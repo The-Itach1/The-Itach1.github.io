@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="zh-CH" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>xctf的wp | The_Itach1</title><meta name="author" content="The_Itach1"><meta name="copyright" content="The_Itach1"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="Challenge area1.elrond32文件下载下来，放到ida里面看，找到关键代码。 大致分析，先求key，再找v2，再异或。写出脚本 #include&lt;stdio.h&gt;  int main(void)  &amp;#123;     int key[9]&#x3D;&amp;#123;105,115,101,110,103,97,114,100&amp;#125;;     int v2[33]&#x3D;&amp;#123">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xctf的wp">
+<meta property="og:url" content="http://example.com/2021/01/21/xctf%E7%9A%84wp/index.html">
+<meta property="og:site_name" content="The_Itach1">
+<meta property="og:description" content="Challenge area1.elrond32文件下载下来，放到ida里面看，找到关键代码。 大致分析，先求key，再找v2，再异或。写出脚本 #include&lt;stdio.h&gt;  int main(void)  &amp;#123;     int key[9]&#x3D;&amp;#123;105,115,101,110,103,97,114,100&amp;#125;;     int v2[33]&#x3D;&amp;#123">
+<meta property="og:locale" content="zh_CH">
+<meta property="og:image" content="https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg">
+<meta property="article:published_time" content="2021-01-21T15:23:32.121Z">
+<meta property="article:modified_time" content="2021-01-21T16:33:19.057Z">
+<meta property="article:author" content="The_Itach1">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg"><link rel="shortcut icon" href="/img/2.png"><link rel="canonical" href="http://example.com/2021/01/21/xctf%E7%9A%84wp/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-01-22 00:33:19'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/5.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">9</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">The_Itach1</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">xctf的wp</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-01-21T15:23:32.121Z" title="Created 2021-01-21 23:23:32">2021-01-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-01-21T16:33:19.057Z" title="Updated 2021-01-22 00:33:19">2021-01-22</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Challenge-area"><a href="#Challenge-area" class="headerlink" title="Challenge area"></a>Challenge area</h1><h2 id="1-elrond32"><a href="#1-elrond32" class="headerlink" title="1.elrond32"></a>1.elrond32</h2><p>文件下载下来，放到ida里面看，找到关键代码。</p>
+<p>大致分析，先求key，再找v2，再异或。<br><img src="https://i.loli.net/2021/01/19/ZYt4zRE8esUpKWL.png"><br>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt; 
+int main(void)
+
+&#123;
+    int key[9]=&#123;105,115,101,110,103,97,114,100&#125;;
+    int v2[33]=&#123; 0xf,0x1f,0x4,0x9,0x1c,0x12,0x42,0x9,0xc,0x44,
+    0xd,0x7,0x9,0x6,0x2d,0x37,0x59,0x1e,0,0x59,0xf,0x8
+    ,0x1c,0x23,0x36,0x7,0x55,0x2,0xc,0x8,0x41,0xa,0x14,&#125;;
+   int i;
+
+   for(i=0;i&lt;33;i++)
+    &#123;
+
+        printf(&quot;%c&quot;,key[i%8]^v2[i]);
+    &#125;
+&#125;</code></pre>
+<p>得到flag{s0me7hing_S0me7hinG_t0lki3n}</p>
+<h2 id="2-666"><a href="#2-666" class="headerlink" title="2.666"></a>2.666</h2><p>ELF文件，ida打开，找到关键代码，分析<br><img src="https://i.loli.net/2021/01/19/diLJQsBIp8V7zOc.png"><br>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int s[19]=&#123;&#39;i&#39;, &#39;z&#39;, &#39;w&#39;, &#39;h&#39;, &#39;r&#39;, &#39;o&#39;, &#39;z&#39;, &#39;&quot;&#39;, &#39;&quot;&#39;, &#39;w&#39;, &#39;&quot;&#39;, &#39;v&#39;, &#39;.&#39;, &#39;K&#39;, &#39;&quot;&#39;, &#39;.&#39;, &#39;N&#39;, &#39;i&#39;&#125;;
+    int flag[19];
+    int i;
+
+    for(i=0;i&lt;18;i+=3)
+    &#123;
+        flag[i]=(s[i]^18)-6;
+        flag[i+1]=(s[i+1]^18)+6;
+        flag[i+2]=s[i+2]^6^18; 
+    &#125;
+
+    for(i=0;i&lt;18;i++)
+    printf(&quot;%c&quot;,flag[i]); 
+&#125;</code></pre>
+<h2 id="3-Reversing-x64Elf-100"><a href="#3-Reversing-x64Elf-100" class="headerlink" title="3.Reversing-x64Elf-100"></a>3.Reversing-x64Elf-100</h2><p>ELF文件，ida打开，找到关键代码，分析<br><img src="https://i.loli.net/2021/01/19/CS9WPR5L1UTJc2q.png"><br>比较有意思的是以前还没做到过用字符串组这种的加密，脚本如下</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    char v3[3][8] = &#123;&quot;Dufhbmf&quot;,&quot;pG`imos&quot;,&quot;ewUglpt&quot;&#125;;
+    int i;
+    int flag[13];
+
+    for(i=0;i&lt;=11;i++)
+    &#123;
+        flag[i]=*(v3[i%3]+2*(i/3))-1;
+        printf(&quot;%c&quot;,flag[i]);
+    &#125;
+&#125; </code></pre>
+<p>得到Code_Talkers</p>
+<h2 id="4-IgniteMe"><a href="#4-IgniteMe" class="headerlink" title="4.IgniteMe"></a>4.IgniteMe</h2><p>exe文件，ida打开，找到关键代码，分析<br><img src="https://i.loli.net/2021/01/19/EXiTzfWhsl1w8xY.png"><br>写脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    char code[]=&quot;GONDPHyGjPEKruv&#123;&#123;pj]X@rF&quot;;
+    int flag[24]=&#123;0&#125;;
+    int i;
+    int key[40]=&#123;13,  19,  23,  17,   2,   1,  32,  29,  12,   2, 
+   25,  47,  23,  43,  36,  31,  30,  22,   9,  15, 
+   21,  39,  19,  38,  10,  47,  30,  26,  45,  12, 
+   34,  4&#125;;
+
+   for(i=0;i&lt;24;i++)
+   &#123;
+       flag[i]=((code[i]^key[i])-72)^0x55;
+       printf(&quot;%c&quot;,flag[i]);
+   &#125;
+ &#125; </code></pre>
+<p>套上格式，得到EIS{WADX_TDGK_AIHC_IHKN_PJLM}</p>
+<h2 id="5-debug"><a href="#5-debug" class="headerlink" title="5.debug"></a>5.debug</h2><p>IDA不能打开，用Eexinfo PE打开，发现是.net，并且还混淆了的。<br><img src="https://i.loli.net/2021/01/19/2TxQ3mrNIkJaPtK.png"><br>先去混淆，类似去混淆还有buuctf的一道[V&amp;N2020 公开赛]CSRe 1。</p>
+<p>先将文件和de4tor.exe放在同一个文件夹，这里是放在的de4tor，顺便把文件名改了，在cmd里面执行。<br><img src="https://i.loli.net/2021/01/19/JMCoTm7b43zkRXp.png"><br>然后用<br>dnspy32位打开，直接进入入口点。<br><img src="https://i.loli.net/2021/01/19/WczLTgBtVlUqwdx.png"><br>到了main函数。<br><img src="https://sm.ms/image/JiQ6N1BEdrKFcgv"><br>得到lag{967DDDFBCD32C1F53527C221D9E40A0B}</p>
+<h2 id="6-hackme"><a href="#6-hackme" class="headerlink" title="6.hackme"></a>6.hackme</h2><p>ida打开找到关键代码。<br><img src="https://i.loli.net/2021/01/19/CGNrk8MjLpVE139.png"><br>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int flag[23];
+    int code[23]=&#123; 95, 242,  94, 139,  78,  14, 163, 170, 199, 147, 
+  129,  61,  95, 116, 163,   9, 145,  43,  73,  40, 
+  147, 103&#125;;
+      int i,j,num=0,men;
+
+      for(i=0;i&lt;22;i++)
+      &#123;
+          j=i+1;
+          men=0;
+          num=0;
+          while(men&lt;j)
+          &#123;
+              men++;
+              num=1828812941 * num + 12345;
+        &#125;
+          flag[i]=code[i]^num;
+          printf(&quot;%c&quot;,flag[i]);
+      &#125;
+ &#125; </code></pre>
+<h2 id="7-Guess-the-Number"><a href="#7-Guess-the-Number" class="headerlink" title="7.Guess-the-Number"></a>7.Guess-the-Number</h2><p>java逆向，直接拖到jd-gui。<br><img src="https://i.loli.net/2021/01/19/PhWGLBVzC17EHjb.png"><br>大数异或，上python，脚本如下</p>
+<pre><code>a=0x4b64ca12ace755516c178f72d05d7061
+b=0xecd44646cfe5994ebeb35bf922e25dba
+flag=hex(a^b)
+print(flag)</code></pre>
+<h2 id="8-BABYRE"><a href="#8-BABYRE" class="headerlink" title="8.BABYRE"></a>8.BABYRE</h2><h2 id="9-EasyRE"><a href="#9-EasyRE" class="headerlink" title="9.EasyRE"></a>9.EasyRE</h2><p>这道题非常有意思，其f5出来的伪代码有点问题，开始看了好久还没看明白，后来一边写脚本，发现了问题。<br><img src="https://i.loli.net/2021/01/19/8fSEy3QVhjzPXZK.png"><br>然后这里去dbg里面看看字符串倒序怎么一回事。<br><img src="https://i.loli.net/2021/01/19/3MSRf9ytOng2Kro.png"><br>然后开始写脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+void down(int *a,int len_flag)
+&#123;
+    int i,t; 
+    int len=len_flag;
+    for(i = 0; i &lt; len/2; i++)
+    &#123;
+        t = a[i];
+        a[i] = a[len-i-1];
+        a[len-i-1] = t;
+    &#125;
+&#125;
+int main(void)
+&#123;
+    int code[25]=&#123;&#39;x&#39;, &#39;I&#39;, &#39;r&#39;, &#39;C&#39;, &#39;j&#39;, &#39;~&#39;, &#39;&lt;&#39;, &#39;r&#39;, &#39;|&#39;, &#39;2&#39;, &#39;t&#39;, &#39;W&#39;, &#39;s&#39;, &#39;v&#39;, &#39;3&#39;, &#39;P&#39;, &#39;t&#39;, &#39;I&#39;,0x7f,0x7a,0x6e,0x64,0x6b,0x61&#125;;
+    int flag[25];
+    int i;
+
+    for(i=0;i&lt;24;i++)
+    &#123;
+        flag[i]=(code[i]^6)-1;
+    &#125;
+    down(flag,25);
+    for(i=0;i&lt;25;i++)
+    &#123;
+        printf(&quot;%c&quot;,flag[i]);
+    &#125;
+ &#125; </code></pre>
+<p>得到flag{xNqU4otPq3ys9wkDsN}</p>
+<h2 id="10-Shuffle"><a href="#10-Shuffle" class="headerlink" title="10.Shuffle"></a>10.Shuffle</h2><p>ida打开直接就看到flag了，SECCON{Welcome to the SECCON 2014 CTF!}</p>
+<h2 id="11-re-for-50-plz-50"><a href="#11-re-for-50-plz-50" class="headerlink" title="11.re-for-50-plz-50"></a>11.re-for-50-plz-50</h2><p>文件下载下来，Eexinfo PE打开，发现是mpis，而且ida无法f5，只好看汇编。</p>
+<p><img src="https://i.loli.net/2021/01/20/5FW3tXHYOd1C7N4.png"></p>
+<p>关键地方<br><img src="https://i.loli.net/2021/01/20/MrSPCaKtJ3wFDdE.png"><br>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    char flag[]=&quot;cbtcqLUBChERV[[Nh@_X^D]X_YPV[CJ&quot;;
+    int i;
+
+    for(i=0;i&lt;31;i++)
+    &#123;
+        printf(&quot;%c&quot;,flag[i]^0x37);
+    &#125;
+ &#125; </code></pre>
+<p>得到TUCTF{but_really_whoisjohngalt}</p>
+<h2 id="12-dmd-50"><a href="#12-dmd-50" class="headerlink" title="12.dmd-50"></a>12.dmd-50</h2><p>ida打开，看到关键代码，然后发现是MD5加密<br><img src="https://i.loli.net/2021/01/20/WE5FwfQJCkGODLV.png"><br>直接在线解密<br><img src="https://i.loli.net/2021/01/20/JPowqbEFVWmdgLf.png"></p>
+<h2 id="13-secret-galaxy-300"><a href="#13-secret-galaxy-300" class="headerlink" title="13.secret-galaxy-300"></a>13.secret-galaxy-300</h2><p>ida打开，看了半天也没分析出来是什么，没有input，也没有输出，就是有些关于行星呀什么之类的。然后看别人的wp，用了od动调。<br><img src="https://i.loli.net/2021/01/20/RlWHLrEZOp8xt5f.png"><br>然后在ida里面的赋值好像在这里<br><img src="https://i.loli.net/2021/01/20/zr4tDogVXGA9jZO.png"><br>然后得到flag：aliens_are_around_us</p>
+<h2 id="14-srm-50"><a href="#14-srm-50" class="headerlink" title="14.srm-50"></a>14.srm-50</h2><p>文件直接打开，要你输入email和password，然后直接放到ida里面看，找到关键函数<br><img src="https://i.loli.net/2021/01/20/JuKlyG4Qif13chS.png"><br>得到flag：CZ9dmq4c8g9G7bAX</p>
+<h2 id="15-simple-check-100"><a href="#15-simple-check-100" class="headerlink" title="15.simple-check-100"></a>15.simple-check-100</h2><p>前言：挺开心的，由于这道题的exe文件用dbg动调，得到的flag竟然是乱码，让我学会了如何用ida动态调试elf文件，这里给个链接如何用ida动态调试elf文件：<a target="_blank" rel="noopener" href="https://www.it610.com/article/1298189057175658496.htm">https://www.it610.com/article/1298189057175658496.htm</a>。<br>首先看看ida里面的逻辑<br><img src="https://i.loli.net/2021/01/21/XQuUG8CeYNaf2yH.png"><br>先来说说exe调试过程。<br><img src="https://i.loli.net/2021/01/21/4L9GyeW16NAsfxD.png"><br>再来说一说ida动调elf过程。<br><img src="https://i.loli.net/2021/01/22/rzlNf2V8FQUqxbu.png"><br>然后得到flag<br><img src="https://i.loli.net/2021/01/22/BMm5vgledx1NXkZ.png"></p>
+<h2 id="16-gametime"><a href="#16-gametime" class="headerlink" title="16.gametime"></a>16.gametime</h2><p>感谢这道题锻炼了我dbg的动调能力。</p>
+<p>文件下载下来，是一个游戏，，属于玩通关了就给flag的那一种，先玩一玩，如果你足够厉害应该是可以玩出来的。玩了一下大概游戏规则就是看到s就按’ ‘，遇到x就按’x’，遇到m就按’m’。</p>
+<p>然后放到ida里面看，为了好看一点，改了部分函数名称，分析分为3个部分。</p>
+<p>第一部分，告诉你游戏规则<br><img src="https://i.loli.net/2021/01/21/mnAlhobL6k5MSsy.png"><br>第二部分，熟悉怎么玩。<br><img src="https://i.loli.net/2021/01/21/YU2B38he6aiug9s.png"><br>第三部分，玩10次，对了就给flag<br><img src="https://i.loli.net/2021/01/21/tm4qUIirv3hLVgd.png"></p>
+<p>接下来，x32dbg动调，需要自己慢慢分析整个流程，找到关键函数位置，这里就只放两个关键点的图片。</p>
+<p>条件判断1<br><img src="https://i.loli.net/2021/01/21/bAn6yhB7gmUZPFv.png"><br>条件判断2<br><img src="https://i.loli.net/2021/01/21/m3tLMkeO98TF2oR.png"><br>最后得到flag<br><img src="https://i.loli.net/2021/01/21/l9cOGIgXxomHTrF.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">The_Itach1</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/01/21/xctf%E7%9A%84wp/">http://example.com/2021/01/21/xctf%E7%9A%84wp/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/01/18/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/"><img class="next-cover" src="https://i.loli.net/2021/01/18/GBV3ucMiqbWNCOl.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">常用算法</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/5.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">The_Itach1</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">9</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Challenge-area"><span class="toc-number">1.</span> <span class="toc-text">Challenge area</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-elrond32"><span class="toc-number">1.1.</span> <span class="toc-text">1.elrond32</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-666"><span class="toc-number">1.2.</span> <span class="toc-text">2.666</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Reversing-x64Elf-100"><span class="toc-number">1.3.</span> <span class="toc-text">3.Reversing-x64Elf-100</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-IgniteMe"><span class="toc-number">1.4.</span> <span class="toc-text">4.IgniteMe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-debug"><span class="toc-number">1.5.</span> <span class="toc-text">5.debug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-hackme"><span class="toc-number">1.6.</span> <span class="toc-text">6.hackme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Guess-the-Number"><span class="toc-number">1.7.</span> <span class="toc-text">7.Guess-the-Number</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-BABYRE"><span class="toc-number">1.8.</span> <span class="toc-text">8.BABYRE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-EasyRE"><span class="toc-number">1.9.</span> <span class="toc-text">9.EasyRE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-Shuffle"><span class="toc-number">1.10.</span> <span class="toc-text">10.Shuffle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-re-for-50-plz-50"><span class="toc-number">1.11.</span> <span class="toc-text">11.re-for-50-plz-50</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-dmd-50"><span class="toc-number">1.12.</span> <span class="toc-text">12.dmd-50</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-secret-galaxy-300"><span class="toc-number">1.13.</span> <span class="toc-text">13.secret-galaxy-300</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-srm-50"><span class="toc-number">1.14.</span> <span class="toc-text">14.srm-50</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-simple-check-100"><span class="toc-number">1.15.</span> <span class="toc-text">15.simple-check-100</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-gametime"><span class="toc-number">1.16.</span> <span class="toc-text">16.gametime</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/xctf%E7%9A%84wp/" title="xctf的wp"><img src="https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="xctf的wp"/></a><div class="content"><a class="title" href="/2021/01/21/xctf%E7%9A%84wp/" title="xctf的wp">xctf的wp</a><time datetime="2021-01-21T15:23:32.121Z" title="Created 2021-01-21 23:23:32">2021-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/18/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" title="常用算法"><img src="https://i.loli.net/2021/01/18/GBV3ucMiqbWNCOl.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="常用算法"/></a><div class="content"><a class="title" href="/2021/01/18/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" title="常用算法">常用算法</a><time datetime="2021-01-18T05:15:44.549Z" title="Created 2021-01-18 13:15:44">2021-01-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/16/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp"><img src="https://i.loli.net/2021/01/16/obZv2RnrgFj6aLq.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="鹏程实验室邀请赛wp"/></a><div class="content"><a class="title" href="/2021/01/16/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp">鹏程实验室邀请赛wp</a><time datetime="2021-01-16T10:56:05.262Z" title="Created 2021-01-16 18:56:05">2021-01-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/18/%E8%8A%B1%E6%8C%87%E4%BB%A4/" title="逆向之&quot;花&quot;"><img src="https://i.loli.net/2020/12/18/XvcSVTGQWYPFR1M.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="逆向之&quot;花&quot;"/></a><div class="content"><a class="title" href="/2020/12/18/%E8%8A%B1%E6%8C%87%E4%BB%A4/" title="逆向之&quot;花&quot;">逆向之&quot;花&quot;</a><time datetime="2020-12-18T13:39:06.387Z" title="Created 2020-12-18 21:39:06">2020-12-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/08/%E6%A0%88%E6%BA%A2%E5%87%BA/" title="栈溢出"><img src="https://i.loli.net/2020/12/08/HBtf36VNDlrLqQU.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="栈溢出"/></a><div class="content"><a class="title" href="/2020/12/08/%E6%A0%88%E6%BA%A2%E5%87%BA/" title="栈溢出">栈溢出</a><time datetime="2020-12-07T16:57:32.683Z" title="Created 2020-12-08 00:57:32">2020-12-08</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By The_Itach1</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">木叶飞舞之处，火亦生生不息</div><div class="icp"><a><span></span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
