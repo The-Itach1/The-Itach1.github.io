@@ -1,0 +1,174 @@
+<!DOCTYPE html><html lang="zh-CH" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>《逆向工程核心原理》20章内嵌补丁练习 | The_Itach1</title><meta name="author" content="The_Itach1"><meta name="copyright" content="The_Itach1"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="内嵌补丁练习参考资料：《逆向工程核心原理》20章。 样本：找了很久，网上基本没人发到网上，发了的都是要钱的(难受)，只不过还是在吾爱破解注册了个号下载下来了(花了19块，QAQ)。所以这里给一个我的百度网盘连接给所有爱学习的人https:&#x2F;&#x2F;pan.baidu.com&#x2F;s&#x2F;1GlrUwfRX1aMBDLr54B1iLQ  提取码yeah 目的：通过内嵌补丁来修改样本中的两个字符串。 什么叫内嵌补丁">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《逆向工程核心原理》20章内嵌补丁练习">
+<meta property="og:url" content="http://example.com/2021/02/26/%E5%86%85%E5%B5%8C%E8%A1%A5%E4%B8%81%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="The_Itach1">
+<meta property="og:description" content="内嵌补丁练习参考资料：《逆向工程核心原理》20章。 样本：找了很久，网上基本没人发到网上，发了的都是要钱的(难受)，只不过还是在吾爱破解注册了个号下载下来了(花了19块，QAQ)。所以这里给一个我的百度网盘连接给所有爱学习的人https:&#x2F;&#x2F;pan.baidu.com&#x2F;s&#x2F;1GlrUwfRX1aMBDLr54B1iLQ  提取码yeah 目的：通过内嵌补丁来修改样本中的两个字符串。 什么叫内嵌补丁">
+<meta property="og:locale" content="zh_CH">
+<meta property="og:image" content="https://i.loli.net/2021/02/26/FV8EmzyUav4BPeg.jpg">
+<meta property="article:published_time" content="2021-02-26T11:41:36.121Z">
+<meta property="article:modified_time" content="2021-02-26T11:50:39.355Z">
+<meta property="article:author" content="The_Itach1">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/26/FV8EmzyUav4BPeg.jpg"><link rel="shortcut icon" href="/img/2.png"><link rel="canonical" href="http://example.com/2021/02/26/%E5%86%85%E5%B5%8C%E8%A1%A5%E4%B8%81%E7%BB%83%E4%B9%A0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-02-26 19:50:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/5.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">11</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2021/02/26/FV8EmzyUav4BPeg.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">The_Itach1</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">《逆向工程核心原理》20章内嵌补丁练习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-02-26T11:41:36.121Z" title="Created 2021-02-26 19:41:36">2021-02-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-02-26T11:50:39.355Z" title="Updated 2021-02-26 19:50:39">2021-02-26</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="内嵌补丁练习"><a href="#内嵌补丁练习" class="headerlink" title="内嵌补丁练习"></a>内嵌补丁练习</h2><p>参考资料：《逆向工程核心原理》20章。</p>
+<p>样本：找了很久，网上基本没人发到网上，发了的都是要钱的(难受)，只不过还是在吾爱破解注册了个号下载下来了(花了19块，QAQ)。所以这里给一个我的百度网盘连接给所有爱学习的人<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1GlrUwfRX1aMBDLr54B1iLQ">https://pan.baidu.com/s/1GlrUwfRX1aMBDLr54B1iLQ</a>  提取码yeah</p>
+<p>目的：通过内嵌补丁来修改样本中的两个字符串。</p>
+<h3 id="什么叫内嵌补丁"><a href="#什么叫内嵌补丁" class="headerlink" title="什么叫内嵌补丁"></a>什么叫内嵌补丁</h3><p>先给一张图<br><img src="https://i.loli.net/2021/02/26/Yt5gWo2NZzrqaUe.png"><br>大概意思就是，有些时候我们不能直接改代码，可能是因为代码被加密了，或者有其他一些检查，于是我们就需要通过插入补丁代码，让程序运行同时，也运行我们的补丁，然后这个补丁就可以来修改代码(这个样本就是通过修改解密后的代码达到修改字符串的目的)。</p>
+<h3 id="分析样本"><a href="#分析样本" class="headerlink" title="分析样本"></a>分析样本</h3><p>先打开文件，会跳出这两个窗口，我们就是要改变这两个窗口的字符串<br><img src="https://i.loli.net/2021/02/26/tCN7Xo1PnBVKw5W.png"></p>
+<p>然后放入x32dbg分析，先f9来到EP处<br><img src="https://i.loli.net/2021/02/26/CG8naysID2frWAx.png"><br>然后跟进call unpackmecrc.4010E9这个函数，进去后再跟进call unpackmecrc.40109B这个函数，也就来到了解密函数。<br><img src="https://i.loli.net/2021/02/26/p1uBh2t5Y7bPQUc.png"><br>可以先看看经过两次解密后004010F5–00401249大概是什么内容，可以看到窗口出现的字符串。<br><img src="https://i.loli.net/2021/02/26/qPHLjARwr8DJeoa.png"></p>
+<p>然后继续跟，来到call unpackmecrc.401039这个函数，这个函数是已经被解密了的。<br><img src="https://i.loli.net/2021/02/26/B3GjoIstRyHd2aw.png"></p>
+<p>跟进去看会发现是一个Crc效检。<br><img src="https://i.loli.net/2021/02/26/bSHmyCiIqfNkFOT.png">-<br>然后先看看解密出来的0040124A–401280<br><img src="https://i.loli.net/2021/02/26/aER6zYeMKsoW3bc.png"><br>来到OEP处，有一个关键的函数<br><img src="https://i.loli.net/2021/02/26/59GfwHnYLkQBTmR.png"><br>先来看看这个函数DialogBoxParamA()</p>
+<pre><code>INT_PTR DialogBoxParamA(
+  HINSTANCE hInstance,
+  LPCSTR    lpTemplateName,
+  HWND      hWndParent,
+  DLGPROC   lpDialogFunc,对话框过程的指点。有关对话框程序的更多信息，请参阅对话程序。
+  LPARAM    dwInitParam
+);</code></pre>
+<p>详细到这个网站去看<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparama">https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparama</a></p>
+<p>然后就先进入第4个参数地址处内部去看看，原来004010F5–00401249是被加密过的，现在已经解密了。<br><img src="https://i.loli.net/2021/02/26/U3mEONFRgsbwSrz.png"><br>分析到这里就差不多了，开始打补丁。</p>
+<h3 id="打补丁"><a href="#打补丁" class="headerlink" title="打补丁"></a>打补丁</h3><p><strong>1.先说一下补丁打在哪。</strong><br>①设置到文件的空白区域。</p>
+<p>②扩展最后节区后设置。</p>
+<p>③添加新节区后设置。</p>
+<p>③和②的方法适合添加代码较多的适合运用。</p>
+<p>这个文件就特地的设置了一个1000的空白区域，在地址00401280处，学过PE就可以很容易知道这部分内容了。</p>
+<p><strong>2.打补丁的大致思路</strong></p>
+<p>先修改最后到OEP的jmp指令，修改使其跳转到我们的补丁处，然后执行我们的补丁，然后补丁的最后再写一个jmp指令跳到OEP处。</p>
+<p><strong>3.正式写补丁</strong></p>
+<p>直接抄的书上的，因为不会写汇编，但是书上也比较易懂，直接用Ctrl+e来编辑<br><img src="https://i.loli.net/2021/02/26/DmFptSvs1UCdEAh.png"><br>然后还有一件事，就是将原来跳到OEP的指令改为跳到我们的补丁地址处，这里涉及到jmp指令的原理，《汇编语言》一书中有讲原理，并且我们修改的是被解密的部分，所以在还要加密回去。</p>
+<p>通过上述分析样本过程我们可以知道<br><img src="https://i.loli.net/2021/02/26/eJSID8HLwAMuGNg.png"><br>图片中的xor 7是因为这部分地址的加密过程就是用的xor 7，可以看样本分析过程中的相应部分，对照地址来查看，还有个注意的地方就是这个必须在调试的最之前来改这个部分(具体来说是未解密之前)。</p>
+<h3 id="正式运行打补丁后的程序"><a href="#正式运行打补丁后的程序" class="headerlink" title="正式运行打补丁后的程序"></a>正式运行打补丁后的程序</h3><p><img src="https://i.loli.net/2021/02/26/JeihdTzUCYNl1VH.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">The_Itach1</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/02/26/%E5%86%85%E5%B5%8C%E8%A1%A5%E4%B8%81%E7%BB%83%E4%B9%A0/">http://example.com/2021/02/26/%E5%86%85%E5%B5%8C%E8%A1%A5%E4%B8%81%E7%BB%83%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/26/FV8EmzyUav4BPeg.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/02/04/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A3%B3/"><img class="next-cover" src="https://i.loli.net/2021/02/04/8vlJQ6SNkU4DWpt.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">一些常用的壳</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/5.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">The_Itach1</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">11</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%B5%8C%E8%A1%A5%E4%B8%81%E7%BB%83%E4%B9%A0"><span class="toc-number">1.</span> <span class="toc-text">内嵌补丁练习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E5%8F%AB%E5%86%85%E5%B5%8C%E8%A1%A5%E4%B8%81"><span class="toc-number">1.1.</span> <span class="toc-text">什么叫内嵌补丁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E6%A0%B7%E6%9C%AC"><span class="toc-number">1.2.</span> <span class="toc-text">分析样本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E8%A1%A5%E4%B8%81"><span class="toc-number">1.3.</span> <span class="toc-text">打补丁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%BC%8F%E8%BF%90%E8%A1%8C%E6%89%93%E8%A1%A5%E4%B8%81%E5%90%8E%E7%9A%84%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.4.</span> <span class="toc-text">正式运行打补丁后的程序</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/02/26/%E5%86%85%E5%B5%8C%E8%A1%A5%E4%B8%81%E7%BB%83%E4%B9%A0/" title="《逆向工程核心原理》20章内嵌补丁练习"><img src="https://i.loli.net/2021/02/26/FV8EmzyUav4BPeg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="《逆向工程核心原理》20章内嵌补丁练习"/></a><div class="content"><a class="title" href="/2021/02/26/%E5%86%85%E5%B5%8C%E8%A1%A5%E4%B8%81%E7%BB%83%E4%B9%A0/" title="《逆向工程核心原理》20章内嵌补丁练习">《逆向工程核心原理》20章内嵌补丁练习</a><time datetime="2021-02-26T11:41:36.121Z" title="Created 2021-02-26 19:41:36">2021-02-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/02/04/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A3%B3/" title="一些常用的壳"><img src="https://i.loli.net/2021/02/04/8vlJQ6SNkU4DWpt.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一些常用的壳"/></a><div class="content"><a class="title" href="/2021/02/04/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A3%B3/" title="一些常用的壳">一些常用的壳</a><time datetime="2021-02-04T09:56:13.008Z" title="Created 2021-02-04 17:56:13">2021-02-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/xctf%E7%9A%84wp/" title="xctf的wp"><img src="https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="xctf的wp"/></a><div class="content"><a class="title" href="/2021/01/21/xctf%E7%9A%84wp/" title="xctf的wp">xctf的wp</a><time datetime="2021-01-21T15:23:32.121Z" title="Created 2021-01-21 23:23:32">2021-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/18/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" title="常用算法"><img src="https://i.loli.net/2021/01/18/GBV3ucMiqbWNCOl.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="常用算法"/></a><div class="content"><a class="title" href="/2021/01/18/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" title="常用算法">常用算法</a><time datetime="2021-01-18T05:15:44.549Z" title="Created 2021-01-18 13:15:44">2021-01-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/16/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp"><img src="https://i.loli.net/2021/01/16/obZv2RnrgFj6aLq.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="鹏程实验室邀请赛wp"/></a><div class="content"><a class="title" href="/2021/01/16/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp">鹏程实验室邀请赛wp</a><time datetime="2021-01-16T10:56:05.262Z" title="Created 2021-01-16 18:56:05">2021-01-16</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://i.loli.net/2021/02/26/FV8EmzyUav4BPeg.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By The_Itach1</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">木叶飞舞之处，火亦生生不息</div><div class="icp"><a><span></span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
