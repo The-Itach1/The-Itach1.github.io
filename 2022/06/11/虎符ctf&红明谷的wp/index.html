@@ -1,0 +1,417 @@
+<!DOCTYPE html><html lang="zh-CH" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>虎符ctf的wp&amp;红明谷杯的wp | The_Itach1</title><meta name="author" content="The_Itach1"><meta name="copyright" content="The_Itach1"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="虎符ctf的wp&amp;红明谷杯的wp大型比赛的题确实有难度，赛后看wp学习了一下，不得不说自己做的时候真的很懵逼。吐槽一下go语言题太多了。。。 gocrypt输入的flag要满足go语言的regexp_MustCompileregexp___Regexp__FindStringSubmatch规定的格式，然后两轮xtea加密。 动调来看看整个过程。 cherk函数，go语言相关知识点http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虎符ctf的wp&amp;红明谷杯的wp">
+<meta property="og:url" content="http://example.com/2022/06/11/%E8%99%8E%E7%AC%A6ctf&%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/index.html">
+<meta property="og:site_name" content="The_Itach1">
+<meta property="og:description" content="虎符ctf的wp&amp;红明谷杯的wp大型比赛的题确实有难度，赛后看wp学习了一下，不得不说自己做的时候真的很懵逼。吐槽一下go语言题太多了。。。 gocrypt输入的flag要满足go语言的regexp_MustCompileregexp___Regexp__FindStringSubmatch规定的格式，然后两轮xtea加密。 动调来看看整个过程。 cherk函数，go语言相关知识点http">
+<meta property="og:locale" content="zh_CH">
+<meta property="og:image" content="https://i.loli.net/2021/04/09/vfNLV8F2DPyglKH.jpg">
+<meta property="article:published_time" content="2022-06-10T17:10:13.977Z">
+<meta property="article:modified_time" content="2021-04-08T19:48:40.968Z">
+<meta property="article:author" content="The_Itach1">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/09/vfNLV8F2DPyglKH.jpg"><link rel="shortcut icon" href="/img/2.png"><link rel="canonical" href="http://example.com/2022/06/11/%E8%99%8E%E7%AC%A6ctf&amp;%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-09 03:48:40'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/5.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2021/04/09/vfNLV8F2DPyglKH.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">The_Itach1</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">虎符ctf的wp&amp;红明谷杯的wp</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-06-10T17:10:13.977Z" title="Created 2022-06-11 01:10:13">2022-06-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-04-08T19:48:40.968Z" title="Updated 2021-04-09 03:48:40">2021-04-09</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="虎符ctf的wp-amp-红明谷杯的wp"><a href="#虎符ctf的wp-amp-红明谷杯的wp" class="headerlink" title="虎符ctf的wp&amp;红明谷杯的wp"></a>虎符ctf的wp&amp;红明谷杯的wp</h1><p>大型比赛的题确实有难度，赛后看wp学习了一下，不得不说自己做的时候真的很懵逼。吐槽一下go语言题太多了。。。</p>
+<h2 id="gocrypt"><a href="#gocrypt" class="headerlink" title="gocrypt"></a>gocrypt</h2><p>输入的flag要满足go语言的regexp_MustCompileregexp___Regexp__FindStringSubmatch规定的格式，然后两轮xtea加密。</p>
+<p>动调来看看整个过程。</p>
+<p>cherk函数，go语言相关知识点<a target="_blank" rel="noopener" href="https://ask.csdn.net/questions/1032787">https://ask.csdn.net/questions/1032787</a>，<a target="_blank" rel="noopener" href="https://blog.csdn.net/weiyuefei/article/details/78589764">https://blog.csdn.net/weiyuefei/article/details/78589764</a><br><img src="https://i.loli.net/2021/04/06/x9lTWYyL2nbGzwS.png"><br>所以说flag要满足类似的形式flag{aaaaaaaa-aaaa-aaaa-1111-111111111111}，继续往下看<br><img src="https://i.loli.net/2021/04/06/eJckLby5vN82Pot.png"><br>然后回到主函数，继续调几步就是变了delat的xtea加密函数<br><img src="https://i.loli.net/2021/04/06/6Vy2QopOUvzsi8H.png"><br>进入函数，会很明显的知道这是个xtea加密，所以只需要找到key和delat和加密后的数据存放的位置就可以了<br><img src="https://i.loli.net/2021/04/06/xagM1BeiFKAw4pY.png"><br>在后面下一个断点，看看加密数据存放的位置<br><img src="https://i.loli.net/2021/04/06/zgSPiZwrdB7tfae.png"><br>后面又有一组xtea加密，就直接跳过了，加密后的数据也是在那个位置。<br>就直接看比较函数了。<br><img src="https://i.loli.net/2021/04/06/iXYkDpRCFrqu9ao.png"></p>
+<p>exp</p>
+<pre><code>//flag&#123;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&#125;
+//flag&#123;aaaaaaaa-aaaa-aaaa-1111-111111111111&#125;
+//flag&#123;11111111-1111-1111-1111-111111111111&#125; C00005E190,C000060780
+
+void decrypt(unsigned int r ,unsigned int *code ,unsigned int *key)
+&#123;
+    unsigned int v0,v1,i,delta=0x12345678;
+    unsigned int sum=delta*r;
+
+    v0=code[0];
+    v1=code[1];
+    for(i=0;i&lt;r;i++)
+    &#123;
+        v1-=( ((v0&lt;&lt;4) ^(v0&gt;&gt;5)) +v0 ) ^ ( sum + key[ (sum&gt;&gt;11)&amp;3 ]);
+        sum-=delta;
+        v0-=( ((v1&lt;&lt;4) ^ (v1&gt;&gt;5)) +v1 ) ^ ( sum + key[sum&amp;3] );
+    &#125;
+    code[0]=v0;
+    code[1]=v1;
+&#125;
+
+#include&lt;stdio.h&gt;
+
+int main()
+&#123;
+    unsigned int key[4]=&#123;0x10203,0x4050607,0x8090a0b,0xc0d0e0f&#125;;
+    unsigned int r=32;
+    unsigned int code[2]=&#123;F011C30E，F39AC745&#125;;// 0x10D9F5ED,0xCB022754
+
+   decrypt(r,code,key);
+   printf(&quot;%02x %02x&quot;,code[0],code[1]); 
+&#125;
+//flag&#123;6ab84d0a-d2f3-le6f-15fd147da714fd6f&#125;</code></pre>
+<p>注意小端序就ok</p>
+<h2 id="re"><a href="#re" class="headerlink" title="re"></a>re</h2><p>mips架构，32位IDA7.5打开，反编译后会看到很多c++写的东西，里面主要的函数也就是pre和server_check_redemption_code，然后数据也就两个字符串，pre函数内部实际上是和主函数差不多的。下面先看看一些c++反编译出来的怎么理解。</p>
+<pre><code>std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &quot;your redemption code: &quot;, envp);
+//这种有&amp;std::cout，是输出，类似printf
+
+std::getline&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt;&gt;(&amp;std::cin, v11);
+//这种有&amp;std::cin的是输入
+
+std::__cxx11::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt;&gt;::basic_string(a,b,c)
+//即 strncpy(a, b, lenth) 第三个参数可选
+
+std::allocator&lt;char&gt;::allocator(a)
+//相当于malloc(a)，a是大小
+
+std::allocator&lt;char&gt;::~allocator(a)
+//相当于free(a)
+
+std::__cxx11::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt;&gt;::length(a1)
+//求字符串长度，类似strlen(a1)
+
+*(char *)std::__cxx11::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt;&gt;::operator[](a2, i)
+//相当于a2[i]</code></pre>
+<p>下面对主函数进行分析<br><img src="https://i.loli.net/2021/04/07/pTZNYVHUbEWt3KD.png"></p>
+<p>下面对server_check_redemption_code进行分析<br><img src="https://i.loli.net/2021/04/07/cCGMN9uk6aR5qAT.png"><br>刚开始我还因为有多解，因为如果只需要函数值返回7的话，那么只需要让k=20，所以前13个字符随便取前面的都ok了，但是忽略了pre这个函数，这个函数里面的server_check_redemption_code函数不能返回-1，这就意味着，flag一定在pre函数的那个字符串中有。所以flag只会有一个。</p>
+<p><img src="https://i.loli.net/2021/04/07/w9n8TKk6btX7CAB.png"></p>
+<p>所以直接在”I Love Ninja Must Die”这个字符串中找和”Ninja Must Die 3 Is A Cruel Game, So Hard For Me”相同的部分就是flag</p>
+<p>得到flag{Ninja Must Die}</p>
+<p>C语言写的server_check_redemption_code大致过程</p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+
+int main(void)
+&#123;
+    int i,j,v4,v7;
+    int s[0xe][256]=&#123;0,&#125;;    
+    int flag[14]=&#123;&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#39;a&#39;,&#125;;
+    char table[]=&quot;I Love Ninja Must Die 3. Beautiful Art And Motive Operation Is Creative.&quot;;
+    memset(s, 0,0xe*256);
+
+    s[0][flag[0]]=1;
+    v4=0;
+    for(i=1;i&lt;0xE;i++)
+    &#123;
+        for(j=0;j&lt;256;j++)
+        &#123;
+            if(j==flag[i])
+                s[i][j]=s[v4][j];
+            else
+                s[i][j]=i+1;
+        &#125;
+
+        v4=s[v4][(flag[i])];
+    &#125;
+
+    v7=0;
+    for(i=0;i&lt;strlen();i++)
+    &#123;
+        v7=s[v7][table[k]]
+        if(v7=14)
+            rerutn k-14+1;
+    &#125;
+&#125;</code></pre>
+<h2 id="CrackMe"><a href="#CrackMe" class="headerlink" title="CrackMe"></a>CrackMe</h2><p>动调，flag有17个，通过两个while(1)被分为7，和10。我测试的flag是abcdefghijklmnopq</p>
+<p>第一个while<br><img src="https://i.loli.net/2021/04/08/xlVnTaAyr2YDI7M.png"><br>第二个while<br><img src="https://i.loli.net/2021/04/08/G6q34mRYoCysFkP.png"><br>然后需要输入一个值<br><img src="https://i.loli.net/2021/04/08/bhCA2cPD4SepfV3.png"><br>爆破，参考了别人的脚本，爆破的是商，然后*12379+余数，确实比较好，思路很6逼，大大减少了爆破的时间</p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;math.h&gt;
+double sub_7FF6110D1360(double a,double b)
+&#123;
+    double c;
+    c=pow(a,b-1);
+    return c/exp(a);
+&#125;
+
+int main()
+&#123;
+    int i=0,j=0;
+    double v19;
+    double v22;
+    double v16=0.0;
+
+    while(1)
+    &#123;
+        double v17=0.0;
+        double v18=0.0;
+
+        int v20;
+        v19 = (double)i + 1.0;
+        do
+        &#123;
+            v17= v17 + sub_7FF6110D1360(v18, v19)* 0.001;
+            v18 = v18 + 0.001;
+        &#125;while(v18 &lt;= 100.0);
+        v20 = (int)(v17 + v17 + 3.0);
+        if(v20==0x13b03)
+        &#123;
+            //printf(&quot;%d&quot;,i);
+            break;
+        &#125;
+        else
+        &#123;
+            //printf(&quot;%d&quot;,i);
+        &#125;
+        i++;
+    &#125;
+
+    while(1)
+    &#123;
+        double v21=0.0;
+        v16=0.0;
+        v22=j+1.0;
+        do
+        &#123;
+            v16 = v16 + sub_7FF6110D1360(v21, v22) * 0.001;
+            v21 = v21 + 0.001;
+        &#125;while( v21 &lt;= 100.0 );
+        if((int)(v16 + v16 + 3.0)==0x5a2)
+        &#123;
+            //printf(&quot;%d&quot;,j);
+            break;
+        &#125;
+
+        j++;
+    &#125;    
+    printf(&quot;%d&quot;,i*12379+j);
+
+&#125;
+//99038</code></pre>
+<p>继续看后面，异或处理了前7个字符。<br><img src="https://i.loli.net/2021/04/08/tQJbVoXzZ6RUAai.png"><br>先解出来</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main()
+&#123;
+    int code[7]=&#123;0x08, 0x4D, 0x59, 0x06, 0x73, 0x02, 0x40&#125;;
+    int key[7]=&#123;0x39,0x39,0x30,0x33,0x38,0x31,0x39&#125;;
+    int flag[7];
+    int i ;
+
+    for(i=0;i&lt;7;i++)
+    &#123;
+        flag[i]=code[i]^key[i];
+        printf(&quot;%c&quot;,flag[i]);
+    &#125;
+&#125;
+//1ti5K3y</code></pre>
+<p>然后是rc4加密后面10个字符，key为前7个，没有魔改<br><img src="https://i.loli.net/2021/04/08/xFYX4AlDecaZjHs.png"><br>网上脚本直接解</p>
+<pre><code>//程序开始
+#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+typedef unsigned longULONG;
+
+/*初始化函数*/
+void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)
+&#123;
+    int i = 0, j = 0;
+    char k[256] = &#123; 0 &#125;;
+    unsigned char tmp = 0;
+    for (i = 0; i&lt;256; i++)
+    &#123;
+        s[i] = i;//做一道re的题时这里就改为了，s[i]=256-i
+        k[i] = key[i%Len];
+    &#125;
+    for (i = 0; i&lt;256; i++)
+    &#123;
+        j = (j + s[i] + k[i]) % 256;
+        tmp = s[i];
+        s[i] = s[j];//交换s[i]和s[j]
+        s[j] = tmp;
+    &#125;
+&#125;
+
+void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)
+&#123;
+    int i = 0, j = 0, t = 0;
+    unsigned long k = 0;
+    unsigned char tmp;
+    for (k = 0; k&lt;Len; k++)
+    &#123;
+        i = (i + 1) % 256;
+        j = (j + s[i]) % 256;
+        tmp = s[i];
+        s[i] = s[j];//交换s[x]和s[y]
+        s[j] = tmp;
+        t = (s[i] + s[j]) % 256;
+        Data[k] ^= s[t];
+    &#125;
+&#125;
+
+int main()
+&#123;
+    unsigned char s[256] = &#123; 0 &#125;, s2[256] = &#123; 0 &#125;;//S-box
+    char key[256] = &#123; &quot;1ti5K3y&quot; &#125;;
+    char pData[512] = &#123;0xB2, 0xD6, 0x8E, 0x3F, 0xAA, 0x14, 0x53, 0x54, 0xC6&#125;;
+    unsigned long len = strlen(pData);
+    int i;
+
+    rc4_init(s, (unsigned char*)key, strlen(key));//已经完成了初始化
+
+    for (i = 0; i&lt;256; i++)//用s2[i]暂时保留经过初始化的s[i]，很重要的！！！
+    &#123;
+        s2[i] = s[i];
+    &#125;
+
+    //rc4_init(s,(unsignedchar*)key,strlen(key));//初始化密钥
+    rc4_crypt(s2, (unsigned char*)pData, len);//解密
+    printf(&quot;pData=%s&quot;, pData);
+    return 0;
+&#125;
+//RC4_crypt</code></pre>
+<p>得到flag{1ti5K3yRC4_crypt}</p>
+<h2 id="g0"><a href="#g0" class="headerlink" title="g0"></a>g0</h2><p>go语言写的exe，用了脚本后还是看不到main_main函数，估计是用了什么东西吧，但是动调可以找到相关函数的位置，然后进去p键一些地方，点进去一些函数又点出来，多试几次就可以看到反编译出来的逻辑了。</p>
+<p>先看大致流程<br><img src="https://i.loli.net/2021/04/09/dgwL7qUIJQCxhnz.png"></p>
+<p>首先是交换位置，将20个字符分为4组，每组5个，假设序号为1234，就变为了2431。<br><img src="https://i.loli.net/2021/04/09/PfnyrUk5Jhjxo3i.png"><br>然后就是base58加密，特征有长度，和变表<br><img src="https://i.loli.net/2021/04/09/zrKg7PAq4SMb2yd.png"><br>进入main_Encode</p>
+<p>特征1：长度<br><img src="https://i.loli.net/2021/04/09/dA7qfaQwe452H9z.png"><br>特征2：表<br><img src="https://i.loli.net/2021/04/09/cvrBFJ7PhgdwblM.png"><br>最后就是跳过if检测，进入比较函数看密文了<br><img src="https://i.loli.net/2021/04/09/Z6iubs5CXg2xWl1.png"><br>进入main_main_func1<br><img src="https://i.loli.net/2021/04/09/wV17R5USEoaGvFA.png"></p>
+<p>exp</p>
+<pre><code>import base58
+
+code=&#39;2GVdudkYo2CBXoQii7gfpkjTc4gT&#39;
+
+table1=&#39;12Nrst6CDquvG7BefghJKLMEFHPQZabRSTUVmyzno89ApwxWXYcdkij345&#39;
+table2=&#39;123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz&#39;
+code2=&#39;&#39;
+flag1=&#39;&#39;
+flag=&#39;&#39;
+for i in range(len(code)):
+    for j in range(len(table1)):
+        if code[i]==table1[j]:
+            code2+=table2[j]
+            break
+print(code2)
+flag1=base58.b58decode(code2)
+flag=flag1[15:20]+flag1[0:5]+flag1[10:15]+flag1[5:10]
+print(flag)
+//flag&#123;We1CTFc0m_2345&#125;</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">The_Itach1</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/06/11/%E8%99%8E%E7%AC%A6ctf&amp;%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/">http://example.com/2022/06/11/%E8%99%8E%E7%AC%A6ctf&amp;%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/04/09/vfNLV8F2DPyglKH.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/06/11/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/"><img class="prev-cover" src="https://i.loli.net/2021/01/16/obZv2RnrgFj6aLq.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">鹏程实验室邀请赛wp</div></div></a></div><div class="next-post pull-right"><a href="/2022/06/11/%E8%8A%B1%E6%8C%87%E4%BB%A4/"><img class="next-cover" src="https://i.loli.net/2020/12/18/XvcSVTGQWYPFR1M.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">逆向之&quot;花&quot;</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/5.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">The_Itach1</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%99%8E%E7%AC%A6ctf%E7%9A%84wp-amp-%E7%BA%A2%E6%98%8E%E8%B0%B7%E6%9D%AF%E7%9A%84wp"><span class="toc-number">1.</span> <span class="toc-text">虎符ctf的wp&amp;红明谷杯的wp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#gocrypt"><span class="toc-number">1.1.</span> <span class="toc-text">gocrypt</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#re"><span class="toc-number">1.2.</span> <span class="toc-text">re</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CrackMe"><span class="toc-number">1.3.</span> <span class="toc-text">CrackMe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#g0"><span class="toc-number">1.4.</span> <span class="toc-text">g0</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp"><img src="https://i.loli.net/2021/01/16/obZv2RnrgFj6aLq.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="鹏程实验室邀请赛wp"/></a><div class="content"><a class="title" href="/2022/06/11/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp">鹏程实验室邀请赛wp</a><time datetime="2022-06-10T17:10:13.979Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E8%99%8E%E7%AC%A6ctf&amp;%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/" title="虎符ctf的wp&amp;红明谷杯的wp"><img src="https://i.loli.net/2021/04/09/vfNLV8F2DPyglKH.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="虎符ctf的wp&amp;红明谷杯的wp"/></a><div class="content"><a class="title" href="/2022/06/11/%E8%99%8E%E7%AC%A6ctf&amp;%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/" title="虎符ctf的wp&amp;红明谷杯的wp">虎符ctf的wp&amp;红明谷杯的wp</a><time datetime="2022-06-10T17:10:13.977Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E8%8A%B1%E6%8C%87%E4%BB%A4/" title="逆向之&quot;花&quot;"><img src="https://i.loli.net/2020/12/18/XvcSVTGQWYPFR1M.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="逆向之&quot;花&quot;"/></a><div class="content"><a class="title" href="/2022/06/11/%E8%8A%B1%E6%8C%87%E4%BB%A4/" title="逆向之&quot;花&quot;">逆向之&quot;花&quot;</a><time datetime="2022-06-10T17:10:13.974Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E7%AE%80%E5%8D%95%E8%BD%AF%E4%BB%B6%E7%A0%B4%E8%A7%A3/" title="Simple software cracking"><img src="https://i.loli.net/2021/12/02/gaPGbVDE1NFzupY.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Simple software cracking"/></a><div class="content"><a class="title" href="/2022/06/11/%E7%AE%80%E5%8D%95%E8%BD%AF%E4%BB%B6%E7%A0%B4%E8%A7%A3/" title="Simple software cracking">Simple software cracking</a><time datetime="2022-06-10T17:10:13.969Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E7%A5%A5%E4%BA%91%E6%9D%AF%20%E9%83%A8%E5%88%86%20re%20wp/" title="祥云杯 部分 re wp"><img src="https://i.loli.net/2021/08/26/TAgouixStP4aqlL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="祥云杯 部分 re wp"/></a><div class="content"><a class="title" href="/2022/06/11/%E7%A5%A5%E4%BA%91%E6%9D%AF%20%E9%83%A8%E5%88%86%20re%20wp/" title="祥云杯 部分 re wp">祥云杯 部分 re wp</a><time datetime="2022-06-10T17:10:13.967Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://i.loli.net/2021/04/09/vfNLV8F2DPyglKH.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By The_Itach1</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">木叶飞舞之处，火亦生生不息</div><div class="icp"><a><span></span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

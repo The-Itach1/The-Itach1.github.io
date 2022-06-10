@@ -1,0 +1,2155 @@
+<!DOCTYPE html><html lang="zh-CH" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>xctf的wp | The_Itach1</title><meta name="author" content="The_Itach1"><meta name="copyright" content="The_Itach1"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="Challenge area1.elrond32文件下载下来，放到ida里面看，找到关键代码。 大致分析，先求key，再找v2，再异或。写出脚本 #include&lt;stdio.h&gt;  int main(void)  &amp;#123;     int key[9]&#x3D;&amp;#123;105,115,101,110,103,97,114,100&amp;#125;;     int v2[33]&#x3D;&amp;#123">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xctf的wp">
+<meta property="og:url" content="http://example.com/2022/06/11/xctf%E7%9A%84wp/index.html">
+<meta property="og:site_name" content="The_Itach1">
+<meta property="og:description" content="Challenge area1.elrond32文件下载下来，放到ida里面看，找到关键代码。 大致分析，先求key，再找v2，再异或。写出脚本 #include&lt;stdio.h&gt;  int main(void)  &amp;#123;     int key[9]&#x3D;&amp;#123;105,115,101,110,103,97,114,100&amp;#125;;     int v2[33]&#x3D;&amp;#123">
+<meta property="og:locale" content="zh_CH">
+<meta property="og:image" content="https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg">
+<meta property="article:published_time" content="2022-06-10T17:10:13.930Z">
+<meta property="article:modified_time" content="2021-06-04T01:31:36.649Z">
+<meta property="article:author" content="The_Itach1">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg"><link rel="shortcut icon" href="/img/2.png"><link rel="canonical" href="http://example.com/2022/06/11/xctf%E7%9A%84wp/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-06-04 09:31:36'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/5.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">The_Itach1</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">xctf的wp</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-06-10T17:10:13.930Z" title="Created 2022-06-11 01:10:13">2022-06-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-06-04T01:31:36.649Z" title="Updated 2021-06-04 09:31:36">2021-06-04</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Challenge-area"><a href="#Challenge-area" class="headerlink" title="Challenge area"></a>Challenge area</h1><h2 id="1-elrond32"><a href="#1-elrond32" class="headerlink" title="1.elrond32"></a>1.elrond32</h2><p>文件下载下来，放到ida里面看，找到关键代码。</p>
+<p>大致分析，先求key，再找v2，再异或。<br><img src="https://i.loli.net/2021/01/19/ZYt4zRE8esUpKWL.png"><br>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt; 
+int main(void)
+
+&#123;
+    int key[9]=&#123;105,115,101,110,103,97,114,100&#125;;
+    int v2[33]=&#123; 0xf,0x1f,0x4,0x9,0x1c,0x12,0x42,0x9,0xc,0x44,
+    0xd,0x7,0x9,0x6,0x2d,0x37,0x59,0x1e,0,0x59,0xf,0x8
+    ,0x1c,0x23,0x36,0x7,0x55,0x2,0xc,0x8,0x41,0xa,0x14,&#125;;
+   int i;
+
+   for(i=0;i&lt;33;i++)
+    &#123;
+
+        printf(&quot;%c&quot;,key[i%8]^v2[i]);
+    &#125;
+&#125;</code></pre>
+<p>得到flag{s0me7hing_S0me7hinG_t0lki3n}</p>
+<h2 id="2-666"><a href="#2-666" class="headerlink" title="2.666"></a>2.666</h2><p>ELF文件，ida打开，找到关键代码，分析<br><img src="https://i.loli.net/2021/01/19/diLJQsBIp8V7zOc.png"><br>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int s[19]=&#123;&#39;i&#39;, &#39;z&#39;, &#39;w&#39;, &#39;h&#39;, &#39;r&#39;, &#39;o&#39;, &#39;z&#39;, &#39;&quot;&#39;, &#39;&quot;&#39;, &#39;w&#39;, &#39;&quot;&#39;, &#39;v&#39;, &#39;.&#39;, &#39;K&#39;, &#39;&quot;&#39;, &#39;.&#39;, &#39;N&#39;, &#39;i&#39;&#125;;
+    int flag[19];
+    int i;
+
+    for(i=0;i&lt;18;i+=3)
+    &#123;
+        flag[i]=(s[i]^18)-6;
+        flag[i+1]=(s[i+1]^18)+6;
+        flag[i+2]=s[i+2]^6^18; 
+    &#125;
+
+    for(i=0;i&lt;18;i++)
+    printf(&quot;%c&quot;,flag[i]); 
+&#125;</code></pre>
+<h2 id="3-Reversing-x64Elf-100"><a href="#3-Reversing-x64Elf-100" class="headerlink" title="3.Reversing-x64Elf-100"></a>3.Reversing-x64Elf-100</h2><p>ELF文件，ida打开，找到关键代码，分析<br><img src="https://i.loli.net/2021/01/19/CS9WPR5L1UTJc2q.png"><br>比较有意思的是以前还没做到过用字符串组这种的加密，脚本如下</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    char v3[3][8] = &#123;&quot;Dufhbmf&quot;,&quot;pG`imos&quot;,&quot;ewUglpt&quot;&#125;;
+    int i;
+    int flag[13];
+
+    for(i=0;i&lt;=11;i++)
+    &#123;
+        flag[i]=*(v3[i%3]+2*(i/3))-1;
+        printf(&quot;%c&quot;,flag[i]);
+    &#125;
+&#125; </code></pre>
+<p>得到Code_Talkers</p>
+<h2 id="4-IgniteMe"><a href="#4-IgniteMe" class="headerlink" title="4.IgniteMe"></a>4.IgniteMe</h2><p>exe文件，ida打开，找到关键代码，分析<br><img src="https://i.loli.net/2021/01/19/EXiTzfWhsl1w8xY.png"><br>写脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    char code[]=&quot;GONDPHyGjPEKruv&#123;&#123;pj]X@rF&quot;;
+    int flag[24]=&#123;0&#125;;
+    int i;
+    int key[40]=&#123;13,  19,  23,  17,   2,   1,  32,  29,  12,   2, 
+   25,  47,  23,  43,  36,  31,  30,  22,   9,  15, 
+   21,  39,  19,  38,  10,  47,  30,  26,  45,  12, 
+   34,  4&#125;;
+
+   for(i=0;i&lt;24;i++)
+   &#123;
+       flag[i]=((code[i]^key[i])-72)^0x55;
+       printf(&quot;%c&quot;,flag[i]);
+   &#125;
+ &#125; </code></pre>
+<p>套上格式，得到EIS{WADX_TDGK_AIHC_IHKN_PJLM}</p>
+<h2 id="5-debug"><a href="#5-debug" class="headerlink" title="5.debug"></a>5.debug</h2><p>IDA不能打开，用Eexinfo PE打开，发现是.net，并且还混淆了的。<br><img src="https://i.loli.net/2021/01/19/2TxQ3mrNIkJaPtK.png"><br>先去混淆，类似去混淆还有buuctf的一道[V&amp;N2020 公开赛]CSRe 1。</p>
+<p>先将文件和de4tor.exe放在同一个文件夹，这里是放在的de4tor，顺便把文件名改了，在cmd里面执行。<br><img src="https://i.loli.net/2021/01/19/JMCoTm7b43zkRXp.png"><br>然后用<br>dnspy32位打开，直接进入入口点。<br><img src="https://i.loli.net/2021/01/19/WczLTgBtVlUqwdx.png"><br>到了main函数。<br><img src="https://sm.ms/image/JiQ6N1BEdrKFcgv"><br>得到lag{967DDDFBCD32C1F53527C221D9E40A0B}</p>
+<h2 id="6-hackme"><a href="#6-hackme" class="headerlink" title="6.hackme"></a>6.hackme</h2><p>ida打开找到关键代码。<br><img src="https://i.loli.net/2021/01/19/CGNrk8MjLpVE139.png"><br>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int flag[23];
+    int code[23]=&#123; 95, 242,  94, 139,  78,  14, 163, 170, 199, 147, 
+  129,  61,  95, 116, 163,   9, 145,  43,  73,  40, 
+  147, 103&#125;;
+      int i,j,num=0,men;
+
+      for(i=0;i&lt;22;i++)
+      &#123;
+          j=i+1;
+          men=0;
+          num=0;
+          while(men&lt;j)
+          &#123;
+              men++;
+              num=1828812941 * num + 12345;
+        &#125;
+          flag[i]=code[i]^num;
+          printf(&quot;%c&quot;,flag[i]);
+      &#125;
+ &#125; </code></pre>
+<h2 id="7-Guess-the-Number"><a href="#7-Guess-the-Number" class="headerlink" title="7.Guess-the-Number"></a>7.Guess-the-Number</h2><p>java逆向，直接拖到jd-gui。<br><img src="https://i.loli.net/2021/01/19/PhWGLBVzC17EHjb.png"><br>大数异或，上python，脚本如下</p>
+<pre><code>a=0x4b64ca12ace755516c178f72d05d7061
+b=0xecd44646cfe5994ebeb35bf922e25dba
+flag=hex(a^b)
+print(flag)</code></pre>
+<h2 id="8-BABYRE"><a href="#8-BABYRE" class="headerlink" title="8.BABYRE"></a>8.BABYRE</h2><h2 id="9-EasyRE"><a href="#9-EasyRE" class="headerlink" title="9.EasyRE"></a>9.EasyRE</h2><p>这道题非常有意思，其f5出来的伪代码有点问题，开始看了好久还没看明白，后来一边写脚本，发现了问题。<br><img src="https://i.loli.net/2021/01/19/8fSEy3QVhjzPXZK.png"><br>然后这里去dbg里面看看字符串倒序怎么一回事。<br><img src="https://i.loli.net/2021/01/19/3MSRf9ytOng2Kro.png"><br>然后开始写脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+void down(int *a,int len_flag)
+&#123;
+    int i,t; 
+    int len=len_flag;
+    for(i = 0; i &lt; len/2; i++)
+    &#123;
+        t = a[i];
+        a[i] = a[len-i-1];
+        a[len-i-1] = t;
+    &#125;
+&#125;
+int main(void)
+&#123;
+    int code[25]=&#123;&#39;x&#39;, &#39;I&#39;, &#39;r&#39;, &#39;C&#39;, &#39;j&#39;, &#39;~&#39;, &#39;&lt;&#39;, &#39;r&#39;, &#39;|&#39;, &#39;2&#39;, &#39;t&#39;, &#39;W&#39;, &#39;s&#39;, &#39;v&#39;, &#39;3&#39;, &#39;P&#39;, &#39;t&#39;, &#39;I&#39;,0x7f,0x7a,0x6e,0x64,0x6b,0x61&#125;;
+    int flag[25];
+    int i;
+
+    for(i=0;i&lt;24;i++)
+    &#123;
+        flag[i]=(code[i]^6)-1;
+    &#125;
+    down(flag,25);
+    for(i=0;i&lt;25;i++)
+    &#123;
+        printf(&quot;%c&quot;,flag[i]);
+    &#125;
+ &#125; </code></pre>
+<p>得到flag{xNqU4otPq3ys9wkDsN}</p>
+<h2 id="10-Shuffle"><a href="#10-Shuffle" class="headerlink" title="10.Shuffle"></a>10.Shuffle</h2><p>ida打开直接就看到flag了，SECCON{Welcome to the SECCON 2014 CTF!}</p>
+<h2 id="11-re-for-50-plz-50"><a href="#11-re-for-50-plz-50" class="headerlink" title="11.re-for-50-plz-50"></a>11.re-for-50-plz-50</h2><p>文件下载下来，Eexinfo PE打开，发现是mpis，而且ida无法f5，只好看汇编。</p>
+<p><img src="https://i.loli.net/2021/01/20/5FW3tXHYOd1C7N4.png"></p>
+<p>关键地方<br><img src="https://i.loli.net/2021/01/20/MrSPCaKtJ3wFDdE.png"><br>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    char flag[]=&quot;cbtcqLUBChERV[[Nh@_X^D]X_YPV[CJ&quot;;
+    int i;
+
+    for(i=0;i&lt;31;i++)
+    &#123;
+        printf(&quot;%c&quot;,flag[i]^0x37);
+    &#125;
+ &#125; </code></pre>
+<p>得到TUCTF{but_really_whoisjohngalt}</p>
+<h2 id="12-dmd-50"><a href="#12-dmd-50" class="headerlink" title="12.dmd-50"></a>12.dmd-50</h2><p>ida打开，看到关键代码，然后发现是MD5加密<br><img src="https://i.loli.net/2021/01/20/WE5FwfQJCkGODLV.png"><br>直接在线解密<br><img src="https://i.loli.net/2021/01/20/JPowqbEFVWmdgLf.png"></p>
+<h2 id="13-secret-galaxy-300"><a href="#13-secret-galaxy-300" class="headerlink" title="13.secret-galaxy-300"></a>13.secret-galaxy-300</h2><p>ida打开，看了半天也没分析出来是什么，没有input，也没有输出，就是有些关于行星呀什么之类的。然后看别人的wp，用了od动调。<br><img src="https://i.loli.net/2021/01/20/RlWHLrEZOp8xt5f.png"><br>然后在ida里面的赋值好像在这里<br><img src="https://i.loli.net/2021/01/20/zr4tDogVXGA9jZO.png"><br>然后得到flag：aliens_are_around_us</p>
+<h2 id="14-srm-50"><a href="#14-srm-50" class="headerlink" title="14.srm-50"></a>14.srm-50</h2><p>文件直接打开，要你输入email和password，然后直接放到ida里面看，找到关键函数<br><img src="https://i.loli.net/2021/01/20/JuKlyG4Qif13chS.png"><br>得到flag：CZ9dmq4c8g9G7bAX</p>
+<h2 id="15-simple-check-100"><a href="#15-simple-check-100" class="headerlink" title="15.simple-check-100"></a>15.simple-check-100</h2><p>前言：挺开心的，由于这道题的exe文件用dbg动调，得到的flag竟然是乱码，让我学会了如何用ida动态调试elf文件，这里给个链接如何用ida动态调试elf文件：<a target="_blank" rel="noopener" href="https://www.it610.com/article/1298189057175658496.htm">https://www.it610.com/article/1298189057175658496.htm</a>。<br>首先看看ida里面的逻辑<br><img src="https://i.loli.net/2021/01/21/XQuUG8CeYNaf2yH.png"><br>先来说说exe调试过程。<br><img src="https://i.loli.net/2021/01/21/4L9GyeW16NAsfxD.png"><br>再来说一说ida动调elf过程。<br><img src="https://i.loli.net/2021/01/22/rzlNf2V8FQUqxbu.png"><br>然后得到flag<br><img src="https://i.loli.net/2021/01/22/BMm5vgledx1NXkZ.png"></p>
+<h2 id="16-gametime"><a href="#16-gametime" class="headerlink" title="16.gametime"></a>16.gametime</h2><p>感谢这道题锻炼了我dbg的动调能力。</p>
+<p>文件下载下来，是一个游戏，，属于玩通关了就给flag的那一种，先玩一玩，如果你足够厉害应该是可以玩出来的。玩了一下大概游戏规则就是看到s就按’ ‘，遇到x就按’x’，遇到m就按’m’。</p>
+<p>然后放到ida里面看，为了好看一点，改了部分函数名称，分析分为3个部分。</p>
+<p>第一部分，告诉你游戏规则<br><img src="https://i.loli.net/2021/01/21/mnAlhobL6k5MSsy.png"><br>第二部分，熟悉怎么玩。<br><img src="https://i.loli.net/2021/01/21/YU2B38he6aiug9s.png"><br>第三部分，玩10次，对了就给flag<br><img src="https://i.loli.net/2021/01/21/tm4qUIirv3hLVgd.png"></p>
+<p>接下来，x32dbg动调，需要自己慢慢分析整个流程，找到关键函数位置，这里就只放两个关键点的图片。</p>
+<p>条件判断1<br><img src="https://i.loli.net/2021/01/21/bAn6yhB7gmUZPFv.png"><br>条件判断2<br><img src="https://i.loli.net/2021/01/21/m3tLMkeO98TF2oR.png"><br>最后得到flag<br><img src="https://i.loli.net/2021/01/21/l9cOGIgXxomHTrF.png"></p>
+<h2 id="17-tt3441810"><a href="#17-tt3441810" class="headerlink" title="17.tt3441810"></a>17.tt3441810</h2><p>这道题就是很无语的。就是将所有二进制提出来，然后去看。</p>
+<p>脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int a[300]=&#123; 104, 102, 108, 72, 191,   1,   0,   0, 
+    72, 141,  52,  36,  72, 
+  186,   2,   0,   0,   0,   0,   0,   0,   0,  72, 
+  184,   1,   0,   0,   0,   0,   0,   0,   0,  15, 
+    5, 104,  97, 103,   0,   0,  72, 191,   1,   0, 
+    0,   0,   0,   0,   0,   0,  72, 141,  52,  36, 
+   72, 186,   2,   0,   0,   0,   0,   0,   0,   0, 
+   72, 184,   1, 
+   15,   5, 104, 123, 112,   0,   0,  72, 191,   1, 
+    0,   0,   0,   0,   0,   0,   0,  72, 141,  52, 
+   36,  72, 186,   2,   
+    0,  72, 184,   1,  
+    0,  15,   5, 104, 111, 112,   0,   0,  72, 191, 
+    1,   0,   0,   0,   0,   0,   0,   0,  72, 141, 
+   52,  36,  72, 186,   2, 
+    0,   0,  72, 184,   1,   0,   0,   0,   0,   0, 
+    0,   0,  15,   5, 104, 112, 111,   0,   0,  72, 
+  191,   1,   0,   0,   0,   0,   0,   0,   0,  72, 
+  141,  52,  36,  72, 186,   2,   0,   0,   0,   0, 
+    0,   0,   0,  72, 184,   1,   0,   0,   0,   0, 
+    0,   0,   0,  15,   5, 104, 112, 114,   0,   0, 
+   72, 191,   1,   
+   72, 141,  52,  36,  72, 186,   2,  
+    0,   0,   0,   0,  72, 184,   1,
+    0,   0,   0,   0,  15,   5, 104, 101, 116,   0, 
+    0,  72, 191,   1, 
+    0,  72, 141,  52,  36,  72, 186,   2,   0,   0, 
+    0,   0,   0,   0,   0,  72, 184,   1,   0,   0, 
+    0,   0,   0,   0,   0,  15,   5, 104, 125,  10, 
+    0,   0,  72, 191,   1,   0,   0,   0,   0,   0, 
+    0,   0,  72, 141,  52,  36,  72, 186,   2,   0, 
+    0,   0,   0,   0,   0,   0, 72, 184, 1, 15, 5, 
+    72, 49, 255, 72, 184, 60,15,5&#125;;
+    int i;
+
+    for(i=0;i&lt;300;i++)
+    &#123;
+        if(a[i]!=0&amp;&amp;a[i]&lt;=&#39;z&#39;&amp;&amp;a[i]&gt;=&#39;a&#39;&amp;&amp;a[i]!=&#39;h&#39;)
+        &#123;
+            printf(&quot;%c&quot;,a[i]);
+        &#125;
+    &#125;
+ &#125; </code></pre>
+<p>将输出内容整理一下，得到flag{poppopret}</p>
+<h2 id="18-notsequence"><a href="#18-notsequence" class="headerlink" title="18.notsequence"></a>18.notsequence</h2><p>怎么说呢，这道题只要你看出是杨辉三角就简单。考了杨辉三角的两个个性质。</p>
+<p>性质一：第n行数字的和为2^（n-1）。1=2^（1-1），1+1=2^（2-1），1+2+1=2^（3-1），1+3+3+1=2^（4-1），1+4+6+4+1=2^（5-1），1+5+10+10+5+1=2^（6-1）<br><img src="https://i.loli.net/2021/01/22/fdQEwi2jO6GR7U8.png"><br>性质二：斜线上数字的和等于其向左（从左上方到右下方的斜线）或向右拐弯（从右上方到左下方的斜线），拐角上的数字。1+1=2，1+1+1=3，1+1+1+1=4，1+2=3，1+2+3=6，1+2+3+4=10，1+3=4，1+3+6=10，1+4=5。<br><img src="https://i.loli.net/2021/01/22/JTINuMcjtyXm3lO.png"><br>脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int a[200][200];
+    int i,j,n;
+
+    printf(&quot;n为杨辉三角的行数，请输入n：&quot;);
+    scanf(&quot;%d&quot;,&amp;n); 
+
+
+
+    for(i=0;i&lt;n;i++)
+    &#123;
+        a[i][0]=1;
+        a[i][i]=1;
+    &#125;
+
+    for(i=2;i&lt;n;i++)
+    &#123;
+        for(j=1;j&lt;i;j++)
+        a[i][j]=a[i-1][j-1]+a[i-1][j]; 
+    &#125;
+
+    for(i=0;i&lt;n;i++)
+    &#123;
+        for(j=0;j&lt;=i;j++)
+        &#123;
+            printf(&quot;%d&quot;,a[i][j]);
+        &#125;
+    &#125;
+
+&#125;</code></pre>
+<p><img src="https://i.loli.net/2021/01/22/8Y3eA6qvgWdjKFE.png"><br>得到RCTF{37894beff1c632010dd6d524aa9604db}</p>
+<h2 id="19-re2-cpp-is-awesome"><a href="#19-re2-cpp-is-awesome" class="headerlink" title="19.re2-cpp-is-awesome"></a>19.re2-cpp-is-awesome</h2><p>简单的cpp代码分析。<br><img src="https://i.loli.net/2021/01/22/ipzvHrG4OInyfXF.png"><br>直接写脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int key[33]=&#123;0x24,0x00,0x05,0x36,0x65,0x07,0x27,0x26,0x2D,
+    0x01, 0x03,0x00,0x0D,0x56,0x01, 0x03,0x65,0x03,0x2D,0x16, 
+  0x02,0x15,0x03,0x65, 0x00,0x29,0x44,0x44,0x01,0x44, 0x2B&#125;;
+    char table[120]=&quot;L3t_ME_T3ll_Y0u_S0m3th1ng_1mp0rtant_A_&#123;FL4G&#125;_W0nt_b3_3X4ctly_th4t_345y_t0_c4ptur3_H0wev3r_1T_w1ll_b3_C00l_1F_Y0u_g0t_1t&quot;;
+    int flag[30];
+    int i;
+
+    for(i=0;i&lt;31;i++)
+    &#123;
+        flag[i]=table[key[i]];
+        printf(&quot;%c&quot;,flag[i]);
+    &#125;
+ &#125; </code></pre>
+<h2 id="20-easy-Maze"><a href="#20-easy-Maze" class="headerlink" title="20.easy_Maze"></a>20.easy_Maze</h2><p>迷宫题，然后IDA打开先分析一下逻辑。<br><img src="https://i.loli.net/2021/01/24/dM32sclnQeS8iyV.png"><br>然后根据动态调试来获取变换后的迷宫。<br><img src="https://i.loli.net/2021/01/24/xwFJPEredgonki7.png"><br>然后就可以写迷宫了<br><img src="https://i.loli.net/2021/01/24/y6pUERKZsbrz7P4.png"></p>
+<h2 id="21-Replace"><a href="#21-Replace" class="headerlink" title="21.Replace"></a>21.Replace</h2><p>这道题让我又见识了一种奇数偶数加密的方式。</p>
+<p>首先upx脱壳，然后放入ida里面<br><img src="https://i.loli.net/2021/01/26/lf1wNOAcjtMuRWD.png"></p>
+<p>写脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int a[257]=&#123;0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 
+  0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76, 0xCA, 0x82, 0xC9, 0x7D, 
+  0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 
+  0x72, 0xC0, 0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, 
+  0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15, 0x04, 0xC7, 
+  0x23, 0xC3, 0x18, 0x96, 0x05, 0x9A, 0x07, 0x12, 0x80, 0xE2, 
+  0xEB, 0x27, 0xB2, 0x75, 0x09, 0x83, 0x2C, 0x1A, 0x1B, 0x6E, 
+  0x5A, 0xA0, 0x52, 0x3B, 0xD6, 0xB3, 0x29, 0xE3, 0x2F, 0x84, 
+  0x53, 0xD1, 0x00, 0xED, 0x20, 0xFC, 0xB1, 0x5B, 0x6A, 0xCB, 
+  0xBE, 0x39, 0x4A, 0x4C, 0x58, 0xCF, 0xD0, 0xEF, 0xAA, 0xFB, 
+  0x43, 0x4D, 0x33, 0x85, 0x45, 0xF9, 0x02, 0x7F, 0x50, 0x3C, 
+  0x9F, 0xA8, 0x51, 0xA3, 0x40, 0x8F, 0x92, 0x9D, 0x38, 0xF5, 
+  0xBC, 0xB6, 0xDA, 0x21, 0x10, 0xFF, 0xF3, 0xD2, 0xCD, 0x0C, 
+  0x13, 0xEC, 0x5F, 0x97, 0x44, 0x17, 0xC4, 0xA7, 0x7E, 0x3D, 
+  0x64, 0x5D, 0x19, 0x73, 0x60, 0x81, 0x4F, 0xDC, 0x22, 0x2A, 
+  0x90, 0x88, 0x46, 0xEE, 0xB8, 0x14, 0xDE, 0x5E, 0x0B, 0xDB, 
+  0xE0, 0x32, 0x3A, 0x0A, 0x49, 0x06, 0x24, 0x5C, 0xC2, 0xD3, 
+  0xAC, 0x62, 0x91, 0x95, 0xE4, 0x79, 0xE7, 0xC8, 0x37, 0x6D, 
+  0x8D, 0xD5, 0x4E, 0xA9, 0x6C, 0x56, 0xF4, 0xEA, 0x65, 0x7A, 
+  0xAE, 0x08, 0xBA, 0x78, 0x25, 0x2E, 0x1C, 0xA6, 0xB4, 0xC6, 
+  0xE8, 0xDD, 0x74, 0x1F, 0x4B, 0xBD, 0x8B, 0x8A, 0x70, 0x3E, 
+  0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, 
+  0x86, 0xC1, 0x1D, 0x9E, 0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, 
+  0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF, 
+  0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 
+  0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
+  &#125;;
+  char b[71]=&quot;2a49f69c38395cde96d6de96d6f4e025484954d6195448def6e2dad67786e21d5adae6&quot;;
+  int flag[36];
+  int mid[36];
+  int i,j;
+
+  for(i=0;i&lt;70;i++)
+  &#123;
+      if(b[i]&lt; 48 || b[i] &gt; 57)
+          b[i] = b[i] - 87;
+      else
+          b[i] = b[i] - 48;
+  &#125;
+  for(i=0;i&lt;70;i++)
+  &#123;
+      printf(&quot;%d &quot;,b[i]);
+  &#125;
+  printf(&quot;\n&quot;);
+  for(i=0,j=0;i&lt;70;i+=2,j++)
+  &#123;
+       mid[j]=((b[i]&lt;&lt;4)+b[i+1])^0x19;
+  &#125;
+
+  for(i=0;i&lt;=38;i++)
+  &#123;
+      printf(&quot;%d &quot;,mid[i]);
+  &#125;
+  for(i=0;i&lt;35;i++)
+  &#123;
+      for(j=0;j&lt;256;j++)
+      &#123;
+          if(mid[i]==a[j])
+          &#123;
+              flag[i]=j;
+        &#125;
+    &#125;
+  &#125;
+  printf(&quot;\n&quot;);
+  for(i=0;i&lt;35;i++)
+  &#123;
+      printf(&quot;%c&quot;,flag[i]);
+  &#125;
+&#125;</code></pre>
+<p>得到flag{Th1s_1s_Simple_Rep1ac3_Enc0d3}</p>
+<h2 id="22-SignIn"><a href="#22-SignIn" class="headerlink" title="22.SignIn"></a>22.SignIn</h2><p>文件下载下来直接用ida打开，一套操作找到关键代码</p>
+<pre><code>__int64 __fastcall main(__int64 a1, char **a2, char **a3)
+&#123;
+  char v4; // [rsp+0h] [rbp-4A0h]
+  char v5; // [rsp+10h] [rbp-490h]
+  char v6; // [rsp+20h] [rbp-480h]
+  char v7; // [rsp+30h] [rbp-470h]
+  char v8; // [rsp+40h] [rbp-460h]
+  char v9; // [rsp+B0h] [rbp-3F0h]
+  unsigned __int64 v10; // [rsp+498h] [rbp-8h]
+
+  v10 = __readfsqword(0x28u);
+  puts(&quot;[sign in]&quot;);
+  printf(&quot;[input your flag]: &quot;, a2);
+  __isoc99_scanf(&quot;%99s&quot;, &amp;v8);
+  sub_96A(&amp;v8, &amp;v9);
+  __gmpz_init_set_str(&amp;v7, &quot;ad939ff59f6e70bcbfad406f2494993757eee98b91bc244184a377520d06fc35&quot;, 16LL);
+  __gmpz_init_set_str(&amp;v6, &amp;v9, 16LL);
+  __gmpz_init_set_str(&amp;v4, &quot;103461035900816914121390101299049044413950405173712170434161686539878160984549&quot;, 10LL);
+  __gmpz_init_set_str(&amp;v5, &quot;65537&quot;, 10LL);
+  __gmpz_powm(&amp;v6, &amp;v6, &amp;v5, &amp;v4);
+  if ( (unsigned int)__gmpz_cmp(&amp;v6, &amp;v7) )
+    puts(&quot;GG!&quot;);
+  else
+    puts(&quot;TTTTTTTTTTql!&quot;);
+  return 0LL;
+&#125;</code></pre>
+<p>发现是一个rsa加密， __gmpz_init_set_str 函数是GNU 高精度算法库。</p>
+<pre><code>c=0xad939ff59f6e70bcbfad406f2494993757eee98b91bc244184a377520d06fc35//密文
+n=103461035900816914121390101299049044413950405173712170434161686539878160984549
+e=65537</code></pre>
+<p>先得到q，p。</p>
+<pre><code>q=282164587459512124844245113950593348271
+p=366669102002966856876605669837014229419</code></pre>
+<p>用脚本跑出来</p>
+<pre><code>from Crypto.Util.number import *
+import gmpy2
+
+p = 282164587459512124844245113950593348271
+q = 366669102002966856876605669837014229419
+e = 65537
+c = 0xad939ff59f6e70bcbfad406f2494993757eee98b91bc244184a377520d06fc35
+
+n = q*p
+phi = (q-1)*(p-1)
+d = gmpy2.invert(e,phi)
+m = gmpy2.powmod(c,d,n)
+flag = long_to_bytes(m)
+
+print(flag)</code></pre>
+<p>得到suctf{Pwn_@_hundred_years}</p>
+<h2 id="23-EASYHOOK"><a href="#23-EASYHOOK" class="headerlink" title="23.EASYHOOK##"></a>23.EASYHOOK##</h2><p>通过这道题学会了可以使用动调来找到加密函数的位置。</p>
+<p>ida看到主函数后，发现里面根本不好找到加密函数，还有一个假的加密函数，然后通过动调来来找到加密函数，如下。<br><img src="https://i.loli.net/2021/01/25/kr7Lqj4x8Z9eVwd.png"><br>ida相应位置<br><img src="https://i.loli.net/2021/01/25/kOnVsL25qSYzmrf.png"><br>写出相应脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+int main(void)
+&#123;
+    int code[20]=&#123;0x61, 0x6A, 0x79, 0x67, 0x6B, 0x46, 0x6D, 0x2E, 0x7F, 0x5F, 
+  0x7E, 0x2D, 0x53, 0x56, 0x7B, 0x38, 0x6D, 0x4C, 0x6E&#125;;
+      int i,j;
+      int flag[20];
+
+      flag[18]=code[18]^0x13;
+      for(i=0;i&lt;18;i++)
+      &#123;
+          if(i%2)
+          &#123;
+              flag[i]=(code[i]^i)+i;
+        &#125;
+        else
+        &#123;
+            flag[i+2]=code[i]^i;
+        &#125;
+    &#125;
+
+    for(i=0;i&lt;19;i++)
+    &#123;
+        printf(&quot;%c&quot;,flag[i]);
+    &#125;
+ &#125; </code></pre>
+<p>得到的东西前面加一个f，得到flag{Ho0k_w1th_Fun}</p>
+<h2 id="24-babymips"><a href="#24-babymips" class="headerlink" title="24.babymips"></a>24.babymips</h2><p>如果你有可以反汇编mips架构的ida，这道题就很简单。<br><img src="https://i.loli.net/2021/01/26/YG3lQk8rKisNBRd.png"><br>开始写脚本</p>
+<pre><code>#include&lt;stdio.h&gt; 
+
+int main(void)
+&#123;
+    int code[33]=&#123;  0x51, 0x7C, 0x6A, 0x7B, 0x67, 0x52, 0xFD, 
+  0x16, 0xA4, 0x89, 0xBD, 0x92, 0x80, 0x13, 0x41, 0x54, 0xA0, 
+  0x8D, 0x45, 0x18, 0x81, 0xDE, 0xFC, 0x95, 0xF0, 0x16, 0x79, 
+  0x1A, 0x15, 0x5B, 0x75, 0x1F&#125;;
+  int flag[33];
+  int i;
+  for(i=5;i&lt;32;i++)
+  &#123;
+      if(i%2)//奇 
+          code[i]=code[i]&lt;&lt;2|code[i]&gt;&gt;6;
+    else//偶 
+        code[i]=code[i]&lt;&lt;6|code[i]&gt;&gt;2;          
+  &#125;
+
+  for(i=0;i&lt;32;i++)
+  &#123;
+      flag[i]=code[i]^(32-i);
+      printf(&quot;%c&quot;,flag[i]);
+  &#125;
+&#125;</code></pre>
+<h2 id="25-reverse-for-the-holy-grail-350"><a href="#25-reverse-for-the-holy-grail-350" class="headerlink" title="25.reverse-for-the-holy-grail-350"></a>25.reverse-for-the-holy-grail-350</h2><p>不得不说这道题是真的有点坑。考验静态分析能力，还有一个爆破考点。</p>
+<p>真正的比较在stringMod函数中。<br><img src="https://i.loli.net/2021/01/26/UMPTi4GAyLY8upm.png"><br>脚本如下</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int flag[19];//65, 105, 110, 69,111,97
+    flag[0]=65;
+    flag[3]=105;
+    flag[6]=110;
+    flag[9]=69;
+    flag[12]=111;
+    flag[15]=97;
+    int v8[19]=&#123;666,667 ,669 ,673 ,676 ,677 ,679 ,683 ,686 ,687 ,689 ,693 ,696 ,697 ,699 ,703 ,706 ,707 ,709&#125;;
+    int marry[7]=&#123;471, 12, 580, 606, 147, 108&#125;;
+
+    int i=0,j,c=0,v7=666;
+    for(i=0;i&lt;18;i++)
+    &#123;
+        flag[i]=flag[i]^v7;
+        v7=v7+v7%5;
+    &#125;
+    flag[2]=239+256*2;
+    flag[5]=196+256*2;
+    flag[8]=220+256*2;
+    flag[11]=199+256*2;
+    flag[14]=222+256*2;
+    flag[17]=252+256*2;
+    for(i=0;i&lt;18;i++)
+    &#123;
+        printf(&quot;%d &quot;,flag[i]);
+    &#125;
+    printf(&quot;\n&quot;);
+
+    for(i=0,c=0;i&lt;18;i+=3,c++)
+    &#123;
+        for(j=35;j&lt;123;j++)
+        &#123;
+            if(flag[i]*(j^v8[i+1])%flag[i+2]==marry[c])
+            &#123;
+                flag[i+1]=j^v8[i+1];
+                break;
+            &#125;
+        &#125;
+    &#125;
+
+    for(i=0;i&lt;18;i++)
+    &#123;
+        flag[i]=flag[i]^v8[i];
+        printf(&quot;%c&quot;,flag[i]);
+    &#125;
+&#125;</code></pre>
+<p>套上格式得到tuctf{AfricanOrEuropean?}</p>
+<h2 id="26-re4-unvm-me"><a href="#26-re4-unvm-me" class="headerlink" title="26.re4-unvm-me"></a>26.re4-unvm-me</h2><p>pyc文件，然后就用uncompyle6反编译一下，由于其他文章之前有过这样的题，就不写怎么反编译了。<br><img src="https://i.loli.net/2021/01/26/Z3mwbPNUWDF6lRi.png"><br>然后解密可以直接线上解，或者用脚本解，脚本比较慢</p>
+<p>好兄弟写的脚本如下</p>
+<pre><code>list = [174282896860968005525213562254350376167, 137092044126081477479435678296496849608, 126300127609096051658061491018211963916, 314989972419727999226545215739316729360, 256525866025901597224592941642385934114, 115141138810151571209618282728408211053, 8705973470942652577929336993839061582, 256697681645515528548061291580728800189, 39818552652170274340851144295913091599, 65313561977812018046200997898904313350, 230909080238053318105407334248228870753, 196125799557195268866757688147870815374, 74874145132345503095307276614727915885]
+list = [8705973470942652577929336993839061582]
+for k in list:
+     m = hex(k)[2:]
+     print(m,end=&#39;,&#39;)
+
+import hashlib
+
+dic = [&#39;&#123;&#39;,&#39;&#125;&#39;,&#39;0&#39;,&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;,&#39;7&#39;,&#39;8&#39;,&#39;9&#39;,&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;,&#39;g&#39;,&#39;h&#39;,&#39;i&#39;,&#39;j&#39;,&#39;k&#39;,&#39;l&#39;,&#39;m&#39;,&#39;n&#39;,&#39;o&#39;,&#39;p&#39;,&#39;q&#39;,&#39;r&#39;,&#39;s&#39;,&#39;t&#39;,&#39;u&#39;,&#39;v&#39;,&#39;w&#39;,&#39;x&#39;,&#39;y&#39;,&#39;z&#39;,&#39;A&#39;,&#39;B&#39;,&#39;C&#39;,&#39;D&#39;,&#39;E&#39;,&#39;F&#39;,&#39;G&#39;,&#39;H&#39;,&#39;I&#39;,&#39;G&#39;,&#39;K&#39;,&#39;L&#39;,&#39;M&#39;,&#39;N&#39;,&#39;O&#39;,&#39;P&#39;,&#39;Q&#39;,&#39;R&#39;,&#39;S&#39;,&#39;T&#39;,&#39;U&#39;,&#39;V&#39;,&#39;W&#39;,&#39;X&#39;,&#39;Y&#39;,&#39;Z&#39;]
+list1 = [&#39;831daa3c843ba8b087c895f0ed305ce7&#39;,&#39;6722f7a07246c6af20662b855846c2c8&#39;,&#39;5f04850fec81a27ab5fc98befa4eb40c&#39;,&#39;ecf8dcac7503e63a6a3667c5fb94f610&#39;,&#39;c0fd15ae2c3931bc1e140523ae934722&#39;,&#39;569f606fd6da5d612f10cfb95c0bde6d&#39;,&#39;068cb5a1cf54c078bf0e7e89584c1a4e&#39;,&#39;c11e2cd82d1f9fbd7e4d6ee9581ff3bd&#39;,&#39;1df4c637d625313720f45706a48ff20f&#39;,&#39;3122ef3a001aaecdb8dd9d843c029e06&#39;,&#39;adb778a0f729293e7e0b19b96a4c5a61&#39;,&#39;938c747c6a051b3e163eb802a325148e&#39;,&#39;38543c5e820dd9403b57beff6020596d&#39;]
+
+for j in list1:
+    for a in range(len(dic)):
+        for b in range(len(dic)):
+            for c in range(len(dic)):
+                for d in range(len(dic)):
+                    for e in range(len(dic)):
+                        m = dic[a].encode(&#39;utf-8&#39;) + dic[b].encode(&#39;utf-8&#39;) + dic[c].encode(&#39;utf-8&#39;) + dic[d].encode(&#39;utf-8&#39;) + dic[e].encode(&#39;utf-8&#39;)
+                        flag = hashlib.md5()
+                        flag.update(m)
+                        md5 = flag.hexdigest()
+                        if md5 == j:
+                            print(m, end=&#39;&#39;)</code></pre>
+<h2 id="27-Windows-Reverse1"><a href="#27-Windows-Reverse1" class="headerlink" title="27.Windows_Reverse1"></a>27.Windows_Reverse1</h2><p>这道题挺奇怪，将一串字符串作为索引表，然后我们输入的值就是表的下标，然后和一串字符串作比较。</p>
+<p>首先先解壳，然后好像解壳后的文件就不能动调了，应该还是可以动调的，以后再学吧。</p>
+<p><img src="https://i.loli.net/2021/01/26/aCFmg7PdbrelMch.png"><br>然后写脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int a[130]=&#123;0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE, 0xFF, 
+  0xFF, 0xFF, 0x01, 0x00, 0x00, 0x00, 0x7E, 0x7D, 0x7C, 0x7B, 
+  0x7A, 0x79, 0x78, 0x77, 0x76, 0x75, 0x74, 0x73, 0x72, 0x71, 
+  0x70, 0x6F, 0x6E, 0x6D, 0x6C, 0x6B, 0x6A, 0x69, 0x68, 0x67, 
+  0x66, 0x65, 0x64, 0x63, 0x62, 0x61, 0x60, 0x5F, 0x5E, 0x5D, 
+  0x5C, 0x5B, 0x5A, 0x59, 0x58, 0x57, 0x56, 0x55, 0x54, 0x53, 
+  0x52, 0x51, 0x50, 0x4F, 0x4E, 0x4D, 0x4C, 0x4B, 0x4A, 0x49, 
+  0x48, 0x47, 0x46, 0x45, 0x44, 0x43, 0x42, 0x41, 0x40, 0x3F, 
+  0x3E, 0x3D, 0x3C, 0x3B, 0x3A, 0x39, 0x38, 0x37, 0x36, 0x35, 
+  0x34, 0x33, 0x32, 0x31, 0x30, 0x2F, 0x2E, 0x2D, 0x2C, 0x2B, 
+  0x2A, 0x29, 0x28, 0x27, 0x26, 0x25, 0x24, 0x23, 0x22, 0x21, 
+  0x20, 0x00&#125;;
+    char v4[17]=&quot;DDCTF&#123;reverseME&#125;&quot;;
+    int i,j;
+
+    printf(&quot;flag&#123;&quot;);
+    for(i=0;i&lt;16;i++)
+    &#123;
+        for(j=0;j&lt;=130;j++)
+        &#123;
+            if(v4[i]==a[j])
+            &#123;
+                printf(&quot;%c&quot;,j);
+                break;
+            &#125;
+        &#125;
+    &#125;
+    printf(&quot;&#125;&quot;);
+&#125;</code></pre>
+<p>得到flag{ZZ[JX#,9(9,+9QY!}</p>
+<h2 id="28-easyRE1"><a href="#28-easyRE1" class="headerlink" title="28.easyRE1"></a>28.easyRE1</h2><p>ida打开，f5一下就可以得到flag{db2f62a36a018bce28e46d976e3f9864}</p>
+<h2 id="29-ReverseMe-120"><a href="#29-ReverseMe-120" class="headerlink" title="29.ReverseMe-120"></a>29.ReverseMe-120</h2><p>这道题是base解码过程，以前都做的是编码，开始还没看懂。</p>
+<p>根据提示字符串’you_know_how_to_remove_junk_code’，来用动调找到关键位置，明白加密原理。</p>
+<p>第一次加密。<br><img src="https://i.loli.net/2021/01/26/k3wRSoZaiXbFCdj.png"><br>第二次加密。<br><img src="https://i.loli.net/2021/01/26/knUD9PyY1ZVQRuG.png"><br>然后到ida里面看相关位置。<br><img src="https://i.loli.net/2021/01/26/horHuJXsD21BMwO.png"><br>知道是base64解码就简单多了，就异或0x25然后解码。</p>
+<p>脚本如下</p>
+<pre><code>import base64
+date_1 = &quot;you_know_how_to_remove_junk_code&quot;
+date_2 = &#39;&#39;
+for i in date_1:
+    date_2 += chr(ord(i)^0x25)
+date = date_2.encode(&quot;utf-8&quot;)
+flag = base64.b64encode(date)  # 被编码的参数必须是二进制数据
+print(flag)</code></pre>
+<h2 id="30-android-app-100"><a href="#30-android-app-100" class="headerlink" title="30.android-app-100"></a>30.android-app-100</h2><p>安卓逆向，就当长见识吧。还要分析解压的一个so文件，确实做不来。</p>
+<p>先jeb分析。<br><img src="https://i.loli.net/2021/01/26/bzfUeGwVhTmurON.png"><br>现在通过ida分析so文件来得到v1<br><img src="https://i.loli.net/2021/01/26/nQDwrvXkay4E9oN.png"><br>然后就可以写脚本了，如果网上直接转好像不行，那个空格转不了。</p>
+<pre><code>import hashlib
+
+str = &#39;92174992 &#39;
+
+# 92060626+114366+“ ”
+hl = hashlib.md5()
+hl.update(str.encode(encoding=&#39;utf-8&#39;))
+print(&#39;MD5加密前为 ：&#39; + str)
+print(&#39;MD5加密后为 ：&#39; + hl.hexdigest())</code></pre>
+<p>套上格式得到Sharif_CTF(833489ef285e6fa80690099efc5d9c9d)</p>
+<h2 id="31-serial-150"><a href="#31-serial-150" class="headerlink" title="31.serial-150"></a>31.serial-150</h2><p>静态分析好像不行，必须动态分析，比较麻烦的就是不知道怎么改指令，好像改不了，xdbg都可以改。ida调试如下</p>
+<p>然后这里是输入flag，随便输就行了<br><img src="https://i.loli.net/2021/01/26/67WfpOosuhtBq2e.png"><br>判断长度<br><img src="https://i.loli.net/2021/01/26/85JcZSk17YV6ngx.png"><br>然后是第一位<br><img src="https://i.loli.net/2021/01/26/bW6YcNjgC5XDvlh.png"><br>然后是第一位和最后一位的和的一个判断<br><img src="https://i.loli.net/2021/01/26/5tcyu3kWdoY8CET.png"><br>然后就是第二位，第三位，总共要改33次zf。</p>
+<p>得到flag：EZ9dmq4c8g9G7bAV</p>
+<h2 id="32-testre"><a href="#32-testre" class="headerlink" title="32.testre"></a>32.testre</h2><p>就是base58，由于之前了解过，然后题中有一个让你混淆base64，实际上没得用，要解的话就直接排序一下最后的密文，然后网站直接解就行了。</p>
+<p>得到flag：base58_is_boring</p>
+<h2 id="33-handcrafted-pyc"><a href="#33-handcrafted-pyc" class="headerlink" title="33.handcrafted-pyc"></a>33.handcrafted-pyc</h2><p>这道题学到了很多东西，文件读写呀，和python字节码这些。</p>
+<p>看了别人wp做的，先根据题意生成pyc</p>
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import marshal,zlib,base64
+
+out=zlib.decompress(base64.b64decode(&#39;eJyNVktv00AQXm/eL0igiaFA01IO4cIVCUGFBBJwqRAckLhEIQmtRfPwI0QIeio/hRO/hJ/CiStH2M/prj07diGRP43Hs9+MZ2fWMxbnP6mux+oK9xVMHPFViLdCTB0xkeKDFEFfTIU4E8KZq8dCvB4UlN3hGEsdddXU9QTLv1eFiGKGM4cKUgsFCNLFH7dFrS9poayFYmIZm1b0gyqxMOwJaU3r6xs9sW1ooakXuRv+un7Q0sIlLVzOCZq/XtsK2oTSYaZlStogXi1HV0iazoN2CV2HZeXqRQ54TlJRb7FUlKyUatISsdzo+P7UU1Gb1POdMruckepGwk9tIXQTftz2yBaT5JQovWvpSa6poJPuqgao+b9l5Aj/R+mLQIP4f6Q8Vb3g/5TB/TJxWGdZr9EQrmn99fwKtTvAZGU7wzS7GNpZpDm2JgCrr8wrmPoo54UqGampFIeS9ojXjc4E2yI06bq/4DRoUAc0nVnng4k6p7Ks0+j/S8z9V+NZ5dhmrJUM/y7JTJeRtnJ2TSYJvsFq3CQt/vnfqmQXt5KlpuRcIvDAmhnn2E0t9BJ3SvB/SfLWhuOWNiNVZ+h28g4wlwUp00w95si43rZ3r6+fUIEdgOZbQAsyFRRvBR6dla8KCzRdslar7WS+a5HFb39peIAmG7uZTHVm17Czxju4m6bayz8e7J40DzqM0jr0bmv9PmPvk6y5z57HU8wdTDHeiUJvBMAM4+0CpoAZ4BPgJeAYEAHmgAUgAHiAj4AVAGORtwd4AVgC3gEmgBBwCPgMWANOAQ8AbwBHgHuAp4D3gLuARwoGmNUizF/j4yDC5BWM1kNvvlxFA8xikRrBxHIUhutFMBlgQoshhPphGAXe/OggKqqb2cibxwuEXjUcQjccxi5eFRL1fDSbKrUhy2CMb2aLyepkegDWsBwPlrVC0/kLHmeCBQ==&#39;))
+
+f=open(&#39;out&#39;,&#39;wb&#39;)
+
+f.write(out)
+
+f.close()</code></pre>
+<p>注意要在python2.7下来生成out文件，然后加上pyc后缀，然后还要用编辑器加上pyc文件头03 F3 0D 0A 97 32 18 5E 63，不然无法反编译。py和pyc<a target="_blank" rel="noopener" href="https://www.cnblogs.com/blili/p/11799483.html">https://www.cnblogs.com/blili/p/11799483.html</a></p>
+<p>然后用uncompyle6 -o命令反编译，得到一个py文件，代码很长，是python的字节码。就直接上脚本了，可以去看大佬的wp，挺详细的。</p>
+<pre><code>import re
+
+with open(&#39;1.txt&#39;,&#39;r&#39;) as f:
+    line = []
+    for i in range(950):
+        line.append(f.readline())
+l1=[]
+for i in line:
+    if &#39;LOAD_CONST&#39; in i :
+        l1.append(re.findall(r&#39;\d+&#39;,i))
+print(l1)
+s=&#39;&#39;
+for i in l1:
+    if i[1]!=0:
+        s +=chr(int(i[1]))
+
+def ROT_TWO(l):
+    a =l.pop()
+    b =l.pop()
+    l.append(a)
+    l.append(b)
+    return l
+
+def BINARY_ADD(l):
+    a =l.pop()
+    b =l.pop()
+    # print(&#39;&#123;&#39;+a,b,a+b,b+a+&#39;&#125;&#39;)
+    l.append(b+a)//注意这里必须是b+a，字符串的相加不能换换顺序。
+    return l
+
+# s =&quot;llaC em yP aht notriv lauhcamni !eac Ini npreterP tohty ntybdocese!!! ctihN&#123;noy woc uoc naipmoa eldnur yP nnohttyb doceni euoy rb ria&#125;!napwssro :dorWp gnssadrow...elP  esa yrtaga .ni oD tonurbf etecro)= .&quot;
+l3=list(s)
+l4=[]
+j=0
+for i in line:
+    if &#39;LOAD_CONST&#39; in i:
+        l4.append(l3[j])
+        # print(l4)
+        j +=1
+    elif &#39;ROT_TWO&#39; in i:
+        l4=ROT_TWO(l4)
+    elif &#39;BINARY_ADD&#39; in i:
+        l4=BINARY_ADD(l4)
+
+print(l4)</code></pre>
+<p>需要注意的是我的1.txt是改了’738  LOAD_CONST    None’成为’738  LOAD_CONST    32’，也就是加了一个空格，不然脚本会出错。</p>
+<p>得到flag：hitcon{Now you can compile and run Python bytecode in your brain!}</p>
+<h2 id="34-asong"><a href="#34-asong" class="headerlink" title="34.asong"></a>34.asong</h2><p>这道题主要考了一个文件读写，然后根据that_girl这个文件构成一个索引表。</p>
+<p>ida先看大致框架<br><img src="https://i.loli.net/2021/02/13/dQTMtkqHnF1gCLu.png"><br>然后再来看3个加密<br><img src="https://i.loli.net/2021/02/13/m3LzICFiEeNWfYQ.png"><br>然后写脚本</p>
+<pre><code>with open(&#39;out&#39;,&#39;rb&#39;) as f:
+    line=[]
+    line.append(f.read())
+print(line)
+s=list(line[0])
+code=&#39;&#39;
+for i in s:
+    code +=hex(i)
+    code +=&#39;,&#39;
+print(code)
+
+with open(&#39;that_girl&#39;,&#39;r&#39;) as f:
+    str = &#39;&#39;
+    str = f.read()
+str1=list(str.lower())
+print(str1)
+L1=[&#39; &#39;,&#39;\&#39;&#39;, &#39;_&#39;, &#39;a&#39;, &#39;c&#39;, &#39;b&#39;, &#39;e&#39;, &#39;d&#39;, &#39;g&#39;, &#39;f&#39;, &#39;i&#39;, &#39;h&#39;, &#39;k&#39;, &#39;m&#39;, &#39;l&#39;, &#39;o&#39;, &#39;n&#39;, &#39;p&#39;, &#39;s&#39;, &#39;r&#39;, &#39;u&#39;, &#39;t&#39;, &#39;w&#39;, &#39;v&#39;, &#39;y&#39;]
+num=0
+
+for i in L1:
+    num = 0
+    for j in range(len(str1)):
+        if i == str1[j]:
+            num+=1
+    print(&#39;%d: \&#39;%c\&#39;,&#39; %(num,i),end=&#39;&#39;)
+print(&#39;\n&#39;)
+
+
+l1=[0xec,0x29,0xe3,0x41,0xe1,0xf7,0xaa,0x1d,0x29,0xed,0x29,0x99,0x39,0xf3,0xb7,0xa9,0xe7,0xac,0x2b,0xb7,0xab,0x40,0x9f,0xa9,0x31,0x35,0x2c,0x29,0xef,0xa8,0x3d,0x4b,0xb0,0xe9,0xe1,0x68,0x7b,0x41]
+l2=[]
+mid=l1[37]&amp;0x7
+for i in range(0,len(l1)):
+    l2.append((mid&lt;&lt;5)|(l1[i]&gt;&gt;3))
+    mid=l1[i]&amp;0x7
+print(l2)
+l3=[0]*38
+table=[22, 0, 6, 2, 30, 24, 9, 1, 21, 7, 18, 10, 8, 12, 17, 23, 13, 4, 3, 14, 19, 11, 20, 16, 15, 5, 25, 36, 27, 28, 29, 37, 31, 32, 33, 26, 34, 35]
+dict= &#123;71: &#39; &#39;,40: &#39;\&#39;&#39;,245: &#39;_&#39;,104: &#39;a&#39;,15: &#39;c&#39;,30: &#39;b&#39;,169: &#39;e&#39;,29: &#39;d&#39;,38: &#39;g&#39;,19: &#39;f&#39;,60: &#39;i&#39;,67: &#39;h&#39;,20: &#39;k&#39;,28: &#39;m&#39;,39: &#39;l&#39;,165: &#39;o&#39;,118: &#39;n&#39;,26: &#39;p&#39;,51: &#39;s&#39;,61: &#39;r&#39;,45: &#39;u&#39;,133: &#39;t&#39;,34: &#39;w&#39;,7: &#39;v&#39;,62: &#39;y&#39;&#125;
+j=0
+while(table[j]):
+    l3[table[j]]=l2[j]
+    j=table[j]
+l3[0]=133
+print(l3)
+flag=&#39;&#39;
+for i in l3:
+    flag+=dict[i]
+print(&#39;QCTF&#123;&#39;+flag+&#39;&#125;&#39;)</code></pre>
+<p>得到QCTF{that_girl_saying_no_for_your_vindicate}</p>
+<h2 id="35-梅津美治郎"><a href="#35-梅津美治郎" class="headerlink" title="35.梅津美治郎"></a>35.梅津美治郎</h2><p>先ida静态分析一下<br><img src="https://i.loli.net/2021/02/13/zB85I2cSxqPNDsA.png"><br>然后动调一下,有一个int3异常，然后调用了自己的一个异常处理函数<br><img src="https://i.loli.net/2021/02/13/zleMiaqPkCB9x61.png"><br>再进入第二个比较函数内部<br><img src="https://i.loli.net/2021/02/13/T8RAIxW3zYKaOSG.png"><br>开始写脚本</p>
+<pre><code>a=&#39;u1nnf2lg&#39;
+c=&#39;&#39;
+for i in a:
+    c+=chr(ord(i) ^ 2)
+print(&#39;flag&#123;r0b0RUlez!_&#39;+c+&#39;&#125;&#39;)</code></pre>
+<p>得到flag{r0b0RUlez!_w3lld0ne}</p>
+<h2 id="36-echo-server"><a href="#36-echo-server" class="headerlink" title="36.echo-server"></a>36.echo-server</h2><p>这道题就是对去花指令的考察吧<br><img src="https://i.loli.net/2021/02/13/O129d7vsTMhiI45.png"><br>可能有点省略，多试试就行了<br><img src="https://i.loli.net/2021/02/13/wfHAPxUmYXZSNDh.png"><br>然后就可以看到代码了<br><img src="https://i.loli.net/2021/02/13/6ZzUwR1DikEuBpF.png"><br>然后不知道为什么我保存的文件，然后放到虚拟机，运行不了。就贴一个flag吧：F8C60EB40F66919A77C4BD88D45DEF4</p>
+<h2 id="37-re5-packed-movement"><a href="#37-re5-packed-movement" class="headerlink" title="37.re5-packed-movement"></a>37.re5-packed-movement</h2><p>这道题有upx加壳，然后脱壳后不能反编译，但是如果细心的话可以发现一些特点</p>
+<pre><code>mov     R2, 41h ; &#39;A&#39;</code></pre>
+<p>这种指令每格一段距离就会出现，先全部搜索一下，直接alt+t<br><img src="https://i.loli.net/2021/02/13/CFVpcX19JDtl4da.png"><br>flag就出来了<br><img src="https://i.loli.net/2021/02/13/bDsao63YnWOcLJI.png"><br>得到ALEXCTF{M0Vfusc4t0r_w0rk5_l1ke_m4g1c}</p>
+<h2 id="38-What-does-this-button-do"><a href="#38-What-does-this-button-do" class="headerlink" title="38.What-does-this-button-do"></a>38.What-does-this-button-do</h2><p>ida打开时发现了这个，直接改后缀为.apk<br><img src="https://i.loli.net/2021/02/13/foa6FrwMvGJUu1p.png"><br>然后jeb打开，找到关键代码<br><img src="https://i.loli.net/2021/02/13/EVSasbg7AdmGphX.png"><br>写脚本</p>
+<pre><code>list=[102, 108, 97, 103, 0x7B, 0x77, 52, 110, 110, 52, 0x5F, 106, 52, 0x72, 0x5F, 109, 0x79, 0x5F, 100, 51, 120, 0x7D]
+flag=&#39;&#39;
+for i in list:
+    flag +=chr(i)
+print(flag)</code></pre>
+<p>得到flag{w4nn4_j4r_my_d3x}</p>
+<h2 id="39-easyGo"><a href="#39-easyGo" class="headerlink" title="39.easyGo"></a>39.easyGo</h2><p>之前一直想用去符号表的脚本，一直没成功，今天到处找了一些资料，看了看师傅们的博客终于弄好了，简单说一下过程。</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/sibears/IDAGolangHelper.git">https://github.com/sibears/IDAGolangHelper.git</a>下载脚本</li>
+<li>ida7.0，7.5都用不起，<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_21063873/article/details/104335240">https://blog.csdn.net/qq_21063873/article/details/104335240</a>改脚本后7.0就可用了。</li>
+<li>File–Script file—脚本，就可以发现函数名改了。</li>
+</ol>
+<p>然后分析题目<br><img src="https://i.loli.net/2021/03/25/3tqr9UZh81BXSEj.png"><br>脚本</p>
+<pre><code>import base64
+import string
+
+str1 = &#39;tGRBtXMZgD6ZhalBtCUTgWgZfnkTgqoNsnAVsmUYsGtCt9pEtDEYsql3&#39;
+
+string1 = &quot;6789_-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345&quot;
+string2 = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;
+
+print(base64.b64decode(str1.translate(str.maketrans(string1, string2))))</code></pre>
+<p>得到flag{92094daf-33c9-431e-a85a-8bfbd5df98ad}</p>
+<h2 id="40-2ex"><a href="#40-2ex" class="headerlink" title="40.2ex"></a>40.2ex</h2><p>mips架构，不得不说反编译后还是很难看。一个变表的base64。<br><img src="https://i.loli.net/2021/03/31/IOFm1jWDcJBRHd4.png"><br>脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+
+&#123;
+    int a[64]=&#123;  0x40, 0x2C, 0x2E, 0x31, 0x66, 0x67, 0x76, 0x77, 0x23, 0x60, 
+  0x2F, 0x32, 0x65, 0x68, 0x75, 0x78, 0x24, 0x7E, 0x22, 0x33, 
+  0x64, 0x69, 0x74, 0x79, 0x25, 0x5F, 0x3B, 0x34, 0x63, 0x6A, 
+  0x73, 0x7A, 0x5E, 0x2B, 0x7B, 0x35, 0x62, 0x6B, 0x72, 0x41, 
+  0x26, 0x3D, 0x7D, 0x36, 0x61, 0x6C, 0x71, 0x42, 0x2A, 0x2D, 
+  0x5B, 0x37, 0x30, 0x6D, 0x70, 0x43, 0x28, 0x29, 0x5D, 0x38, 
+  0x39, 0x6E, 0x6F, 0x44&#125;;
+  int i;
+  for(i=0;i&lt;64;i++)
+  &#123;
+      printf(&quot;%c&quot;,a[i]);
+  &#125;
+&#125;
+//@,.1fgvw#`/2ehux$~&quot;3dity%_;4cjsz^+&#123;5bkrA&amp;=&#125;6alqB*-[70mpC()]89noD</code></pre>
+<p>base64解密<br>    import base64</p>
+<pre><code>base1 = &#39;@,.1fgvw#`/2ehux$~&quot;3dity%_;4cjsz^+&#123;5bkrA&amp;=&#125;6alqB*-[70mpC()]89noD&#39;
+t = &#39;_r-+_Cl5;vgq_pdme7#7eC0=&#39;//把第一个删了。
+base = &#39;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#39;
+ans = &#39;&#39;
+
+for i in t:
+    ans += base[base1.index(i)]
+print(ans)
+print(base64.b64decode(ans))</code></pre>
+<p>得到flag{change53233}</p>
+<h2 id="first"><a href="#first" class="headerlink" title="first"></a>first</h2><p>一道多线程md5加密，然后检验的方式也挺独特。通过动调更能理解一些变量的含义，和整个逻辑过程。可以用ida脚本findcrypt</p>
+<p>分析整个过程<br><img src="https://i.loli.net/2021/03/31/HCTAsGIumR5ipvr.png"><br>然后是创建了线程来进行md5加密，线程调用了6次，每次加密4个字符。<br><img src="https://i.loli.net/2021/03/31/kDm1wUsj32g49fl.png"><br>最后是输出真正的flag<br><img src="https://i.loli.net/2021/03/31/HSF5m17izOBVch9.png"></p>
+<p>解题思路就是先md5爆破得到输入的24个字符，然后异或得到flag</p>
+<p>md5爆破脚本，好像md5爆破，密文必须是小写字母样，大写爆不出来。</p>
+<pre><code>import hashlib
+
+list1=[&#39;4746bbbd02bb590f&#39;,&#39;BEAC2821ECE8FC5C&#39;,&#39;ad749265ca7503ef&#39;,&#39;4386B38FC12C4227&#39;,&#39;B03ECC45A7EC2DA7&#39;, &#39;BE3C5FFE121734E8&#39;]
+
+for j in list1:
+    for a in range(48,128):
+        for b in range(48,128):
+            for c in range(48,128):
+                for d in range(48,128):
+                    str = chr(a)+chr(b)+chr(c)+chr(d)
+                    flag = hashlib.md5(str.encode(&#39;utf-8&#39;)).hexdigest()
+                    if flag[0:16] == j.casefold():
+                        print(str, end=&#39;&#39;)
+//juhuhfenlapsiuerhjifdunu</code></pre>
+<p>然后异或解密，然后会发现一些数据不对(goodjobyougeytcnsflaj284)，原因是爆破出来md5的字符是乱的，根据错误位置判断是第4组和第6组有问题，略微调一下顺序，并且还有一个点，就是v11的值还是要是原来的值，写出的脚本如下。</p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+int main(void)
+
+&#123;
+    char str[25]=&quot;juhuhfenlapsiuerhjifdunu&quot;;
+    char flag[25];
+    int table[25]=&#123;0xFE, 0xE9, 0xF4, 0xE2, 0xF1, 0xFA, 0xF4, 0xE4, 0xF0, 
+  0xE7, 0xE4, 0xE5, 0xE3, 0xF2, 0xF5, 0xEF, 0xE8, 0xFF, 0xF6, 
+  0xF4, 0xFD, 0xB4, 0xA5, 0xB2&#125;;
+    int i,mid,num=0;
+
+    for(i=0;i&lt;24;i++)
+    &#123;
+        mid=str[i]+i;
+        num^=mid;
+    &#125;
+
+    strcpy(str,&quot;juhuhfenlapsdunuhjifiuer&quot;);
+    for(i=0;i&lt;24;i++)
+    &#123;
+        flag[i]=num ^ table[i] ^ str[i];
+        printf(&quot;%c&quot;,flag[i]);
+    &#125;
+
+
+&#125;</code></pre>
+<h2 id="MyDriver2-397"><a href="#MyDriver2-397" class="headerlink" title="MyDriver2-397"></a>MyDriver2-397</h2><p>驱动逆向</p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;windows.h&gt;
+
+int main()
+&#123;
+    unsigned int a[32]=&#123; 0x5C6E1395, 0x5C5813A2, 0x5C5413B3, 0x5C541388, 0x5C57139A, 0x5C5013A9, 0x5C6E13A2, 0x5C0213F7, 0x5C1F13F6, 0x5C4913B1, 0x000013B1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0&#125;;
+    int i,j;
+
+    char m[128]=&#123;0x50,0x00,0x5F,0x00,0x67,0x00,0x69,0x00,0x76,0x00,0x65,0x00,0x4D,0x00,0x65,0x00,0x5F,0x00,0x66,0x00,0x6C,0x00,0x61,0x00,0x67,0x00,0x5F,0x00,0x32,0x00,0x33,0x00,0x33,0x00,0x2E,0x00,0x74,0x00,0x78,0x00,0x74,0x00,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C,0xC5,0x13,0x31,0x5C&#125;;    
+    char n[128]=&#123; 0x70, 0x74, 0x37, 0x65, 0x47, 0x66, 0x05, 0x61, 0x11, 0x20, 
+  0x0C, 0x73, 0x6D, 0x41, 0x3A, 0x73, 0x36, 0x6D, 0x16, 0x6C, 
+  0x09, 0x5F, 0x28, 0x6E, 0x0B, 0x69, 0x31, 0x65, 0x6D, 0x68, 
+  0x5C, 0x6F, 0x58, 0x5F, 0x6A, 0x72, 0x02, 0x00, 0x78, 0x00, 
+  0x74, 0x00, 0x50, 0x00, 0x5F, 0x00, 0x67, 0x00, 0x69, 0x00, 
+  0x76, 0x00, 0x65, 0x00, 0x4D, 0x00, 0x65, 0x00, 0x5F, 0x00, 
+  0x66, 0x00, 0x6C, 0x00, 0x61, 0x00, 0x67, 0x00, 0x5F, 0x00, 
+  0x32, 0x00, 0x33, 0x00, 0x33, 0x00, 0x2E, 0x00, 0x74, 0x00, 
+  0x78, 0x00, 0x74, 0x00, 0x50, 0x00, 0x5F, 0x00, 0x67, 0x00, 
+  0x69, 0x00, 0x76, 0x00, 0x65, 0x00, 0x4D, 0x00, 0x65, 0x00, 
+  0x5F, 0x00, 0x66, 0x00, 0x6C, 0x00, 0x61, 0x00, 0x67, 0x00, 
+  0x5F, 0x00, 0x32, 0x00, 0x33, 0x00, 0x33, 0x00, 0x2E, 0x00, 
+  0x74, 0x00, 0x78, 0x00, 0x74, 0x00, 0x50, 0x00&#125;;
+
+    for(i=0;i&lt;32;i++)//得到m 
+    &#123;
+        a[i]=(a[i]^1546720197);
+
+        printf(&quot;0x%02X,0x%02X,0x%02X,0x%02X,&quot;, *((char*)&amp;a[i])&amp;0xff,*((char*)&amp;a[i] + 1)&amp;0xff,*((char*)&amp;a[i] +2)&amp;0xff,*((char*)&amp;a[i]+3)&amp;0xff);
+
+    &#125;
+
+    for(int i=0;i&lt;128;i++)
+    &#123;
+        n[i]^=m[i%42];
+    &#125;
+    printf(&quot;%s&quot;,n); 
+ &#125; </code></pre>
+<h2 id="xx"><a href="#xx" class="headerlink" title="xx"></a>xx</h2><p>大致流程</p>
+<p>输入flag，对前4位进行检验<br><img src="https://i.loli.net/2021/04/11/8tGLzxPCs6lXN2w.png"><br>填充key，然后xxtea加密<br><img src="https://i.loli.net/2021/04/11/1RiSKQdqe7X8olw.png"><br>然后换位，异或加密<br><img src="https://i.loli.net/2021/04/11/zuhPHn1ptKm6xUi.png"><br>最后比较<br><img src="https://i.loli.net/2021/04/11/TX5Udgwp1AyG6Ob.png"><br>所以解题思路就是，先异或解密，换位，再xxtea解密</p>
+<p>exp</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int code[24]=&#123;0xCE, 0xBC, 0x40, 0x6B, 0x7C, 0x3A, 0x95, 0xC0, 0xEF, 0x9B, 
+  0x20, 0x20, 0x91, 0xF7, 0x02, 0x35, 0x23, 0x18, 0x02, 0xC8, 
+  0xE7, 0x56, 0x56, 0xFA&#125;;
+      int i,j,a;
+
+      for(i=23;i&gt;0;i--)
+      &#123;
+          a=i/3-1;
+          if(i/3&gt;0)
+          &#123;
+              do
+            &#123;
+                code[i]^=code[a--];
+            &#125;
+            while(a&gt;=0);        
+        &#125;
+    &#125;
+
+    for(i=0;i&lt;24;i++)
+    &#123;
+        printf(&quot;%X &quot;,code[i]);
+    &#125;
+    printf(&quot;\n0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X,0x%X&quot;,code[1],code[3],code[0],code[2],code[5],code[7],code[4],code[6],code[9],code[11],code[8],code[10],code[13],code[15],code[12],code[14],code[17],code[19],code[16],code[18],code[21],code[23],code[20],code[22]);
+ &#125; 
+//0xBC,0xA5,0xCE,0x40,0xF4,0xB2,0xB2,0xE7,0xA9,0x12,0x9D,0x12,0xAE,0x10,0xC8,0x5B,0x3D,0xD7,0x6,0x1D,0xDC,0x70,0xF8,0xDC</code></pre>
+<p>xxtea解密</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+void decrypt(unsigned int *code ,unsigned int *key ,unsigned int n)
+&#123;
+    unsigned int next,end,sum;
+    unsigned int rounds,e,delta=0x9e3779b9;
+    int i;
+
+    rounds=6+52/n;
+    sum=rounds*delta&amp; 0xffffffff;    
+    next=code[0];//设置next为code的第一个 
+    do
+    &#123;
+        e=(sum&gt;&gt;2)&amp;3;
+        for(i=n-1;i&gt;0;i--)//解密最后一个到第二个
+        &#123;
+            end=code[i-1];
+            code[i]-=(( (end&gt;&gt;5^next&lt;&lt;2)  + (next&gt;&gt;3^end&lt;&lt;4) ) ^ ( (sum^next) + (key[(i&amp;3)^e]^end) ))&amp; 0xffffffff;
+            next=code[i];
+        &#125;
+        end=code[n-1];
+        code[0]-=(( (end&gt;&gt;5^next&lt;&lt;2) + (next&gt;&gt;3^end&lt;&lt;4) ) ^ ( (sum^next) +(key[i&amp;3^e]^end) ))&amp; 0xffffffff;
+        next=code[0];
+        sum=(sum-delta)&amp; 0xffffffff;
+    &#125;while(--rounds);
+
+&#125;
+int main()
+&#123;
+    unsigned key[4]=&#123;0x67616c66,0,0,0&#125;;
+    unsigned int n=6;
+    int i;
+    unsigned int code[6]=&#123;0x40cea5bc,0xe7b2b2f4,0x129d12a9,0x5bc810ae,0x1d06d73d,0xdcf870dc&#125;;
+    decrypt(code,key,n);
+    for(i=0;i&lt;5;i++)
+    &#123;
+    //    printf(&quot;%x&quot;,code[i]);
+        printf(&quot;%c%c%c%c&quot;, *((char*)&amp;code[i])&amp;0xff,*((char*)&amp;code[i] + 1)&amp;0xff,*((char*)&amp;code[i] + 2)&amp;0xff,*((char*)&amp;code[i]+3)&amp;0xff);
+    &#125;
+&#125;
+//flag&#123;CXX_and_++tea&#125;</code></pre>
+<h2 id="Junk-Instruction"><a href="#Junk-Instruction" class="headerlink" title="Junk_Instruction"></a>Junk_Instruction</h2><p>这道题的关键点就是MFC的check跳到了哪里，和去花指令(感觉有点难)，或者动调找关键点和对比部分。然后就是带不同的数据去试。</p>
+<p>先用xspy软件得到check后跳到了哪里，如下。<br><img src="https://i.loli.net/2021/04/22/hYuBHw1z3lmjMKx.png"><br><img src="https://i.loli.net/2021/04/22/ZxVOpvNqLtU4ikS.png"><br>加密过程就是，flag去掉前5个和最后一个，然后倒序，然后rc4加密。</p>
+<p>具体过程就是动调了，主要看xor和cmp，然后cmp数据的时候，是从最后一个开始比较的，也没什么关系。</p>
+<p>exp，注意密文里面有个0，会导致脚本的len出问题，所以直接将len=32</p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+typedef unsigned longULONG;
+
+/*初始化函数*/
+void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)
+&#123;
+    int i = 0, j = 0;
+    char k[256] = &#123; 0 &#125;;
+    unsigned char tmp = 0;
+    for (i = 0; i&lt;256; i++)
+    &#123;
+        s[i] = i;//做一道re的题时这里就改为了，s[i]=256-i
+        k[i] = key[i%Len];
+    &#125;
+    for (i = 0; i&lt;256; i++)
+    &#123;
+        j = (j + s[i] + k[i]) % 256;
+        tmp = s[i];
+        s[i] = s[j];//交换s[i]和s[j]
+        s[j] = tmp;
+    &#125;
+&#125;
+
+/*加解密*/
+void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)
+&#123;
+    int i = 0, j = 0, t = 0;
+    unsigned long k = 0;
+    unsigned char tmp;
+    for (k = 0; k&lt;Len; k++)
+    &#123;
+        i = (i + 1) % 256;
+        j = (j + s[i]) % 256;
+        tmp = s[i];
+        s[i] = s[j];//交换s[x]和s[y]
+        s[j] = tmp;
+        t = (s[i] + s[j]) % 256;
+        Data[k] = (Data[k]^s[t]);
+    &#125;
+&#125;
+
+int main()
+&#123;
+    unsigned char s[256] = &#123; 0 &#125;, s2[256] = &#123; 0 &#125;;//S-box
+    char key[256] =  &quot;qwertyuiop&quot; ;
+    char pData[512] = &#123;0x5b,0xd6,0xd0,0x26,0xc8,0xdd,0x19,0x7e,0x6e,0x3e,0xcb,0x16,0x91,0x7d,0xff,0xaf,0xdd,0x76,0x64,0xb0,0xf7,0xe5,0x89,0x57,0x82,0x9f,0xc,0x0,0x9e,0xd0,0x45,0xfa&#125;;
+
+    unsigned long len = 32;
+    int i;
+
+    printf(&quot;key=%s,length=%d\n\n&quot;, key, strlen(key));
+    rc4_init(s, (unsigned char*)key, strlen(key));//已经完成了初始化
+
+    for (i = 0; i&lt;256; i++)//用s2[i]暂时保留经过初始化的s[i]，很重要的！！！
+    &#123;
+        s2[i] = s[i];
+    &#125;
+
+    //rc4_init(s,(unsignedchar*)key,strlen(key));//初始化密钥
+    rc4_crypt(s2, (unsigned char*)pData, len);//解密
+
+    printf(&quot;flag&#123;&quot;);
+    for(i=31;i&gt;0;i--)
+    &#123;
+        printf(&quot;%c&quot;, pData[i]);
+    &#125;
+    printf(&quot;&#125;&quot;);
+    return 0;
+&#125;
+//flag&#123;973387a11fa3f724d74802857d3e052&#125;</code></pre>
+<p>别人的python版本</p>
+<pre><code>d = [0x5B, 0xD6, 0xD0, 0x26, 0xC8, 0xDD, 0x19, 126, 110, 62, -53, 22, -111, 125, -1, -81, -35, 118, 100, -80, -9, -27, -119, 87, -126, -97, 12, 0, -98, -48, 69, -6]
+import sys, os, hashlib, time, base64
+
+def rc4(plain, key):
+    box = list(range(256))
+    j = 0
+    for i in range(256):
+        j = (j + box[i] + ord(key[i % len(key)])) % 256
+        box[i], box[j] = box[j], box[i]
+    print(box)
+    # print(type(box)) #for_test
+    # return box
+    res = []
+    i = j = 0
+    for s in plain:
+        i = (i + 1) % 256
+        j = (j + box[i]) % 256
+        box[i], box[j] = box[j], box[i]
+        t = (box[i] + box[j]) % 256
+        k = box[t]
+        res.append(chr((s ^ k)&amp;0xff))
+    return res
+
+r = rc4(d, &quot;qwertyuiop&quot;)
+r = [(i) for i in r]
+print(&quot;&quot;.join(r[::-1]))</code></pre>
+<h2 id="icekey"><a href="#icekey" class="headerlink" title="icekey"></a>icekey</h2><p>C#程序，用了一个ice算法，程序中自带加密解密，所以动调直接调用程序里面的解密函数解密密文就行了。</p>
+<h2 id="evil"><a href="#evil" class="headerlink" title="evil"></a>evil</h2><p>这道题，大概看了下，做不了了，附件x.jpg都没给了，（后来在吾爱论坛找到了图片），但整个流程还是值得分析一波的。</p>
+<p>脱壳就不说了，手动脱，esp定律。</p>
+<p>然后就进入主函数分析。<br><img src="https://i.loli.net/2021/04/24/dRbZvrpEfuYceD6.png"><br>主要分析，那个sub_401370函数，这个函数就不应该执行。<br><img src="https://i.loli.net/2021/04/24/59dKJA4Mj6mVZWH.png"><br>后来再一分析，自毁进程的原因找到了，这也解释了为什么要复制自己到一个临时的文件目录。</p>
+<p>这里我假设</p>
+<pre><code>Buffer=C:\Users\Temp\a.exe
+Filename=D:\a.exe
+CommandLine=C:\Users\Temp\a.exe &quot;D:\a.exe&quot;</code></pre>
+<p>然后根据<a target="_blank" rel="noopener" href="https://www.cnblogs.com/weekbo/p/9054488.html">https://www.cnblogs.com/weekbo/p/9054488.html</a>，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa">https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa</a>中讲述createprocess()api的第一个参数</p>
+<p><img src="https://i.loli.net/2021/04/24/BdqC1IoM9LFOu3K.png"><br>所以说创建的进程实际上是我们复制的那个exe文件，也就是C:\Users\Temp\a.exe。</p>
+<p>这就导致了我们会在新进程中的这个位置跳出来<br><img src="https://i.loli.net/2021/04/24/7ILbFTUr3CtBX9m.png"><br>接下来就进入了，sub_401620这个函数，进去看看。<br><img src="https://i.loli.net/2021/04/24/jJ2eRn6KsEpzMG5.png"><br>所以，原文件就被删除了。</p>
+<p>然后要做这个题就要绕过前面的函数，直接跳到，从网站下载x.jpg和读取jpg的那个函数开始。</p>
+<p>后头在吾爱破解论坛上找到了x.jpg，所以就可以做了，但是不知道为什么用动调来做，老是调到一个地方就调不走了。所以还是静态解吧。</p>
+<p>解密函数</p>
+<pre><code>#include&lt;stdio.h&gt;
+unsigned __int64 a=0x4A8754F5745174;
+unsigned char key[256]=&#123;&#125;;
+void getkey()
+&#123;
+    int i;
+    char v4[8]=&#123;0&#125;;
+    for(i=0;i&lt;8;i++)
+    &#123;
+        v4[i]=a;
+        a&gt;&gt;=8;
+    &#125;
+
+    for(i=0;i&lt;256;i++)
+    &#123;
+        key[i]=(i+v4[i%8])&amp;0xff;
+    &#125;
+&#125; 
+
+decrypt(unsigned char v[])
+&#123;
+    int i,x=0,y=0;
+    unsigned int v4;
+    unsigned int v5;
+    for(i=0;i&lt;326;i++)
+    &#123;
+        x=(x+1)%256;
+        y=(key[x]+y)%256;
+        v4 = key[x];
+        v5 = key[y];
+        key[x] = v5;
+        key[y] = v4;
+        v[i]=(key[(v4+v5)%256]^v[i]^i)&amp;0xff;
+    &#125;
+&#125;
+int main(void)
+&#123;
+    FILE *fp;
+    unsigned char v[326]=&#123;0&#125;;
+    unsigned char flag[100]=&#123;0&#125;;
+    int i,j,k=0;
+    fp=fopen(&quot;x.jpg&quot;,&quot;rb&quot;);
+    fread(&amp;v, 1, 326, fp);
+    getkey();
+    decrypt(v);
+    for(i=0;i&lt;326;i++)
+    &#123;
+        if(v[i]==0x68)
+        &#123;
+            for(j=1;j&lt;5;j++)
+            &#123;
+                flag[k+j]=v[i+j];
+                printf(&quot;%c&quot;,flag[k+j]);
+                k+=4;
+            &#125;
+        &#125;
+    &#125;
+&#125;//嶯靗l A32.duserX   ratsCongcomXing.chuxuxhddidiade@d9e97173d4aed69bb1c4adacc49bTF-c DDCKey:</code></pre>
+<p>解密得到的是shellcode，也就是机器码，我们提数据来得到flag</p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+
+int main(void)
+&#123;
+    char flag[]=&quot;com ing.chuxuxhddidiade@d9e97173d4aed69bb1c4adacc49bTF-c DDCKey:&quot;;
+    int i;
+    int len;
+    len=strlen(flag);
+//    printf(&quot;%d&quot;,len);
+    for(i=len-1;i&gt;0;i-=4)
+    &#123;
+        printf(&quot;%c%c%c%c&quot;,flag[i-3],flag[i-2],flag[i-1],flag[i]);
+    &#125;    
+&#125;
+//Key: DDCTF-cc49badacb1c4d69bd4ae7173d9e9ade@didiuxhdchuxing.com</code></pre>
+<p>为了懒得提数据，我们也可以直接将解密数据放到xdbg的空白处，然后开头开始执行。</p>
+<p><img src="https://i.loli.net/2021/04/24/kZpt3I2BVnwRlrm.png"></p>
+<h2 id="childRE"><a href="#childRE" class="headerlink" title="childRE"></a>childRE</h2><p>考点是一个数据结构二叉树的变换顺序，没学数据结构，但是它的变换顺序是一定的，所以可以带值去找出变换顺序，然后就是UnDecorateSymbolName这个函数，函数反修饰指定已修饰的 C++ 符号名。</p>
+<p>分析总流程<br><img src="https://i.loli.net/2021/04/26/RK2rpOxvG7t3HT6.png"></p>
+<p>所以先求outputString。</p>
+<p>脚本1</p>
+<pre><code>//abcdefghijklmnopqrstuvwxyz12345
+
+#include&lt;stdio.h&gt;
+#include&lt;windows.h&gt;
+#include&lt;string.h&gt;
+
+int main(void)
+&#123;
+    char table[]=&quot;1234567890-=!@#$%^&amp;*()_+qwertyuiop[]QWERTYUIOP&#123;&#125;asdfghjkl;&#39;ASDFGHJKL:\&quot;ZXCVBNM&lt;&gt;?zxcvbnm,./&quot;;
+    char table1[]=&quot;(_@4620!08!6_0*0442!@186%%0@3=66!!974*3234=&amp;0^3&amp;1@=&amp;0908!6_0*&amp;&quot;;
+    char table2[]=&quot;55565653255552225565565555243466334653663544426565555525555222&quot;;
+    int v1[62],v2[62],code[62];
+    int i,j;
+//    int len=strlen(table);
+//    printf(&quot;%d&quot;,len);
+    for(i=0;i&lt;0x3E;i++)
+    &#123;
+        for(j=0;j&lt;=90;j++)
+        &#123;
+            if(table1[i]==table[j])
+            &#123;
+                v1[i]=j; 
+                break;
+            &#125;
+        &#125;
+    &#125;
+    for(i=0;i&lt;0x3E;i++)
+    &#123;
+        for(j=0;j&lt;=90;j++)
+        &#123;
+            if(table2[i]==table[j])
+            &#123;
+                v2[i]=j;
+                break;
+            &#125;
+        &#125;
+    &#125;
+
+    for(i=0;i&lt;62;i++)
+    &#123;
+        code[i]=v2[i]*23+v1[i];
+        printf(&quot;%c&quot;,code[i]);
+    &#125;
+&#125;
+//private: char * __thiscall R0Pxx::My_Aut0_PWN(unsigned char *)</code></pre>
+<p>手动还原回去，得到?My_Aut0_PWN@R0Pxx@@AAEPADPAE@Z。这个知识点《加密与解密》第4章讲了一小部分，然后这个师傅写的比较详细<a target="_blank" rel="noopener" href="https://www.freesion.com/article/6515734088/">https://www.freesion.com/article/6515734088/</a>，然后进行位置变换。<br>脚本2，a数组是我自己试的数据，b数组是动调得到的数据。</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main()
+&#123;
+    int a[31]=&#123;  0x70, 0x71, 0x68, 0x72, 0x73, 0x69, 0x64, 0x74, 0x75, 0x6A, 
+            0x76, 0x77, 0x6B, 0x65, 0x62, 0x78, 0x79, 0x6C, 0x7A, 0x31, 
+            0x6D, 0x66, 0x32, 0x33, 0x6E, 0x34, 0x35, 0x6F, 0x67, 0x63, 
+            0x61&#125;;
+      int b[31]=&#123;0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 
+            0x6B, 0x6C, 0x6D, 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 
+            0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x31, 0x32, 0x33, 0x34, 
+            0x35&#125;;
+    int c[31];
+    char str[]=&quot;?My_Aut0_PWN@R0Pxx@@AAEPADPAE@Z&quot;;
+    int i,j;
+
+    for(i=0;i&lt;31;i++)
+    &#123;
+        for(j=0;j&lt;31;j++)
+        &#123;
+              if(b[i]==a[j])
+              &#123;
+                  c[i]=j;
+              //    printf(&quot;%d &quot;,c[i]);
+            &#125;
+        &#125;    
+    &#125;
+    for(i=0;i&lt;31;i++)
+    &#123;
+        printf(&quot;%c&quot;,str[c[i]]);
+    &#125;
+&#125;
+//Z0@tRAEyuP@xAAA?M_A0_WNPx@@EPDP</code></pre>
+<p>脚本3，md5加密</p>
+<pre><code>import hashlib
+
+str=&#39;Z0@tRAEyuP@xAAA?M_A0_WNPx@@EPDP&#39;
+flag = hashlib.md5(str.encode(&#39;utf-8&#39;)).hexdigest()
+print(&#39;flag&#123;&#39;+flag+&#39;&#125;&#39;)
+//flag&#123;63b148e750fed3a33419168ac58083f5&#125;</code></pre>
+<h2 id="RE-Crc-300"><a href="#RE-Crc-300" class="headerlink" title="RE-Crc-300"></a>RE-Crc-300</h2><p>一个窗口类的程序，正好大致看了看crc，嘻嘻。</p>
+<p>进入到DialogFunc函数，可以看到很清晰的结构。<br><img src="https://i.loli.net/2021/04/26/J8hRMLTxGI9uPBi.png"><br>进入CRC检验函数，查看逻辑<br><img src="https://i.loli.net/2021/04/26/UWDKQ4d38JThMi6.png"><br>所以分奇，偶爆破就行。</p>
+<p>exp，本来想写个python的，但爆不出来，还是用c吧</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int dword_AAFD60[]=&#123;0x00000000,0x00000000,0x77073096,0xF26B8303,0xEE0E612C,0xE13B70F7,0x990951BA,0x1350F3F4,0x076DC419,0xC79A971F,0x706AF48F,0x35F1141C,0xE963A535,0x26A1E7E8,0x9E6495A3,0xD4CA64EB,0x0EDB8832,0x8AD958CF,0x79DCB8A4,0x78B2DBCC,0xE0D5E91E,0x6BE22838,0x97D2D988,0x9989AB3B,0x09B64C2B,0x4D43CFD0,0x7EB17CBD,0xBF284CD3,0xE7B82D07,0xAC78BF27,0x90BF1D91,0x5E133C24,0x1DB71064,0x105EC76F,0x6AB020F2,0xE235446C,0xF3B97148,0xF165B798,0x84BE41DE,0x030E349B,0x1ADAD47D,0xD7C45070,0x6DDDE4EB,0x25AFD373,0xF4D4B551,0x36FF2087,0x83D385C7,0xC494A384,0x136C9856,0x9A879FA0,0x646BA8C0,0x68EC1CA3,0xFD62F97A,0x7BBCEF57,0x8A65C9EC,0x89D76C54,0x14015C4F,0x5D1D08BF,0x63066CD9,0xAF768BBC,0xFA0F3D63,0xBC267848,0x8D080DF5,0x4E4DFB4B,0x3B6E20C8,0x20BD8EDE,0x4C69105E,0xD2D60DDD,0xD56041E4,0xC186FE29,0xA2677172,0x33ED7D2A,0x3C03E4D1,0xE72719C1,0x4B04D447,0x154C9AC2,0xD20D85FD,0x061C6936,0xA50AB56B,0xF477EA35,0x35B5A8FA,0xAA64D611,0x42B2986C,0x580F5512,0xDBBBC9D6,0x4B5FA6E6,0xACBCF940,0xB93425E5,0x32D86CE3,0x6DFE410E,0x45DF5C75,0x9F95C20D,0xDCD60DCF,0x8CC531F9,0xABD13D59,0x7EAEB2FA,0x26D930AC,0x30E349B1,0x51DE003A,0xC288CAB2,0xC8D75180,0xD1D83946,0xBFD06116,0x23B3BA45,0x21B4F4B5,0xF779DEAE,0x56B3C423,0x05125DAD,0xCFBA9599,0x1642AE59,0xB8BDA50F,0xE4292D5A,0x2802B89E,0xBA3A117E,0x5F058808,0x4851927D,0xC60CD9B2,0x5B016189,0xB10BE924,0xA96AE28A,0x2F6F7C87,0x7DA08661,0x58684C11,0x8FCB0562,0xC1611DAB,0x9C9BF696,0xB6662D3D,0x6EF07595,0x76DC4190,0x417B1DBC,0x01DB7106,0xB3109EBF,0x98D220BC,0xA0406D4B,0xEFD5102A,0x522BEE48,0x71B18589,0x86E18AA3,0x06B6B51F,0x748A09A0,0x9FBFE4A5,0x67DAFA54,0xE8B8D433,0x95B17957,0x7807C9A2,0xCBA24573,0x0F00F934,0x39C9C670,0x9609A88E,0x2A993584,0xE10E9818,0xD8F2B687,0x7F6A0DBB,0x0C38D26C,0x086D3D2D,0xFE53516F,0x91646C97,0xED03A29B,0xE6635C01,0x1F682198,0x6B6B51F4,0x5125DAD3,0x1C6C6162,0xA34E59D0,0x856530D8,0xB01EAA24,0xF262004E,0x42752927,0x6C0695ED,0x96BF4DCC,0x1B01A57B,0x64D4CECF,0x8208F4C1,0x77843D3B,0xF50FC457,0x85EFBE38,0x65B0D9C6,0xDBFC821C,0x12B7E950,0x2997011F,0x8BBEB8EA,0x3AC7F2EB,0xFCB9887C,0xC8AC71E8,0x62DD1DDF,0x1C661503,0x15DA2D49,0xEE0D9600,0x8CD37CF3,0xFD5D65F4,0xFBD44C65,0x0F36E6F7,0x4DB26158,0x61C69362,0x3AB551CE,0x93AD1061,0xA3BC0074,0x80FDE395,0xD4BB30E2,0x72966096,0x4ADFA541,0xA65C047D,0x3DD895D7,0x5437877E,0xA4D1C46D,0x4767748A,0xD3D6F4FB,0xB50CF789,0x4369E96A,0xEB1FCBAD,0x346ED9FC,0x197448AE,0xAD678846,0x0A24BB5A,0xDA60B8D0,0xF84F3859,0x44042D73,0x2C855CB2,0x33031DE5,0xDEEEDFB1,0xAA0A4C5F,0xCDBE2C45,0xDD0D7CC9,0x3FD5AF46,0x5005713C,0x7198540D,0x270241AA,0x83F3D70E,0xBE0B1010,0x90A324FA,0xC90C2086,0x62C8A7F9,0x5768B525,0xB602C312,0x206F85B3,0x44694011,0xB966D409,0x5739B3E5,0xCE61E49F,0xA55230E6,0x5EDEF90E,0xFB410CC2,0x29D9C998,0x092A8FC1,0xB0D09822,0x1A7A7C35,0xC7D7A8B4,0xE811FF36,0x59B33D17,0x3CDB9BDD,0x2EB40D81,0xCEB018DE,0xB7BD5C3B,0xDDE0EB2A,0xC0BA6CAD,0x2F8B6829,0xEDB88320,0x82F63B78,0x9ABFB3B6,0x709DB87B,0x03B6E20C,0x63CD4B8F,0x74B1D29A,0x91A6C88C,0xEAD54739,0x456CAC67,0x9DD277AF,0xB7072F64,0x04DB2615,0xA457DC90,0x73DC1683,0x563C5F93,0xE3630B12,0x082F63B7,0x94643B84,0xFA44E0B4,0x0D6D6A3E,0xE9141340,0x7A6A5AA8,0x1B7F9043,0xE40ECF0B,0xCFB5F4A8,0x9309FF9D,0x3DDE77AB,0x0A00AE27,0x2E8E845F,0x7D079EB1,0xDCE5075C,0xF00F9344,0x92A8FC17,0x8708A3D2,0x60C37F14,0x1E01F268,0x73938CE0,0x6906C2FE,0x81F80FE3,0xF762575D,0x55326B08,0x806567CB,0xA759E80B,0x196C3671,0xB4091BFF,0x6E6B06E7,0x466298FC,0xFED41B76,0x1871A4D8,0x89D32BE0,0xEA1A27DB,0x10DA7A5A,0xF94AD42F,0x67DD4ACC,0x0B21572C,0xF9B9DF6F,0xDFEB33C7,0x8EBEEFF9,0x2D80B0C4,0x17B7BE43,0x3ED04330,0x60B08ED5,0xCCBBC033,0xD6D6A3E8,0xA24BB5A6,0xA1D1937E,0x502036A5,0x38D8C2C4,0x4370C551,0x4FDFF252,0xB11B4652,0xD1BB67F1,0x65D122B9,0xA6BC5767,0x97BAA1BA,0x3FB506DD,0x84EA524E,0x48B2364B,0x7681D14D,0xD80D2BDA,0x2892ED69,0xAF0A1B4C,0xDAF96E6A,0x36034AF6,0xC9A99D9E,0x41047A60,0x3BC21E9D,0xDF60EFC3,0xEF087A76,0xA867DF55,0x1D63F975,0x316E8EEF,0x0E330A81,0x4669BE79,0xFC588982,0xCB61B38C,0xB21572C9,0xBC66831A,0x407EF1CA,0x256FD2A0,0x532E023E,0x5268E236,0xA145813D,0xCC0C7795,0x758FE5D6,0xBB0B4703,0x87E466D5,0x220216B9,0x94B49521,0x5505262F,0x66DF1622,0xC5BA3BBE,0x38CC2A06,0xB2BD0B28,0xCAA7A905,0x2BB45A92,0xD9F75AF1,0x5CB36A04,0x2B9CD9F2,0xC2D7FFA7,0xFF56BD19,0xB5D0CF31,0x0D3D3E1A,0x2CD99E8B,0x1E6DCDEE,0x5BDEAE1D,0xEC064EED,0x9B64C2B0,0xC38D26C4,0xEC63F226,0x31E6A5C7,0x756AA39C,0x22B65633,0x026D930A,0xD0DDD530,0x9C0906A9,0x0417B1DB,0xEB0E363F,0xF67C32D8,0x72076785,0xE52CC12C,0x05005713,0x1747422F,0x95BF4A82,0x49547E0B,0xE2B87A14,0xBB3FFD08,0x7BB12BAE,0xA86F0EFC,0x0CB61B38,0x5A048DFF,0x92D28E9B,0x8ECEE914,0xE5D5BE0D,0x7CA56A17,0x7CDCEFB7,0x6FF599E3,0x0BDBDF21,0x9D9E1AE0,0x86D3D2D4,0xD3D3E1AB,0xF1D4E242,0x21B862A8,0x68DDB3F8,0x32E8915C,0x1FDA836E,0xC083125F,0x81BE16CD,0x144976B4,0xF6B9265B,0xE622F5B7,0x6FB077E1,0xF5720643,0x18B74777,0x07198540,0x88085AE6,0x590AB964,0xFF0F6A70,0xAB613A67,0x66063BCA,0xB831C993,0x11010B5C,0x4A5A4A90,0x8F659EFF,0x9E902E7B,0xF862AE69,0x6CFBAD78,0x616BFFD3,0x7FAB5E8C,0x166CCF45,0x8DC0DD8F,0xA00AE278,0xE330A81A,0xD70DD2EE,0x115B2B19,0x4E048354,0x020BD8ED,0x3903B3C2,0xF0605BEE,0xA7672661,0x24AA3F05,0xD06016F7,0xD6C1BC06,0x4969474D,0xC5914FF2,0x3E6E77DB,0x37FACCF1,0xAED16A4A,0x69E9F0D5,0xD9D65ADC,0x9B8273D6,0x40DF0B66,0x88D28022,0x37D83BF0,0x7AB90321,0xA9BCAE53,0xAE7367CA,0xDEBB9EC5,0x5C18E4C9,0x47B2CF7F,0x4F48173D,0x30B5FFE9,0xBD23943E,0xBDBDF21C,0xF36E6F75,0xCABAC28A,0x0105EC76,0x53B39330,0x12551F82,0x24B4A3A6,0xE03E9C81,0xBAD03605,0x34F4F86A,0xCDD70693,0xC69F7B69,0x54DE5729,0xD5CF889D,0x23D967BF,0x27A40B9E,0xB3667A2E,0x79B737BA,0xC4614AB8,0x8BDCB4B9,0x5D681B02,0x988C474D,0x2A6F2B94,0x6AE7C44E,0xB40BBE37,0xBE2DA0A5,0xC30C8EA1,0x4C4623A6,0x5A05DF1B,0x5F16D052,0x2D02EF8D,0xAD7D5351&#125;;
+
+
+void check1(int a,int b,int c,int d,int e)
+&#123;
+    unsigned int v6=-1;
+    int i;
+    char table[]=&#123;0x53, 0x6F, 0x20, 0x74, 0x68, 0x69, 0x73, 0x20, 0x69, 0x73,
+  0x20, 0x61, 0x20, 0x6E, 0x6F, 0x74, 0x20, 0x64, 0x69, 0x66,
+  0x66, 0x63, 0x75, 0x6C, 0x74, 0x20, 0x70, 0x72, 0x6F, 0x62,
+  0x6C, 0x65, 0x6D, 0x20, 0x69, 0x66, 0x20, 0x79, 0x6F, 0x75,
+  0x20, 0x68, 0x61, 0x76, 0x65, 0x20, 0x61, 0x20, 0x76, 0x65,
+  0x72, 0x79, 0x20, 0x67, 0x6F, 0x6F, 0x64, 0x20, 0x63, 0x6F,
+  0x6D, 0x70, 0x75, 0x74, 0x65, 0x2E, 0x42, 0x75, 0x74, 0x20,
+  0x69, 0x66, 0x20, 0x79, 0x6F, 0x75, 0x20, 0x64, 0x6F, 0x20,
+  0x6E, 0x6F, 0x74, 0x20, 0x68, 0x61, 0x76, 0x65, 0x20, 0x61,
+  0x20, 0x67, 0x6F, 0x6F, 0x64, 0x20, 0x63, 0x6F, 0x6D, 0x70,
+  0x75, 0x74, 0x65, 0x72, 0x2E, 0x49, 0x74, 0x20, 0x73, 0x65,
+  0x65, 0x6D, 0x73, 0x20, 0x74, 0x68, 0x61, 0x74, 0x20, 0x54,
+  0x68, 0x69, 0x73, 0x20, 0x70, 0x72, 0x6F, 0x62, 0x6C, 0x65,
+  0x6D, 0x20, 0x77, 0x69, 0x6C, 0x6C, 0x20, 0x74, 0x61, 0x6B,
+  0x65, 0x20, 0x61, 0x20, 0x6C, 0x6F, 0x74, 0x20, 0x6F, 0x66,
+  0x20, 0x74, 0x69, 0x6D, 0x65, 0x2E, 0x42, 0x75, 0x74, 0x20,
+  0x6E, 0x6F, 0x74, 0x20, 0x74, 0x68, 0x69, 0x6E, 0x67, 0x20,
+  0x69, 0x73, 0x20, 0x69, 0x6D, 0x70, 0x6F, 0x73, 0x73, 0x69,
+  0x62, 0x6C, 0x65, 0x2E, 0x53, 0x6F, 0x20, 0x6A, 0x75, 0x73,
+  0x74, 0x20, 0x74, 0x72, 0x79, 0x20, 0x69, 0x74, 0x21, 0x21,
+  0x53, 0x6F, 0x6D, 0x65, 0x20, 0x74, 0x69, 0x6D, 0x65, 0x73,
+  0x2C, 0x54, 0x68, 0x65, 0x20, 0x74, 0x68, 0x69, 0x6E, 0x67,
+  0x20, 0x77, 0x65, 0x20, 0x73, 0x65, 0x65, 0x6D, 0x20, 0x69,
+  0x73, 0x20, 0x6E, 0x6F, 0x74, 0x20, 0x72, 0x65, 0x61, 0x6C,
+  0x6C, 0x20, 0x5B, 0x5D, 0x5B, 0x5D, 0x28, 0x29, 0x28, 0x29,
+  0x3C, 0x3E, 0x3C, 0x3E, 0x2E, 0x2E, 0x00&#125;;
+
+    table[0x00]=a;
+    table[0x22]=b;
+    table[0x44]=c;
+    table[0x66]=d;
+    table[0x88]=e;
+
+    for(i=0;i&lt;256;i+=2)
+    &#123;
+        v6 = dword_AAFD60[2 * (unsigned __int8)(v6 ^ table[i])] ^ (v6 &gt;&gt; 8);
+    &#125;
+    if(~v6==0xBA56C4F9)
+    &#123;
+        printf(&quot;%c%c%c%c%c &quot;,a,b,c,d,e);
+    &#125;
+&#125;
+
+void check2(int a,int b,int c,int d,int e)
+&#123;
+    unsigned int v4=-1;
+    int i;
+    char table[]=&#123;0x53, 0x6F, 0x20, 0x74, 0x68, 0x69, 0x73, 0x20, 0x69, 0x73,
+  0x20, 0x61, 0x20, 0x6E, 0x6F, 0x74, 0x20, 0x64, 0x69, 0x66,
+  0x66, 0x63, 0x75, 0x6C, 0x74, 0x20, 0x70, 0x72, 0x6F, 0x62,
+  0x6C, 0x65, 0x6D, 0x20, 0x69, 0x66, 0x20, 0x79, 0x6F, 0x75,
+  0x20, 0x68, 0x61, 0x76, 0x65, 0x20, 0x61, 0x20, 0x76, 0x65,
+  0x72, 0x79, 0x20, 0x67, 0x6F, 0x6F, 0x64, 0x20, 0x63, 0x6F,
+  0x6D, 0x70, 0x75, 0x74, 0x65, 0x2E, 0x42, 0x75, 0x74, 0x20,
+  0x69, 0x66, 0x20, 0x79, 0x6F, 0x75, 0x20, 0x64, 0x6F, 0x20,
+  0x6E, 0x6F, 0x74, 0x20, 0x68, 0x61, 0x76, 0x65, 0x20, 0x61,
+  0x20, 0x67, 0x6F, 0x6F, 0x64, 0x20, 0x63, 0x6F, 0x6D, 0x70,
+  0x75, 0x74, 0x65, 0x72, 0x2E, 0x49, 0x74, 0x20, 0x73, 0x65,
+  0x65, 0x6D, 0x73, 0x20, 0x74, 0x68, 0x61, 0x74, 0x20, 0x54,
+  0x68, 0x69, 0x73, 0x20, 0x70, 0x72, 0x6F, 0x62, 0x6C, 0x65,
+  0x6D, 0x20, 0x77, 0x69, 0x6C, 0x6C, 0x20, 0x74, 0x61, 0x6B,
+  0x65, 0x20, 0x61, 0x20, 0x6C, 0x6F, 0x74, 0x20, 0x6F, 0x66,
+  0x20, 0x74, 0x69, 0x6D, 0x65, 0x2E, 0x42, 0x75, 0x74, 0x20,
+  0x6E, 0x6F, 0x74, 0x20, 0x74, 0x68, 0x69, 0x6E, 0x67, 0x20,
+  0x69, 0x73, 0x20, 0x69, 0x6D, 0x70, 0x6F, 0x73, 0x73, 0x69,
+  0x62, 0x6C, 0x65, 0x2E, 0x53, 0x6F, 0x20, 0x6A, 0x75, 0x73,
+  0x74, 0x20, 0x74, 0x72, 0x79, 0x20, 0x69, 0x74, 0x21, 0x21,
+  0x53, 0x6F, 0x6D, 0x65, 0x20, 0x74, 0x69, 0x6D, 0x65, 0x73,
+  0x2C, 0x54, 0x68, 0x65, 0x20, 0x74, 0x68, 0x69, 0x6E, 0x67,
+  0x20, 0x77, 0x65, 0x20, 0x73, 0x65, 0x65, 0x6D, 0x20, 0x69,
+  0x73, 0x20, 0x6E, 0x6F, 0x74, 0x20, 0x72, 0x65, 0x61, 0x6C,
+  0x6C, 0x20, 0x5B, 0x5D, 0x5B, 0x5D, 0x28, 0x29, 0x28, 0x29,
+  0x3C, 0x3E, 0x3C, 0x3E, 0x2E, 0x2E, 0x00&#125;;
+
+    table[0x11]=a;
+    table[0x33]=b;
+    table[0x55]=c;
+    table[0x77]=d;
+    table[0x99]=e;
+
+    for(i=0;i&lt;256;i+=2)
+    &#123;
+        v4 = dword_AAFD60[2 * (unsigned __int8)(v4 ^ table[i+1]) +1] ^ (v4 &gt;&gt; 8);
+    &#125;
+    if(~v4==0xE89BA203)
+    &#123;
+        printf(&quot;%c%c%c%c%c &quot;,a,b,c,d,e);
+    &#125;
+&#125;
+
+int main()
+&#123;
+    int a,b,c,d,e;
+
+    for(a=30;a&lt;=128;a++)
+    &#123;
+        for(b=30;b&lt;128;b++)
+        &#123;
+            for(c=30;c&lt;128;c++)
+            &#123;
+                for(d=30;d&lt;128;d++)
+                &#123;
+                    for(e=30;e&lt;128;e++)
+                    &#123;
+                        check1(a,b,c,d,e);
+                        check2(a,b,c,d,e);
+                    &#125;    
+                &#125; 
+            &#125; 
+        &#125;
+    &#125;
+&#125; 
+//I sac
+//ti  r</code></pre>
+<p>爆破时间比较久。爆出来，我发现多解还挺多，哈哈哈<br><img src="https://i.loli.net/2021/04/27/4VtHKqGjpRr6ul3.png"></p>
+<p>将正确的拼接一下得到hctf{It is a crc program!}</p>
+<h2 id="polyre"><a href="#polyre" class="headerlink" title="polyre"></a>polyre</h2><p>ida打开，可以看到用了控制流平坦化。<br><img src="https://i.loli.net/2021/04/28/5SlpRoOLeHKCu3s.png"><br>看了wp，说要用脚本处理一下，<a target="_blank" rel="noopener" href="https://github.com/cq674350529/deflat">https://github.com/cq674350529/deflat</a>下载deflat.py处理，这里使用这个脚本还是花费了一些时间来配环境，网上也没有具体教程，这里就说详细点。</p>
+<p>首先安装angr，<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45055269/article/details/105176185">https://blog.csdn.net/weixin_45055269/article/details/105176185</a>，注意升级pip。</p>
+<pre><code>pip3 install virtualenv//安装virtualenv
+mkdir angr
+cd angr
+source venv/bin/activate//进入对应的环境
+pip3 install -i http://pypi.douban.com/simple --trusted-host pypi.douban.com angr//安装angr
+deactive//退出当前venv环境</code></pre>
+<p>每次使用的时候要先进入这个环境(source venv/bin/activate)。我们创建这个angr文件夹里面，就有一个python3.8的环境，里面已经有了angr，但是要用deflat.py这个脚本还少了am_graph.py，找了许久，结果就在GitHub那个项目里面，放到python3.8的site-packages。</p>
+<p>然后就可以用了，嘻嘻，这个python3是angr中的python3.8。<br><img src="https://i.loli.net/2021/04/28/iYn5LMzWAaOcJdK.png"><br>完成后，就会生成一个polyre_recovered文件，再次用ida打开就会看到代码好看多了。</p>
+<p>这里正式来分析逻辑，其中的while()都不用管，用来干扰分析的，真正处理部分如下。<br><img src="https://i.loli.net/2021/04/28/JryegD3oKzn2xHO.png"><br>我用c写的类似过程。</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main()
+&#123;
+    int i;
+    for(i=0;i&lt;6;i++)
+    &#123;
+        for(j=0;j&lt;64;j++)
+        &#123;
+            if(flag[i]&gt;=0)
+            &#123;
+                flag[i]=flag[i]&lt;&lt;1;
+            &#125;
+            else
+            &#123;
+                flag[i]=flag[i]&lt;&lt;1;
+                flag[i]=flag[i]^0xB0004B7679FA26B3;
+            &#125;            
+        &#125;
+
+     &#125; 
+&#125;</code></pre>
+<p>比较部分<br><img src="https://i.loli.net/2021/04/28/O7kCeTWrBylw13q.png"><br>然后要解的话有两个思路，一个用z3，z3yyds</p>
+<pre><code>from z3 import *
+code=[0x0BC8FF26D43536296,0x520100780530EE16,0x4DC0B5EA935F08EC,0x342B90AFD853F450,
+      0x8B250EBCAA2C3681,0x55759F81A2C68AE4]
+
+s = Solver()
+flag = [BitVec(&#39;flag[%d]&#39; % i, 64) for i in range(6)]
+for i in range(6):
+  for j in range(64):
+    flag[i]=If(flag[i]&gt;=0,flag[i]*2,(flag[i]*2)^0xB0004B7679FA26B3)//z3特有的If
+  s.add(flag[i]==code[i])
+
+print(s.check())
+m=s.model()
+print(m)
+//[flag[4] = 7363777037631763767,
+ flag[3] = 3835203404393046370,
+ flag[1] = 7148951143638579506,
+ flag[2] = 3257850080642543666,
+ flag[0] = 7378644943136451686,
+ flag[5] = 32056]</code></pre>
+<p>整理输出</p>
+<pre><code>code=[7378644943136451686,7148951143638579506,3257850080642543666,
+      3835203404393046370,7363777037631763767,32056]
+flag=[0]*6
+def print_flag(s):
+    str=&#39;&#39;
+    for i in range(0,len(s),2):
+        a=int(s[i:i+2],16)
+        str+=chr(a)
+    print(str[::-1],end=&#39;&#39;)
+
+for i in range(6):
+    flag[i]=(hex(code[i]).replace(&#39;0x&#39;,&#39;&#39;))
+    print_flag(flag[i])
+//flag&#123;6ff29390-6c20-4c56-ba70-a95758e3d1f8&#125;</code></pre>
+<p>方法二，逆向反解</p>
+<p>思路：细心观察，可以发现，如果数大于0，那么它的第一位一定是0，如果数据小于0，那么第一位是1。且不同的处理方式，也会导致得到的数要么是奇数，要么是偶数，我们就可以根据是奇数还是偶数来写反解脚本。还可以用一个简单的数据来试验一下，然后看看反过来怎么解，用一个byte大小的数就行了。</p>
+<pre><code>if(flag[i]&gt;=0)//第一位是0
+&#123;
+    flag[i]=flag[i]&lt;&lt;1;//左位移1位，得到的最后一位是0，是偶数。
+&#125;
+else//第一位是1
+&#123;
+    flag[i]=flag[i]&lt;&lt;1;
+    flag[i]=flag[i]^0xB0004B7679FA26B3;//左移1位加上异或，得到最后一位是1，是奇数。
+&#125;</code></pre>
+<p>脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+unsigned __int64 code[6]=&#123;0x0BC8FF26D43536296,0x520100780530EE16,0x4DC0B5EA935F08EC,0x342B90AFD853F450,
+    0x8B250EBCAA2C3681,0x55759F81A2C68AE4&#125;;//注意是unsigned __int64，因为我们处理时，是根据奇偶，不需要区分有符号还是无符号。
+int main()
+&#123;
+    signed __int64 flag[6];
+    int i,j;
+    char ch;
+
+    for(i=0;i&lt;6;i++)
+    &#123;
+        for(j=0;j&lt;64;j++)
+        &#123;
+            if(code[i]&amp;0x1==1)//如果是奇数
+            &#123;
+                code[i]=(code[i]^0xB0004B7679FA26B3);
+                code[i]=(code[i]&gt;&gt;1);
+                code[i]=code[i]|0x8000000000000000;//一定要确保第一位是1，因为正向加密时，这个数是负数。
+            &#125;    
+            else//如果是偶数
+            &#123;
+                code[i]=(code[i]&gt;&gt;1);//右移1位，第一位变为0，这时候不需要处理第一位，因为正向加密时，第一位一定是0，也就是这个数是正数。
+            &#125;
+        &#125;
+    &#125;
+    //输出
+    for(i=0;i&lt;6;i++)
+    &#123;
+        for(j=0;j&lt;8;j++)
+        &#123;
+            ch=code[i]&amp;0xff;
+            printf(&quot;%c&quot;,ch);
+            code[i]=code[i]&gt;&gt;8;            
+        &#125;
+
+    &#125;
+&#125;
+//flag&#123;6ff29390-6c20-4c56-ba70-a95758e3d1f8&#125;</code></pre>
+<h2 id="seven"><a href="#seven" class="headerlink" title="seven"></a>seven</h2><p>驱动迷宫题，注意键盘码就行<a target="_blank" rel="noopener" href="https://blog.csdn.net/wguoyong/article/details/5678511">https://blog.csdn.net/wguoyong/article/details/5678511</a>。</p>
+<p>打印出迷宫，</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int a[14][16]=&#123; 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x6F, 0x2E, 0x2E, 0x2E, 
+  0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 
+  0x2E, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2E, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2E, 0x2E, 0x2E, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2E, 0x2E, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2E, 0x2E, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2E, 0x2E, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2E, 0x2E, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2E, 0x2E, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2E, 0x2E, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2E, 0x2E, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2E, 0x2E, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x37, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 0x2A, 
+  0x2A, 0x2A, 0x2A, 0x2A &#125;;
+   int i,j;
+
+   for(i=0;i&lt;14;i++)
+   &#123;
+           for(j=0;j&lt;15;j++)
+           &#123;
+               printf(&quot;%c&quot;,a[i][j]);
+        &#125;
+        printf(&quot;\n&quot;);
+   &#125;
+&#125; 
+
+***************
+o..............
+**************.
+************...
+***********..**
+**********..***
+*********..****
+********..*****
+*******..******
+******..*******
+*****..********
+****..*********
+****7**********
+***************
+//hctf&#123;ddddddddddddddssaasasasasasasasasas&#125;</code></pre>
+<h2 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h2><p>一个windows逆向，考点比较简单。</p>
+<p>主函数逻辑<br><img src="https://i.loli.net/2021/05/03/f18i4dtAb2h6yJm.png"><br>进入处理函数<br><img src="https://i.loli.net/2021/05/03/I6cnaxsOTRNSXiB.png"><br>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt; 
+
+unsigned char  sub_401460(unsigned char a1[], int a2)
+&#123;
+  char v2; // al
+  char v3; // cl
+  int v4; // eax
+  int v5; // edx
+
+  v2 = a1[a2];
+  v3 = a1[a2+1];
+  if ( (unsigned __int8)(v2 - 48) &gt; 9u )
+    v2 -= 55;
+  v4 = v2 &amp; 0xF;
+  v5 = (v3 - 55) &amp; 0xF;
+  if ( (unsigned __int8)(v3 - 48) &lt;= 9u )
+    v5 = v3 &amp; 0xF;
+  return v5 | (16 * v4);
+&#125;
+
+int main()
+&#123;
+     unsigned char key[]=&quot;1A2F943C4D8C5B6EA3C9BCAD7E&quot;;
+     char code[]=&#123;0x0F, 0x87, 0x62, 0x14, 0x01, 0xC6, 0xF0, 0x21, 0x30, 0x11, 0x50, 0xD0, 0x82, 0x23, 0xAE, 0x23,0xEE, 0xA9, 0xB4, 0x52, 0x78, 0x57, 0x0C, 0x86, 0x8B&#125;;
+     int i;
+     unsigned char flag[25],mid;
+
+     for(i=0;i!=25;i++)
+     &#123;
+         mid=sub_401460(key,i);
+         flag[i]=mid^code[i];
+     &#125;
+     for(i=0;i&lt;25;i++)
+     &#123;
+         flag[i]=((flag[i]&gt;&gt;2)&amp;0xff)|((flag[i]&lt;&lt;6)&amp;0xff);
+     &#125;
+    printf(&quot;%s&quot;,flag);
+&#125;
+//EIS&#123;ea3y_r7Eve0rSe_r1ghT&#125; </code></pre>
+<h2 id="Re150"><a href="#Re150" class="headerlink" title="Re150"></a>Re150</h2><p>一个elf文件，文件需要动调来看，存在smc，和很多花指令。</p>
+<p>先是smc<br><img src="https://i.loli.net/2021/05/28/cK6yvFo7TbalzWN.png"><br>然后找到主函数，并且去掉里面的花，很多都是E8，还有一些是很多字节码都没用的部分。得到主函数如下。<br><img src="https://i.loli.net/2021/05/28/ukWhsDLoZNEBlmt.png"><br>然后加密部分<br><img src="https://i.loli.net/2021/05/28/CZ6IchbzAf5neB4.png"></p>
+<p>脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    unsigned char flag[]=&#123;  0x73, 0x8D, 0xF2, 0x4C, 0xC7, 0xD4, 0x7B, 0xF7, 0x18, 0x32, 
+  0x71, 0x0D, 0xCF, 0xDC, 0x67, 0x4F, 0x7F, 0x0B, 0x6D&#125;;
+      int i;
+
+      for(i=0;i&lt;20;i++)
+      &#123;
+          flag[i]=flag[i]^0x20;
+          flag[i]=flag[i]^i;
+
+          flag[i]= (flag[i] &lt;&lt;(i%8)) |(flag[i]&gt;&gt;(8-i%8));
+          printf(&quot;%c&quot;,flag[i]);
+    &#125;
+&#125;
+//SYC&#123;&gt;&gt;Wh06m1&gt;&gt;R0Ot&#125;</code></pre>
+<h2 id="babyre1"><a href="#babyre1" class="headerlink" title="babyre1"></a>babyre1</h2><p>考察点，xxtea加密解密，还有md5加密，爆破，和细节约束条件。</p>
+<p>主函数<br><img src="https://i.loli.net/2021/06/02/EdigPjOBGFJV7b3.png"><br>加密函数内部<br><img src="https://i.loli.net/2021/06/02/6mQBvZR7FqWt5cj.png"></p>
+<p>题目中，还有个判断就是，md5(rctf{(input)})=5f8243a662cf71bf31d2b2602638dc1d</p>
+<p>所以写脚本的大概思路就是根据密文Bingo!^0x17，来先得到解密前的6个字节，然后爆破剩下的两个字节，然后进行xxtea解密，将解密后的8个字节，套上格式rctf{}，进行md5加密，然后和md5数据进行比较。</p>
+<p>脚本，其中的md5.c来自GitHub。</p>
+<pre><code>#include&lt;stdio.h&gt;
+#include &quot;MD5.c&quot;
+#include&lt;string.h&gt;
+void encrypt(unsigned int *flag ,unsigned int *key ,unsigned int n)
+&#123;
+    unsigned int next,end,sum;
+    unsigned int rounds,e,delta=0x9e3779b9;
+    int i;
+
+    rounds=6+52/n;//轮回的次数
+    sum=0;
+    end=flag[n-1];//先设置end的值为最后一个，因为加密第一个要用
+    do
+    &#123;
+        sum+=delta;
+        e=(sum&gt;&gt;2)&amp;3;//与key的值关;
+        for(i=0;i&lt;n-1;i++)//加密第一个到倒数第二个
+        &#123;
+            next=flag[i+1];
+            flag[i]+=(( (end&gt;&gt;5^next&lt;&lt;2)  + (next&gt;&gt;3^end&lt;&lt;4) ) ^ ( (sum^next) + (key[(i&amp;3)^e]^end) ));
+            end=flag[i];//现在用end来保存当前数据的值，为下一个数据的加密做准备。
+        &#125;
+        next=flag[0];//将第一个数据给next，为加密最后一个数据做准备，这时候end的值为倒数第二个数据。
+        flag[n-1]+=(( (end&gt;&gt;5^next&lt;&lt;2)  + (next&gt;&gt;3^end&lt;&lt;4) ) ^ ( (sum^next) + (key[(i&amp;3)^e]^end) ));
+        end=flag[n-1];//继续设置end的值为最后一个数据，为新一轮加密做准备。
+    &#125;while(--rounds);
+
+&#125;
+
+
+void decrypt(unsigned int *code ,unsigned int *key ,unsigned int n)
+&#123;
+    unsigned int next,end,sum;
+    unsigned int rounds,e,delta=0x9e3779b9;
+    int i;
+
+    rounds=6+52/n;
+    sum=rounds*delta;    
+    next=code[0];//设置next为code的第一个 
+    do
+    &#123;
+        e=(sum&gt;&gt;2)&amp;3;
+        for(i=n-1;i&gt;0;i--)//解密最后一个到第二个
+        &#123;
+            end=code[i-1];
+            code[i]-=(( (end&gt;&gt;5^next&lt;&lt;2)  + (next&gt;&gt;3^end&lt;&lt;4) ) ^ ( (sum^next) + (key[(i&amp;3)^e]^end) ));
+            next=code[i];
+        &#125;
+        end=code[n-1];
+        code[0]-=(( (end&gt;&gt;5^next&lt;&lt;2) + (next&gt;&gt;3^end&lt;&lt;4) ) ^ ( (sum^next) +(key[i&amp;3^e]^end) ));
+        next=code[0];
+        sum-=delta;
+    &#125;while(--rounds);
+
+&#125;
+
+int main()
+&#123;
+
+    unsigned int key[4]=&#123;0x0E0C7E0C7,0x0C6F1D3D7,0x0C6D3C6D3,0x0C4D0D2CE&#125;;
+    char hex[16]=&#123;&#39;0&#39;,&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;,&#39;7&#39;,&#39;8&#39;,&#39;9&#39;,&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;&#125;;
+    unsigned int n=2;
+    int i,j,k,m,q,x,num,z;
+
+    for(i=0;i&lt;=4;i++)
+    &#123;
+        for(j=0;j&lt;0xff;j++)
+        &#123;
+            unsigned int code[2]=&#123;0x70797e55,0x00003678&#125;;
+            code[1]=code[1]|(i&lt;&lt;24)|(j&lt;&lt;16);
+            encrypt(code,key,n);
+            unsigned char flag[22]=&quot;rctf&#123;&quot;;
+            num=0;
+            for(m=0;m&lt;2;m++)
+            &#123;
+                for(q=0;q&lt;4;q++)
+                &#123;
+                    flag[5+num]=hex[(*((char*)&amp;code[m]+q)&amp;0xff)&gt;&gt;4];
+                    flag[5+num+1]=hex[(*((char*)&amp;code[m]+q)&amp;0xff)&amp;0xf]; 
+                    num+=2;
+                &#125;
+            &#125;
+
+            flag[21]=125;
+            char flag_md5[33]=&#123;0&#125;;
+            unsigned char  res[23]=&#123;0&#125;;
+            md5((uint8_t*)flag, 22, res);
+            for(int x=0;x&lt;16;x++)
+            &#123;
+                sprintf(flag_md5+2*x,&quot;%02x&quot;,res[x]);    
+            &#125;    
+            if(!strcmp(flag_md5,&quot;5f8243a662cf71bf31d2b2602638dc1d&quot;))
+            &#123;
+                printf(&quot;flag:%s&quot;,flag);
+            &#125;
+
+        &#125;
+    &#125;
+&#125;
+//flag:rctf&#123;05e8a376e4e0446e&#125;</code></pre>
+<h2 id="easyRE"><a href="#easyRE" class="headerlink" title="easyRE"></a>easyRE</h2><p>这道题，和buu上的一样，直接复制过来了</p>
+<p>下载文件用ida打开，shift+12；<br><img src="https://i.loli.net/2020/12/11/e1Zowna3kmUCTYL.png"><br>找到重要代码</p>
+<pre><code>  unsigned __int64 v54; // [rsp+108h] [rbp-18h]
+
+  v54 = __readfsqword(0x28u);
+  v12 = 73;
+  v13 = 111;
+  v14 = 100;
+  v15 = 108;
+  v16 = 62;
+  v17 = 81;
+  v18 = 110;
+  v19 = 98;
+  v20 = 40;
+  v21 = 111;
+  v22 = 99;
+  v23 = 121;
+  v24 = 127;
+  v25 = 121;
+  v26 = 46;
+  v27 = 105;
+  v28 = 127;
+  v29 = 100;
+  v30 = 96;
+  v31 = 51;
+  v32 = 119;
+  v33 = 125;
+  v34 = 119;
+  v35 = 101;
+  v36 = 107;
+  v37 = 57;
+  v38 = 123;
+  v39 = 105;
+  v40 = 121;
+  v41 = 61;
+  v42 = 126;
+  v43 = 121;
+  v44 = 76;
+  v45 = 64;
+  v46 = 69;
+  v47 = 67;
+  memset(v48, 0, sizeof(v48));
+  v49 = 0;
+  v50 = 0;
+  sub_4406E0(0LL, v48, 37LL);
+  v50 = 0;
+  if ( sub_424BA0(v48) == 36 )
+  &#123;
+    for ( i = 0; i &lt; (unsigned __int64)sub_424BA0(v48); ++i )
+    &#123;
+      if ( (unsigned __int8)(v48[i] ^ i) != *(&amp;v12 + i) )//v48是自己输入的，*(&amp;v12 + i)就相当于一个数组，从v12到v47，一共36个数。简单的异或。
+      &#123;
+        result = 4294967294LL;
+        goto LABEL_13;
+      &#125;
+    &#125;
+    sub_410CC0(&quot;continue!&quot;);
+    memset(&amp;v51, 0, 0x40uLL);
+    v53 = 0;
+    sub_4406E0(0LL, &amp;v51, 64LL);
+    v52 = 0;
+    if ( sub_424BA0(&amp;v51) == 39 )
+    &#123;
+      v1 = sub_400E44(&amp;v51);
+      v2 = sub_400E44(v1);
+      v3 = sub_400E44(v2);
+      v4 = sub_400E44(v3);
+      v5 = sub_400E44(v4);
+      v6 = sub_400E44(v5);
+      v7 = sub_400E44(v6);
+      v8 = sub_400E44(v7);
+      v9 = sub_400E44(v8);
+      v10 = sub_400E44(v9);
+      if ( !(unsigned int)sub_400360(v10, off_6CC090) )
+      &#123;
+        sub_410CC0(&quot;You found me!!!&quot;);
+        sub_410CC0(&quot;bye bye~&quot;);
+      &#125;
+      result = 0LL;
+    &#125;
+    else
+    &#123;
+      result = 4294967293LL;
+    &#125;
+  &#125;
+  else
+  &#123;
+    result = 0xFFFFFFFFLL;
+  &#125;
+LABEL_13:
+  if ( __readfsqword(0x28u) != v54 )
+    sub_444020();
+  return result;
+&#125;</code></pre>
+<p>先看这一部分</p>
+<pre><code>if ( sub_424BA0(v48) == 36 )
+  &#123;
+    for ( i = 0; i &lt; (unsigned __int64)sub_424BA0(v48); ++i )
+    &#123;
+      if ( (unsigned __int8)(v48[i] ^ i) != *(&amp;v12 + i) )//v48是自己输入的，*(&amp;v12 + i)就相当于一个数组，从v12到v47，一共36个数。简单的异或。
+      &#123;
+        result = 4294967294LL;
+        goto LABEL_13;
+      &#125;
+    &#125;</code></pre>
+<p>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int a[36]=&#123;73,111,100,108,62,81,110,98,40,111,99,121,127,121,46,105,127,100,96,51,119,125,119,101,107,57,123,105,121,61,126,121,76,64,69,67&#125;;     
+    int i;
+
+    for(i=0;i&lt;36;i++)
+    &#123;
+        a[i]=a[i]^i;
+        printf(&quot;%c&quot;,a[i]); 
+    &#125;
+ &#125; </code></pre>
+<p>得到<br><img src="https://i.loli.net/2020/12/11/9zfNW3A4sLdRIbn.png"><br>它说：前四个字符是“flag”，现在还不知道意思。</p>
+<p>继续看</p>
+<pre><code>    memset(&amp;v51, 0, 0x40uLL);//定义了一个数组叫v51
+    v53 = 0;
+    sub_4406E0(0LL, &amp;v51, 64LL);
+    v52 = 0;
+    if ( sub_424BA0(&amp;v51) == 39 )//v61长度是39
+    &#123;
+      v1 = sub_400E44(&amp;v51);//对v51base64编码
+      v2 = sub_400E44(v1);//对v1base64编码
+      v3 = sub_400E44(v2);
+      v4 = sub_400E44(v3);
+      v5 = sub_400E44(v4);
+      v6 = sub_400E44(v5);
+      v7 = sub_400E44(v6);
+      v8 = sub_400E44(v7);
+      v9 = sub_400E44(v8);
+      v10 = sub_400E44(v9);
+      if ( !(unsigned int)sub_400360(v10, off_6CC090) )将v10和off_6CC090对比。
+      &#123;
+        sub_410CC0(&quot;You found me!!!&quot;);
+        sub_410CC0(&quot;bye bye~&quot;);
+      &#125;</code></pre>
+<p>整个过程就是一个不断base64编码的过程，进行了10次，得到了off_6CC090，也就是</p>
+<pre><code>Vm0wd2VHUXhTWGhpUm1SWVYwZDRWVll3Wkc5WFJsbDNXa1pPVlUxV2NIcFhhMk0xVmpKS1NHVkdXbFpOYmtKVVZtcEtTMUl5VGtsaVJtUk9ZV3hhZVZadGVHdFRNVTVYVW01T2FGSnRVbGhhVjNoaFZWWmtWMXBFVWxSTmJFcElWbTAxVDJGV1NuTlhia0pXWWxob1dGUnJXbXRXTVZaeVdrWm9hVlpyV1hwV1IzaGhXVmRHVjFOdVVsWmlhMHBZV1ZSR1lWZEdVbFZTYlhSWFRWWndNRlZ0TVc5VWJGcFZWbXR3VjJKSFVYZFdha1pXWlZaT2NtRkhhRk5pVjJoWVYxZDBhMVV3TlhOalJscFlZbGhTY1ZsclduZGxiR1J5VmxSR1ZXSlZjRWhaTUZKaFZqSktWVkZZYUZkV1JWcFlWV3BHYTFkWFRrZFRiV3hvVFVoQ1dsWXhaRFJpTWtsM1RVaG9hbEpYYUhOVmJUVkRZekZhY1ZKcmRGTk5Wa3A2VjJ0U1ExWlhTbFpqUldoYVRVWndkbFpxUmtwbGJVWklZVVprYUdFeGNHOVhXSEJIWkRGS2RGSnJhR2hTYXpWdlZGVm9RMlJzV25STldHUlZUVlpXTlZadE5VOVdiVXBJVld4c1dtSllUWGhXTUZwell6RmFkRkpzVWxOaVNFSktWa1phVTFFeFduUlRhMlJxVWxad1YxWnRlRXRXTVZaSFVsUnNVVlZVTURrPQ==</code></pre>
+<p>直接网上解码10次，发现是<a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-254172.htm">https://bbs.pediy.com/thread-254172.htm</a>，居然是一个网站。。。。无情被欺骗。最后通过看wp，发现真正的算法在<br><img src="https://i.loli.net/2020/12/11/8SeKL1W6wEzcDyo.png"><br>得到代码</p>
+<pre><code>unsigned __int64 __fastcall sub_400D35(__int64 a1, __int64 a2)
+&#123;
+  __int64 v2; // rdx
+  __int64 v3; // rdx
+  __int64 v4; // rdx
+  unsigned __int64 result; // rax
+  unsigned __int64 v6; // rt1
+  unsigned int v7; // [rsp+Ch] [rbp-24h]
+  signed int i; // [rsp+10h] [rbp-20h]
+  signed int j; // [rsp+14h] [rbp-1Ch]
+  unsigned int v10; // [rsp+24h] [rbp-Ch]
+  unsigned __int64 v11; // [rsp+28h] [rbp-8h]
+
+  v11 = __readfsqword(0x28u);
+  v7 = sub_43FD20() - qword_6CEE38;
+  for ( i = 0; i &lt;= &#39;\x04�&#39;; ++i )
+  &#123;
+    sub_40F790(v7);
+    sub_40FE60(v7, a2, v2);
+    sub_40FE60(v7, a2, v3);
+    v7 = (unsigned __int64)sub_40FE60(v7, a2, v4) ^ 2557891634;
+  &#125;
+  v10 = v7;
+  if ( ((unsigned __int8)v7 ^ byte_6CC0A0[0]) == &#39;f&#39; &amp;&amp; (HIBYTE(v10) ^ (unsigned __int8)byte_6CC0A3) == &#39;g&#39; )//这里的f和g是不是有点熟悉，再联系一下前面的提示：前四个字符是“flag”，通过这个来求key。
+  &#123;
+    for ( j = 0; j &lt;= 24; ++j )
+      sub_410E90((unsigned __int8)(byte_6CC0A0[j] ^ *((_BYTE *)&amp;v10 + j % 4)));//加密算法，key实际上就是那个v10，通过j % 4，又可以知道，v10只有4个。
+  &#125;
+  v6 = __readfsqword(0x28u);
+  result = v6 ^ v11;
+  if ( v6 != v11 )
+    sub_444020();
+  return result;
+&#125;</code></pre>
+<p>byte_6CC0A0[25]={0x40,0x35,0x20,0x56,0x5d,0x18,0x22,0x45,0x17,0x2f,0x24,0x6e,0x62,0x3c,0x27,0x54,0x48,0x6c,0x24,0x6e,0x72,0x3c,0x32,0x45,0x5b};</p>
+<p>写出脚本</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int a[36]=&#123;73,111,100,108,62,81,110,98,40,111,99,121,127,121,46,105,127,100,96,51,119,125,119,101,107,57,123,105,121,61,126,121,76,64,69,67&#125;; 
+    int key[4]=&#123;&#39;f&#39;,&#39;l&#39;,&#39;a&#39;,&#39;g&#39;&#125; ;
+    int byte_6CC0A0[25]=&#123;0x40,0x35,0x20,0x56,0x5d,0x18,0x22,0x45,0x17,0x2f,0x24,0x6e,0x62,0x3c,0x27,0x54,0x48,0x6c,0x24,0x6e,0x72,0x3c,0x32,0x45,0x5b&#125;;
+    int i,j;
+
+    for(i=0;i&lt;36;i++)
+    &#123;
+        a[i]=a[i]^i;
+        printf(&quot;%c&quot;,a[i]); 
+    &#125;
+    printf(&quot;\n&quot;); 
+    for(i=0;i&lt;4;i++)//通过前4个字符，也就是flag，求出key。
+    &#123;
+        key[i]=key[i]^byte_6CC0A0[i];
+    &#125;
+    for(j=0;j&lt;25;j++)//用key来解密。
+    &#123;
+        byte_6CC0A0[j]=byte_6CC0A0[j]^key[j%4];
+        printf(&quot;%c&quot;,byte_6CC0A0[j]);
+    &#125;
+ &#125; </code></pre>
+<p>得到flag{Act1ve_Defen5e_Test}</p>
+<h2 id="babyre"><a href="#babyre" class="headerlink" title="babyre"></a>babyre</h2><p>题目设置了3个password，第一个是3维迷宫，第二个是base64解密，第3个是类似sm4的加密过程。</p>
+<p>3维迷宫<br><img src="https://i.loli.net/2021/06/03/x3hgB68ZMuPfV4c.png"><br>画出3维迷宫</p>
+<pre><code>#include&lt;stdio.h&gt;
+//ddwwxxssxaxwwaasasyywwdd
+
+int main()
+&#123;
+    char map[]=&quot;**************.****.**s..*..******.****.***********..***..**..#*..***..***.********************.**..*******..**...*..*.*.**.*&quot;;
+    int i;
+
+    for(i=0;i&lt;125;i++)
+    &#123;
+        printf(&quot;%c &quot;,map[i]);
+        if((i+1)%5==0)
+        &#123;
+            printf(&quot;\n&quot;);
+        &#125;
+        if((i+1)%25==0)
+        &#123;
+            printf(&quot;\n&quot;);    
+        &#125;
+    &#125;
+&#125;
+
+* * * * *     * . . * *      * . . * *      * * * * *      * * * * *
+* * * * *     * * * * .      * . . * *      * * * * *      * * . . *
+* * * * .     * * * * .      . . # * .      * * * * *      * . . . *
+* * * * .     * * * * *      . * * * .      * * * * *      . . * . *
+* * s . .     * * * * *      . * * * .      . * * . .      . * * . *</code></pre>
+<p>第二部分，base64解密过程，应该是把表给隐藏了，动调应该可以看到。<br><img src="https://i.loli.net/2021/06/03/23fyaXTgUZbIJCs.png"><br>脚本</p>
+<pre><code>import base64
+url = &#39;sctf_9102&#39;
+date = url.encode(&quot;utf-8&quot;)
+st = base64.b64encode(date)
+print(st)
+#c2N0Zl85MTAy</code></pre>
+<p>第3部分，也是比较难的一部分，类似sm4加密过程。<br><img src="https://i.loli.net/2021/06/03/bPk9YyRc5ONL4BX.png"><br>要逆这个算法，想了很久，分析发现其实和数组内异或加密是差不多的，我们假设生成的30个数为v1~v30，我们可以知道v30=v26^sub_1464(v27 ^ v28 ^ v29)，现在密文已知，相当于v27，v28，v29，v30是已知，所以可以求得v26，然后可以求得v25…..直到最后求出开始的4个数，然后转为char。</p>
+<p>这个还可以不写算法，直接用题目中的，只需要将开始的4个数改为密文(注意顺序就行)，就可以得到明文。<br><img src="https://i.loli.net/2021/06/03/64nGVTQLZmM8lWX.png"><br>网上找的脚本如下</p>
+<pre><code>aaa = [0xbe040680,0xc5af7647,0x9fcc401f,0xd8bf92ef]
+d = [
+0x000000D6, 0x00000090, 0x000000E9, 0x000000FE, 0x000000CC, 0x000000E1, 0x0000003D, 0x000000B7, 0x00000016, 0x000000B6, 0x00000014, 0x000000C2, 0x00000028, 0x000000FB, 0x0000002C, 0x00000005, 0x0000002B, 0x00000067, 0x0000009A, 0x00000076, 0x0000002A, 0x000000BE, 0x00000004, 0x000000C3, 0x000000AA, 0x00000044, 0x00000013, 0x00000026, 0x00000049, 0x00000086, 0x00000006, 0x00000099, 0x0000009C, 0x00000042, 0x00000050, 0x000000F4, 0x00000091, 0x000000EF, 0x00000098, 0x0000007A, 0x00000033, 0x00000054, 0x0000000B, 0x00000043, 0x000000ED, 0x000000CF, 0x000000AC, 0x00000062, 0x000000E4, 0x000000B3, 0x0000001C, 0x000000A9, 0x000000C9, 0x00000008, 0x000000E8, 0x00000095, 0x00000080, 0x000000DF, 0x00000094, 0x000000FA, 0x00000075, 0x0000008F, 0x0000003F, 0x000000A6, 0x00000047, 0x00000007, 0x000000A7, 0x000000FC, 0x000000F3, 0x00000073, 0x00000017, 0x000000BA, 0x00000083, 0x00000059, 0x0000003C, 0x00000019, 0x000000E6, 0x00000085, 0x0000004F, 0x000000A8, 0x00000068, 0x0000006B, 0x00000081, 0x000000B2, 0x00000071, 0x00000064, 0x000000DA, 0x0000008B, 0x000000F8, 0x000000EB, 0x0000000F, 0x0000004B, 0x00000070, 0x00000056, 0x0000009D, 0x00000035, 0x0000001E, 0x00000024, 0x0000000E, 0x0000005E, 0x00000063, 0x00000058, 0x000000D1, 0x000000A2, 0x00000025, 0x00000022, 0x0000007C, 0x0000003B, 0x00000001, 0x00000021, 0x00000078, 0x00000087, 0x000000D4, 0x00000000, 0x00000046, 0x00000057, 0x0000009F, 0x000000D3, 0x00000027, 0x00000052, 0x0000004C, 0x00000036, 0x00000002, 0x000000E7, 0x000000A0, 0x000000C4, 0x000000C8, 0x0000009E, 0x000000EA, 0x000000BF, 0x0000008A, 0x000000D2, 0x00000040, 0x000000C7, 0x00000038, 0x000000B5, 0x000000A3, 0x000000F7, 0x000000F2, 0x000000CE, 0x000000F9, 0x00000061, 0x00000015, 0x000000A1, 0x000000E0, 0x000000AE, 0x0000005D, 0x000000A4, 0x0000009B, 0x00000034, 0x0000001A, 0x00000055, 0x000000AD, 0x00000093, 0x00000032, 0x00000030, 0x000000F5, 0x0000008C, 0x000000B1, 0x000000E3, 0x0000001D, 0x000000F6, 0x000000E2, 0x0000002E, 0x00000082, 0x00000066, 0x000000CA, 0x00000060, 0x000000C0, 0x00000029, 0x00000023, 0x000000AB, 0x0000000D, 0x00000053, 0x0000004E, 0x0000006F, 0x000000D5, 0x000000DB, 0x00000037, 0x00000045, 0x000000DE, 0x000000FD, 0x0000008E, 0x0000002F, 0x00000003, 0x000000FF, 0x0000006A, 0x00000072, 0x0000006D, 0x0000006C, 0x0000005B, 0x00000051, 0x0000008D, 0x0000001B, 0x000000AF, 0x00000092, 0x000000BB, 0x000000DD, 0x000000BC, 0x0000007F, 0x00000011, 0x000000D9, 0x0000005C, 0x00000041, 0x0000001F, 0x00000010, 0x0000005A, 0x000000D8, 0x0000000A, 0x000000C1, 0x00000031, 0x00000088, 0x000000A5, 0x000000CD, 0x0000007B, 0x000000BD, 0x0000002D, 0x00000074, 0x000000D0, 0x00000012, 0x000000B8, 0x000000E5, 0x000000B4, 0x000000B0, 0x00000089, 0x00000069, 0x00000097, 0x0000004A, 0x0000000C, 0x00000096, 0x00000077, 0x0000007E, 0x00000065, 0x000000B9, 0x000000F1, 0x00000009, 0x000000C5, 0x0000006E, 0x000000C6, 0x00000084, 0x00000018, 0x000000F0, 0x0000007D, 0x000000EC, 0x0000003A, 0x000000DC, 0x0000004D, 0x00000020, 0x00000079, 0x000000EE, 0x0000005F, 0x0000003E, 0x000000D7, 0x000000CB, 0x00000039, 0x00000048, 0x000000C6, 0x000000BA, 0x000000B1, 0x000000A3, 0x00000050, 0x00000033, 0x000000AA, 0x00000056, 0x00000097, 0x00000091, 0x0000007D, 0x00000067, 0x000000DC, 0x00000022, 0x00000070, 0x000000B2, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+]
+
+for i in range(len(d)):
+    if d[i] == 0xa6:
+        print i
+def pass3_re(x):
+    x &amp;= 0xffffffff
+    a = d[x&amp;0xff] 
+    b = (d[(x&amp;0xffff)&gt;&gt;8]&lt;&lt;8) 
+    c = (d[(x&amp;0xffffff)&gt;&gt;16]&lt;&lt;16) 
+    e = (d[(x&amp;0xffffffff)&gt;&gt;24]&lt;&lt;24)
+    x = a|b|c|e 
+    x &amp;= 0xffffffff
+    a = (((x&lt;&lt;12)|(x&gt;&gt;20))&amp;0xffffffff) 
+    b = (((x&gt;&gt;6)|(x&lt;&lt;26))&amp;0xffffffff) 
+    c = (((x&lt;&lt;8)|(x&gt;&gt;24))&amp;0xffffffff) 
+    e = (((x&gt;&gt;2)|(x&lt;&lt;30))&amp;0xffffffff)
+    x = a^b^c^e
+    return x&amp;0xffffffff
+
+l = []
+for i in range(30 - 4):
+    l.append(0)
+for i in aaa:
+    l.append(i)
+
+cx = 25
+for i in range(26):
+    l[cx] = pass3_re(l[cx+1] ^ l[cx+2] ^ l[cx+3]) ^ l[cx+4]
+    cx -= 1
+
+
+pass3 = &#39;&#39;
+for i in range(4):
+    pass3  += (hex(l[i])[2:]).decode(&#39;hex&#39;)[::-1]
+
+print pass3</code></pre>
+<p>所以得到flag：sctf{ddwwxxssxaxwwaasasyywwdd-c2N0Zl85MTAy(fl4g_is_s0_ug1y!)}</p>
+<h2 id="easy-reverse-200"><a href="#easy-reverse-200" class="headerlink" title="easy-reverse-200"></a>easy-reverse-200</h2><p>不知道为什么交不了flag了</p>
+<p>分析函数，发现是对字节加密的xtea算法，对delat也进行了修改。<br><img src="https://i.loli.net/2021/06/04/KHsvD5qxQPV9Tta.png"><br>脚本解密</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+void decrypt(unsigned int r ,char *code ,int *key)
+&#123;
+    char v0,v1,i,j=0;
+    unsigned char sum=0xD9u;
+
+    v0=code[0];
+    v1=code[1];
+    do
+    &#123;
+        sum += 71;
+        v1 -= (sum + *(unsigned __int8 *)(key + (((char)sum &gt;&gt; 11) &amp; 3))) ^ (v0 + (16 * (char)v0 ^ ((char)v0 &gt;&gt; 5)));
+        v0 -= (v1 + (((char)v1 &gt;&gt; 5) ^ 16 * (char)v1)) ^ (sum + *(unsigned __int8 *)(key + (sum &amp; 3)));
+    &#125;while(sum!=0xb9);
+    code[0]=v0;
+    code[1]=v1;
+    printf(&quot;%c%c&quot;,code[0]%128,code[1]%128);
+&#125;
+
+int main()
+&#123;
+
+    int key[4]=&#123;0xde,0xad,0xbe,0xef&#125;;
+    unsigned int r=32;
+    char code[24]=&#123; 0xBF, 0xF1, 0x6A, 0x2C, 0x10, 0x0B, 0x16, 0x59, 0xBA, 0x3A, 
+  0x8C, 0x49, 0x05, 0x1B, 0x04, 0xE2, 0x85, 0xD5, 0xC2, 0xFC, 
+  0xD7, 0x9B, 0xE9, 0x42&#125;;
+    int i;
+
+    for(i=0;i&lt;24;i+=2)
+    &#123;
+        decrypt(r,&amp;code[i],key);
+    &#125;
+&#125;
+//zctf&#123;ha_hAha_d1l_exp0r7&#125;</code></pre>
+<h2 id=""><a href="#" class="headerlink" title="##"></a>##</h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">The_Itach1</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/06/11/xctf%E7%9A%84wp/">http://example.com/2022/06/11/xctf%E7%9A%84wp/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/06/11/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A3%B3/"><img class="prev-cover" src="https://i.loli.net/2021/02/04/8vlJQ6SNkU4DWpt.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">一些常用的壳</div></div></a></div><div class="next-post pull-right"><a href="/2022/06/11/Windows-Hack-Programming/"><img class="next-cover" src="https://s2.loli.net/2022/01/31/ktMQEOe8CgB9LJD.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Windows-Hack-Programming</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/5.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">The_Itach1</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Challenge-area"><span class="toc-number">1.</span> <span class="toc-text">Challenge area</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-elrond32"><span class="toc-number">1.1.</span> <span class="toc-text">1.elrond32</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-666"><span class="toc-number">1.2.</span> <span class="toc-text">2.666</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Reversing-x64Elf-100"><span class="toc-number">1.3.</span> <span class="toc-text">3.Reversing-x64Elf-100</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-IgniteMe"><span class="toc-number">1.4.</span> <span class="toc-text">4.IgniteMe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-debug"><span class="toc-number">1.5.</span> <span class="toc-text">5.debug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-hackme"><span class="toc-number">1.6.</span> <span class="toc-text">6.hackme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Guess-the-Number"><span class="toc-number">1.7.</span> <span class="toc-text">7.Guess-the-Number</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-BABYRE"><span class="toc-number">1.8.</span> <span class="toc-text">8.BABYRE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-EasyRE"><span class="toc-number">1.9.</span> <span class="toc-text">9.EasyRE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-Shuffle"><span class="toc-number">1.10.</span> <span class="toc-text">10.Shuffle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-re-for-50-plz-50"><span class="toc-number">1.11.</span> <span class="toc-text">11.re-for-50-plz-50</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-dmd-50"><span class="toc-number">1.12.</span> <span class="toc-text">12.dmd-50</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-secret-galaxy-300"><span class="toc-number">1.13.</span> <span class="toc-text">13.secret-galaxy-300</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-srm-50"><span class="toc-number">1.14.</span> <span class="toc-text">14.srm-50</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-simple-check-100"><span class="toc-number">1.15.</span> <span class="toc-text">15.simple-check-100</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-gametime"><span class="toc-number">1.16.</span> <span class="toc-text">16.gametime</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-tt3441810"><span class="toc-number">1.17.</span> <span class="toc-text">17.tt3441810</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#18-notsequence"><span class="toc-number">1.18.</span> <span class="toc-text">18.notsequence</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#19-re2-cpp-is-awesome"><span class="toc-number">1.19.</span> <span class="toc-text">19.re2-cpp-is-awesome</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#20-easy-Maze"><span class="toc-number">1.20.</span> <span class="toc-text">20.easy_Maze</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#21-Replace"><span class="toc-number">1.21.</span> <span class="toc-text">21.Replace</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#22-SignIn"><span class="toc-number">1.22.</span> <span class="toc-text">22.SignIn</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#23-EASYHOOK"><span class="toc-number">1.23.</span> <span class="toc-text">23.EASYHOOK##</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#24-babymips"><span class="toc-number">1.24.</span> <span class="toc-text">24.babymips</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#25-reverse-for-the-holy-grail-350"><span class="toc-number">1.25.</span> <span class="toc-text">25.reverse-for-the-holy-grail-350</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#26-re4-unvm-me"><span class="toc-number">1.26.</span> <span class="toc-text">26.re4-unvm-me</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#27-Windows-Reverse1"><span class="toc-number">1.27.</span> <span class="toc-text">27.Windows_Reverse1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#28-easyRE1"><span class="toc-number">1.28.</span> <span class="toc-text">28.easyRE1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#29-ReverseMe-120"><span class="toc-number">1.29.</span> <span class="toc-text">29.ReverseMe-120</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#30-android-app-100"><span class="toc-number">1.30.</span> <span class="toc-text">30.android-app-100</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#31-serial-150"><span class="toc-number">1.31.</span> <span class="toc-text">31.serial-150</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#32-testre"><span class="toc-number">1.32.</span> <span class="toc-text">32.testre</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#33-handcrafted-pyc"><span class="toc-number">1.33.</span> <span class="toc-text">33.handcrafted-pyc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#34-asong"><span class="toc-number">1.34.</span> <span class="toc-text">34.asong</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#35-%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E"><span class="toc-number">1.35.</span> <span class="toc-text">35.梅津美治郎</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#36-echo-server"><span class="toc-number">1.36.</span> <span class="toc-text">36.echo-server</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#37-re5-packed-movement"><span class="toc-number">1.37.</span> <span class="toc-text">37.re5-packed-movement</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#38-What-does-this-button-do"><span class="toc-number">1.38.</span> <span class="toc-text">38.What-does-this-button-do</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#39-easyGo"><span class="toc-number">1.39.</span> <span class="toc-text">39.easyGo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#40-2ex"><span class="toc-number">1.40.</span> <span class="toc-text">40.2ex</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#first"><span class="toc-number">1.41.</span> <span class="toc-text">first</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MyDriver2-397"><span class="toc-number">1.42.</span> <span class="toc-text">MyDriver2-397</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xx"><span class="toc-number">1.43.</span> <span class="toc-text">xx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Junk-Instruction"><span class="toc-number">1.44.</span> <span class="toc-text">Junk_Instruction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#icekey"><span class="toc-number">1.45.</span> <span class="toc-text">icekey</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#evil"><span class="toc-number">1.46.</span> <span class="toc-text">evil</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#childRE"><span class="toc-number">1.47.</span> <span class="toc-text">childRE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RE-Crc-300"><span class="toc-number">1.48.</span> <span class="toc-text">RE-Crc-300</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#polyre"><span class="toc-number">1.49.</span> <span class="toc-text">polyre</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#seven"><span class="toc-number">1.50.</span> <span class="toc-text">seven</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reverse"><span class="toc-number">1.51.</span> <span class="toc-text">Reverse</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Re150"><span class="toc-number">1.52.</span> <span class="toc-text">Re150</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babyre1"><span class="toc-number">1.53.</span> <span class="toc-text">babyre1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easyRE"><span class="toc-number">1.54.</span> <span class="toc-text">easyRE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babyre"><span class="toc-number">1.55.</span> <span class="toc-text">babyre</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easy-reverse-200"><span class="toc-number">1.56.</span> <span class="toc-text">easy-reverse-200</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.57.</span> <span class="toc-text">##</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp"><img src="https://i.loli.net/2021/01/16/obZv2RnrgFj6aLq.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="鹏程实验室邀请赛wp"/></a><div class="content"><a class="title" href="/2022/06/11/%E9%B9%8F%E7%A8%8B%E5%AE%9E%E9%AA%8C%E5%AE%A4%E9%82%80%E8%AF%B7%E8%B5%9Bwp/" title="鹏程实验室邀请赛wp">鹏程实验室邀请赛wp</a><time datetime="2022-06-10T17:10:13.979Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E8%99%8E%E7%AC%A6ctf&amp;%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/" title="虎符ctf的wp&amp;红明谷杯的wp"><img src="https://i.loli.net/2021/04/09/vfNLV8F2DPyglKH.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="虎符ctf的wp&amp;红明谷杯的wp"/></a><div class="content"><a class="title" href="/2022/06/11/%E8%99%8E%E7%AC%A6ctf&amp;%E7%BA%A2%E6%98%8E%E8%B0%B7%E7%9A%84wp/" title="虎符ctf的wp&amp;红明谷杯的wp">虎符ctf的wp&amp;红明谷杯的wp</a><time datetime="2022-06-10T17:10:13.977Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E8%8A%B1%E6%8C%87%E4%BB%A4/" title="逆向之&quot;花&quot;"><img src="https://i.loli.net/2020/12/18/XvcSVTGQWYPFR1M.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="逆向之&quot;花&quot;"/></a><div class="content"><a class="title" href="/2022/06/11/%E8%8A%B1%E6%8C%87%E4%BB%A4/" title="逆向之&quot;花&quot;">逆向之&quot;花&quot;</a><time datetime="2022-06-10T17:10:13.974Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E7%AE%80%E5%8D%95%E8%BD%AF%E4%BB%B6%E7%A0%B4%E8%A7%A3/" title="Simple software cracking"><img src="https://i.loli.net/2021/12/02/gaPGbVDE1NFzupY.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Simple software cracking"/></a><div class="content"><a class="title" href="/2022/06/11/%E7%AE%80%E5%8D%95%E8%BD%AF%E4%BB%B6%E7%A0%B4%E8%A7%A3/" title="Simple software cracking">Simple software cracking</a><time datetime="2022-06-10T17:10:13.969Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/%E7%A5%A5%E4%BA%91%E6%9D%AF%20%E9%83%A8%E5%88%86%20re%20wp/" title="祥云杯 部分 re wp"><img src="https://i.loli.net/2021/08/26/TAgouixStP4aqlL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="祥云杯 部分 re wp"/></a><div class="content"><a class="title" href="/2022/06/11/%E7%A5%A5%E4%BA%91%E6%9D%AF%20%E9%83%A8%E5%88%86%20re%20wp/" title="祥云杯 部分 re wp">祥云杯 部分 re wp</a><time datetime="2022-06-10T17:10:13.967Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://i.loli.net/2021/01/22/wrXkBza1Nqu6C5Z.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By The_Itach1</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">木叶飞舞之处，火亦生生不息</div><div class="icp"><a><span></span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
