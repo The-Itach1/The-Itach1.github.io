@@ -1,0 +1,640 @@
+<!DOCTYPE html><html lang="zh-CH" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DLL注入技术 | The_Itach1</title><meta name="keywords" content="Windows,《逆原》"><meta name="author" content="The_Itach1"><meta name="copyright" content="The_Itach1"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="逆向工程核心原理DLL注入前言：学这一部分知识最好先学一部分win32API编程的知识，分析源代码就会容易一些。 DLL注入概念 DLL注入指的是向运行中的其他进程强制插入特定的DLL文件。从技术细节来说，DLL注入命令其他进程自行调用LoadLibrary()API，加载用户指定的DLL文件。DLL注入与其他一般的DLL加载在于，加载的目标进程是其自身或其他进程。 DLL注入技术的作用 DLL注">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DLL注入技术">
+<meta property="og:url" content="http://example.com/2021/03/09/DLL%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="The_Itach1">
+<meta property="og:description" content="逆向工程核心原理DLL注入前言：学这一部分知识最好先学一部分win32API编程的知识，分析源代码就会容易一些。 DLL注入概念 DLL注入指的是向运行中的其他进程强制插入特定的DLL文件。从技术细节来说，DLL注入命令其他进程自行调用LoadLibrary()API，加载用户指定的DLL文件。DLL注入与其他一般的DLL加载在于，加载的目标进程是其自身或其他进程。 DLL注入技术的作用 DLL注">
+<meta property="og:locale" content="zh_CH">
+<meta property="og:image" content="https://i.loli.net/2021/03/09/ureiVDLYMQqvnIf.jpg">
+<meta property="article:published_time" content="2021-03-09T09:38:45.000Z">
+<meta property="article:modified_time" content="2022-06-10T18:44:20.867Z">
+<meta property="article:author" content="The_Itach1">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="《逆原》">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/03/09/ureiVDLYMQqvnIf.jpg"><link rel="shortcut icon" href="/img/2.png"><link rel="canonical" href="http://example.com/2021/03/09/DLL%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-06-11 02:44:20'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/5.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">52</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">21</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2021/03/09/ureiVDLYMQqvnIf.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">The_Itach1</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">DLL注入技术</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-03-09T09:38:45.000Z" title="Created 2021-03-09 17:38:45">2021-03-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-06-10T18:44:20.867Z" title="Updated 2022-06-11 02:44:20">2022-06-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Reverse/">Reverse</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="逆向工程核心原理DLL注入"><a href="#逆向工程核心原理DLL注入" class="headerlink" title="逆向工程核心原理DLL注入"></a>逆向工程核心原理DLL注入</h2><p>前言：学这一部分知识最好先学一部分win32API编程的知识，分析源代码就会容易一些。</p>
+<p><strong>DLL注入概念</strong></p>
+<p>DLL注入指的是向运行中的其他进程强制插入特定的DLL文件。从技术细节来说，DLL注入命令其他进程自行调用LoadLibrary()API，加载用户指定的DLL文件。DLL注入与其他一般的DLL加载在于，加载的目标进程是其自身或其他进程。</p>
+<p><strong>DLL注入技术的作用</strong></p>
+<p>DLL注入技术可以被正常软件用来添加/扩展其他程序，调试或逆向工程的功能性；该技术也常被恶意软件以多种方式利用。</p>
+<p><strong>三种DLL注入的方法：</strong></p>
+<ol>
+<li>创建远端线程（CreateRemoteThread()API）</li>
+<li>使用注册表（AppInit_DLLs值）</li>
+<li>消息钩取（SetWindowsHookEx()API）</li>
+<li>通过修改pe文件来加载DLL文件</li>
+</ol>
+<h3 id="创建远端线程（CreateRemoteThread-API）"><a href="#创建远端线程（CreateRemoteThread-API）" class="headerlink" title="创建远端线程（CreateRemoteThread()API）"></a>创建远端线程（CreateRemoteThread()API）</h3><p>大概原理就是通过CreateRemoteThread()API来使目标进程调用LoadLibrary()API，加载我们写好的DLL。</p>
+<h4 id="InjectDll-exe"><a href="#InjectDll-exe" class="headerlink" title="InjectDll.exe"></a>InjectDll.exe</h4><p>这个程序用来像目标进程注入我们的DLL，源代码如下</p>
+<pre><code>#include&quot;Windows.h&quot;
+#include&quot;tchar.h&quot;
+#include&quot;stdio.h&quot;
+
+BOOL InjectDll(DWORD dwPID, LPCTSTR szDllPath)
+&#123;
+    HANDLE hProcess = NULL, hThread = NULL;//目标进程的句柄 
+    HMODULE hMod = NULL;                   
+    LPVOID pRemoteBuf = NULL;              //向目标进程申请内存空间的首地址。 
+    DWORD dwBufSize = (DWORD)(_tcslen(szDllPath) + 1) * sizeof(TCHAR);//我们写的DLL路径的字符串长度大小，记得加一个1，字符串以&#39;\0&#39;结尾。 
+    LPTHREAD_START_ROUTINE pThreadProc;    //线程的起点函数地址。 
+
+     //获得目标进程的句柄，让我们可以操作这个进程 
+    if (!(hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPID)))
+    &#123;
+        _tprintf(L&quot;OpenProcess(%d) failed!!! [%d]\n&quot;, dwPID, GetLastError());
+        return false;
+    &#125;
+
+    //向目标进程申请一个可以存放DLL路径字符串长度大小的空间。 
+    pRemoteBuf = VirtualAllocEx(hProcess, NULL, dwBufSize, MEM_COMMIT, PAGE_READWRITE);
+
+    //将DLL路径字符串写人这个申请的空间。 
+    WriteProcessMemory(hProcess, pRemoteBuf, (LPVOID)szDllPath, dwBufSize, NULL);
+
+     //获取&quot;kernel32.dll&quot;动态链接库的模块句柄，用来调用其中的&quot;LoadLibraryW&quot;函数。 
+    hMod = GetModuleHandle(L&quot;kernel32.dll&quot;);
+
+    //所执行的线程函数地址设置为LoadLibraryW()API函数，使这个函数调用pRemoteBuf这个参数，也就是加载我们的DLL。 
+    pThreadProc = (LPTHREAD_START_ROUTINE)GetProcAddress(hMod, &quot;LoadLibraryW&quot;);
+    //创建一个线程，hProcess为目标进程， pThreadProc为线程函数地址， pRemoteBuf为向这个函数传入的参数。 
+    hThread = CreateRemoteThread(hProcess, NULL, 0, pThreadProc, pRemoteBuf, 0, NULL);
+    WaitForSingleObject(hThread, INFINITE);
+    CloseHandle(hThread);   //关闭线程句柄 
+    CloseHandle(hProcess);  //关闭进程句柄 
+    return TRUE;
+&#125;
+int _tmain(int argc, TCHAR* argv[])
+&#123;
+    if(argc!=3)//这里是描述使用方法 
+    &#123;
+        _tprintf(L&quot;USAGE:%s pid dll_path\n&quot;, argv[0]);
+        return 1;
+    &#125;
+
+    if (InjectDll((DWORD)_tstol(argv[1]), argv[2]))  //argv[1]是目标进程的PID， argv[2]是我们要注入DLL的绝对地址。 然后_tstol是将字符串型的PID转为整型的。
+        _tprintf(L&quot;InjectDll(\&quot;%s\&quot;) success!!!\n&quot;, argv[2]);
+    else
+        _tprintf(L&quot;InjectDll(\&quot;%s\&quot;) failed!!!\n&quot;, argv[2]);
+    return 0;
+&#125;</code></pre>
+<p>将这个代码在Visual Studio 2019中用win32来生成exe文件，得到InjectDll.exe。下面是一些函数的解释。</p>
+<p><strong>GetModuleHandle()API</strong></p>
+<p>获取一个应用程序或动态链接库的模块句柄。</p>
+<pre><code>HMODULE GetModuleHandle(
+    LPCTSTR lpModuleName //lpModuleName String，指定模块名，这通常是与模块的文件名相同的一个名字。
+);</code></pre>
+<p><strong>VirtualAllocEx()API</strong></p>
+<p>在指定进程的虚拟空间保留或提交内存区域</p>
+<pre><code>LPVOID VirtualAllocEx(
+    HANDLE hProcess,
+    LPVOID lpAddress,
+    SIZE_T dwSize,
+    DWORD flAllocationType,
+    DWORD flProtect
+);
+hProcess：申请内存所在的进程句柄。
+
+lpAddress：保留页面的内存地址；一般用NULL自动分配 。
+
+dwSize：欲分配的内存大小，字节单位；注意实际分 配的内存大小是页内存大小的整数倍
+
+flAllocationType
+可取下列值：
+MEM_COMMIT：为特定的页面区域分配内存中或磁盘的页面文件中的物理存储
+MEM_PHYSICAL ：分配物理内存（仅用于地址窗口扩展内存）
+MEM_RESERVE：保留进程的虚拟地址空间，而不分配任何物理存储。保留页面可通过继续调用VirtualAlloc（）而被占用
+MEM_RESET ：指明在内存中由参数lpAddress和dwSize指定的数据无效
+MEM_TOP_DOWN：在尽可能高的地址上分配内存（Windows 98忽略此标志）
+MEM_WRITE_WATCH：必须与MEM_RESERVE一起指定，使系统跟踪那些被写入分配区域的页面（仅针对Windows 98）
+
+flProtect
+可取下列值：
+PAGE_READONLY： 该区域为只读。如果应用程序试图访问区域中的页的时候，将会被拒绝访
+PAGE_READWRITE 区域可被应用程序读写
+PAGE_EXECUTE： 区域包含可被系统执行的代码。试图读写该区域的操作将被拒绝。
+PAGE_EXECUTE_READ ：区域包含可执行代码，应用程序可以读该区域。
+PAGE_EXECUTE_READWRITE： 区域包含可执行代码，应用程序可以读写该区域。
+PAGE_GUARD： 区域第一次被访问时进入一个STATUS_GUARD_PAGE异常，这个标志要和其他保护标志合并使用，表明区域被第一次访问的权限
+PAGE_NOACCESS： 任何访问该区域的操作将被拒绝
+PAGE_NOCACHE： RAM中的页映射到该区域时将不会被微处理器缓存（cached)
+注:PAGE_GUARD和PAGE_NOCHACHE标志可以和其他标志合并使用以进一步指定页的特征。PAGE_GUARD标志指定了一个防护页（guard page），即当一个页被提交时会因第一次被访问而产生一个one-shot异常，接着取得指定的访问权限。PAGE_NOCACHE防止当它映射到虚拟页的时候被微处理器缓存。这个标志方便设备驱动使用直接内存访问方式（DMA）来共享内存块。
+返回值：
+执行成功就返回分配内存的首地址，不成功就是NULL。</code></pre>
+<p><strong>WriteProcessMemory()</strong></p>
+<p>此函数能写入某一进程的内存区域，故需此函数入口区必须可以访问，否则操作将失败。</p>
+<pre><code>BOOL WriteProcessMemory(
+    HANDLE hProcess,  //由OpenProcess返回的进程句柄。
+    LPVOID lpBaseAddress,  //要写的内存首地址
+    LPVOID lpBuffer,  //指向要写的数据的指针。
+    DWORD nSize,  //要写入的字节数。
+    LPDWORD lpNumberOfBytesWritten
+);</code></pre>
+<p><strong>GetProcAddress()</strong></p>
+<p>获得函数地址</p>
+<pre><code>FARPROC GetProcAddress(
+    HMODULE hModule, // DLL模块句柄
+    LPCSTR lpProcName // 函数名
+);</code></pre>
+<p><strong>CreateRemoteThread()</strong></p>
+<p>在目标进程中创建一个线程</p>
+<pre><code>HANDLE WINAPI CreateRemoteThread(
+__in HANDLE hProcess,  //线程所属进程的进程句柄.
+__in LPSECURITY_ATTRIBUTES lpThreadAttributes,  //一个指向 SECURITY_ATTRIBUTES 结构的指针, 该结构指定了线程的安全属性.
+__in SIZE_T dwStackSize,   //线程栈初始大小,以字节为单位,如果该值设为0,那么使用系统默认大小.
+__in LPTHREAD_START_ROUTINE lpStartAddress,    //在远程进程的地址空间中,该线程的线程函数的起始地址.
+__in LPVOID lpParameter,   //传给线程函数的参数.
+__in DWORD dwCreationFlags,   
+__out LPDWORD lpThreadId   //指向所创建线程ID的指针,如果创建失败,该参数为NULL.
+);</code></pre>
+<h4 id="myhack-dll"><a href="#myhack-dll" class="headerlink" title="myhack.dll"></a>myhack.dll</h4><p>根据书上改了一下，变成了弹出一个窗口的dll动态链接库</p>
+<pre><code>// dllmain.cpp : 定义 DLL 应用程序的入口点。
+#include &quot;windows.h&quot;
+#include &quot;tchar.h&quot;
+#include &quot;pch.h&quot;
+
+
+DWORD WINAPI ThreadProc(LPVOID lParam)//弹出一个输出hellow world的窗口
+&#123;
+    CHAR message[]=&quot;hellow world&quot;;
+    CHAR title[]=&quot;messagebox&quot;;
+    MessageBoxA(NULL,message,title,MB_OK);
+
+    return 0;
+&#125;
+
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+&#123;
+    HANDLE hThread = NULL;
+
+    switch (fdwReason)
+    &#123;
+    case DLL_PROCESS_ATTACH:
+        OutputDebugString(L&quot;&lt;myhack.dll&gt; Injection!!!&quot;);//在Debugview里面输出字符串
+        hThread = CreateThread(NULL, 0, ThreadProc, NULL, 0, NULL); //创建一个线程
+        CloseHandle(hThread);
+        break;
+    &#125;
+
+    return TRUE;
+&#125;</code></pre>
+<p>将InjectDll.exe，和myhack.dll都放在D盘下，打开32位的notepad.exe然后用管理员权限的cmd来执行命令。<br><img src="https://i.loli.net/2021/03/07/PJHU7dn198LCIuX.png"><br>效果如下<br><img src="https://i.loli.net/2021/03/07/pg3HcyKQW9Lqonf.png"><br>看了后面的内容，根据代码改了一下InjectDll.exe的代码，可以不用查看PID了，只需要提供进程的名称，详细内容请看另一篇博客win32编程学习笔记。</p>
+<pre><code>#include&quot;Windows.h&quot;
+#include&quot;tchar.h&quot;
+#include &quot;tlhelp32.h&quot;
+#include&quot;stdio.h&quot;
+
+DWORD FindProcessID(LPCTSTR szProcessName)
+&#123;
+    DWORD dwPID = 0xFFFFFFFF;
+    HANDLE hSnapShot = INVALID_HANDLE_VALUE;
+    PROCESSENTRY32 pe;
+
+    // Get the snapshot of the system
+    pe.dwSize = sizeof(PROCESSENTRY32);
+    hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+
+    // find process
+    Process32First(hSnapShot, &amp;pe);
+    do
+    &#123;
+        if (!_tcsicmp(szProcessName, (LPCTSTR)pe.szExeFile))
+        &#123;
+            dwPID = pe.th32ProcessID;
+            break;
+        &#125;
+    &#125; while (Process32Next(hSnapShot, &amp;pe));
+
+    CloseHandle(hSnapShot);
+
+    return dwPID;
+&#125;
+
+BOOL InjectDll(DWORD dwPID, LPCTSTR szDllPath)
+&#123;
+    HANDLE hProcess = NULL, hThread = NULL;
+    HMODULE hMod = NULL;
+    LPVOID pRemoteBuf = NULL;
+    DWORD dwBufSize = (DWORD)(_tcslen(szDllPath) + 1) * sizeof(TCHAR);
+    LPTHREAD_START_ROUTINE pThreadProc;
+
+    if (!(hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPID)))
+    &#123;
+        _tprintf(L&quot;OpenProcess(%d) failed!!! [%d]\n&quot;, dwPID, GetLastError());
+        return false;
+    &#125;
+    pRemoteBuf = VirtualAllocEx(hProcess, NULL, dwBufSize, MEM_COMMIT, PAGE_READWRITE);
+
+    WriteProcessMemory(hProcess, pRemoteBuf, (LPVOID)szDllPath, dwBufSize, NULL);
+
+    hMod = GetModuleHandle(L&quot;kernel32.dll&quot;);
+    pThreadProc = (LPTHREAD_START_ROUTINE)GetProcAddress(hMod, &quot;LoadLibraryW&quot;);
+    hThread = CreateRemoteThread(hProcess, NULL, 0, pThreadProc, pRemoteBuf, 0, NULL);
+    WaitForSingleObject(hThread, INFINITE);
+    CloseHandle(hThread);
+    CloseHandle(hProcess);
+    return TRUE;
+&#125;
+int _tmain(int argc, TCHAR* argv[])
+&#123;
+    DWORD PID;
+
+    if (argc != 3)
+    &#123;
+        _tprintf(L&quot;USAGE:%s processname dll_path\n&quot;, argv[0]);
+        return 1;
+    &#125;
+
+
+    PID = FindProcessID(argv[1]);
+    if (InjectDll(PID, argv[2]))
+        _tprintf(L&quot;InjectDll(\&quot;%s\&quot;) success!!!\n&quot;, argv[2]);
+    else
+        _tprintf(L&quot;InjectDll(\&quot;%s\&quot;) failed!!!\n&quot;, argv[2]);
+    return 0;
+&#125;</code></pre>
+<h3 id="使用注册表（AppInit-DLLs值）"><a href="#使用注册表（AppInit-DLLs值）" class="headerlink" title="使用注册表（AppInit_DLLs值）"></a>使用注册表（AppInit_DLLs值）</h3><p>通过修改注册表来注入DLL。</p>
+<h4 id="myhack2-dll"><a href="#myhack2-dll" class="headerlink" title="myhack2.dll"></a>myhack2.dll</h4><p>简单做了一些改动，变成了，不隐藏打开一个网页。如果要隐藏的话改一下pi结构体的一些内容就行了。</p>
+<pre><code>// dllmain.cpp : 定义 DLL 应用程序的入口点。
+#include &quot;pch.h&quot;
+#include &quot;windows.h&quot;
+#include &quot;tchar.h&quot;
+#include &quot;stdio.h&quot;
+
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+&#123;
+    TCHAR szPath[MAX_PATH] = &#123; 0, &#125;;
+    TCHAR szChildname[] = TEXT(&quot;D:/Firefox/firefox.exe&quot;);
+    TCHAR szURL[] = TEXT(&quot; https://the_itach1.gitee.io/&quot;);
+    TCHAR process[] = TEXT(&quot;notepad.exe&quot;);
+    TCHAR* p = NULL;
+    STARTUPINFO si = &#123; 0, &#125;;
+    PROCESS_INFORMATION pi = &#123; 0, &#125;;
+
+    si.cb = sizeof(STARTUPINFO);
+
+
+    switch (fdwReason)
+    &#123;
+    case DLL_PROCESS_ATTACH:
+        if (!GetModuleFileName(NULL, szPath, MAX_PATH))
+            break;
+
+        if (!(p = _tcsrchr(szPath, &#39;\\&#39;)))  
+            break;
+
+        if (_tcsicmp(p + 1, process))      //确保当前进程是notepad.exe，才会进行这些操作，也可以根据需要来改变进程对象。
+            break;
+
+        if (!CreateProcess(szChildname, (LPTSTR)(LPCTSTR)szURL,
+            NULL, NULL, FALSE,
+            0,
+            NULL, NULL, &amp;si, &amp;pi))
+            break;
+
+        if (pi.hProcess != NULL)
+            CloseHandle(pi.hProcess);
+
+        break;
+    &#125;
+    return TRUE;
+&#125;</code></pre>
+<p>在运行里面输入regedit.exe，打开注册表编辑器，然后就如下图所示进行改动。<br><img src="https://i.loli.net/2021/03/07/LalP5cvkGJRNYCT.png"><br>然后重启计算机，就可以发现myhack.dll已经注入到了user32.dll加载的所有进程。(不知道什么原因我电脑好像不行，哈哈哈)。</p>
+<h3 id="消息钩取（SetWindowsHookEx-API）"><a href="#消息钩取（SetWindowsHookEx-API）" class="headerlink" title="消息钩取（SetWindowsHookEx()API）"></a>消息钩取（SetWindowsHookEx()API）</h3><p>目前不知道怎么将截取的键盘信息输出到debugview。</p>
+<h4 id="hookmain-exe"><a href="#hookmain-exe" class="headerlink" title="hookmain.exe"></a>hookmain.exe</h4><p>hookmain.exe就相当于一个药引吧，主要用来加载dll里面的两个函数。至于为什么不能直接写一个exe文件来钩取键盘记录，我认为是以因为SetWindowsHookEx()这个函数的特性就就决定了它只能在DLL中存在，下面会给SetWindowsHookEx()函数的一些介绍。</p>
+<pre><code>#include &quot;stdio.h&quot;
+#include &quot;conio.h&quot;
+#include &quot;windows.h&quot;
+
+#define    DEF_DLL_NAME        &quot;KeyHook.dll&quot;
+#define    DEF_HOOKSTART        &quot;HookStart&quot;
+#define    DEF_HOOKSTOP        &quot;HookStop&quot;
+
+typedef void (*PFN_HOOKSTART)();//这里是定义了两个函数指针。
+typedef void (*PFN_HOOKSTOP)();
+
+void main()
+&#123;
+    HMODULE            hDll = NULL;
+    PFN_HOOKSTART    HookStart = NULL;
+    PFN_HOOKSTOP    HookStop = NULL;
+    char            ch = 0;
+
+
+    hDll = LoadLibraryA(DEF_DLL_NAME);//加载KeyHook.dll，获得dll的句柄
+    if (hDll == NULL)
+    &#123;
+        printf(&quot;LoadLibrary(%s) failed!!! [%d]&quot;, DEF_DLL_NAME, GetLastError());
+        return;
+    &#125;
+
+    HookStart = (PFN_HOOKSTART)GetProcAddress(hDll, DEF_HOOKSTART);//利用GetProcAddress()获得HookStart的函数地址
+    HookStop = (PFN_HOOKSTOP)GetProcAddress(hDll, DEF_HOOKSTOP);//利用GetProcAddress()获得HookStop的函数地址
+
+    HookStart();//开始钩取函数
+
+    printf(&quot;press &#39;q&#39; to quit!\n&quot;);
+    while (_getch() != &#39;q&#39;);//遇到键盘输入q就退出
+
+    HookStop();//退出钩取函数
+
+    FreeLibrary(hDll);
+&#125;</code></pre>
+<h4 id="KeyHook-dll"><a href="#KeyHook-dll" class="headerlink" title="KeyHook.dll"></a>KeyHook.dll</h4><p>最重要的就是SetWindowsHookEx()，和KeyBoardProc()这个回调函数了。</p>
+<p><strong>SetWindowsHookEx()</strong></p>
+<pre><code>HHOOK WINAPI SetWindowsHookEx（
+  _In_  int    idHook，　　　　　　　　　　　　设置钩子的类型.意思就是我要设置的钩子是什么钩子. 可以是监视窗口过程.可以是监视消息队列.
+  _In_ HOOKPROC lpfn，　　　　　　　　　　　　 根据钩子类型.设置不同的回调函数.
+  _In_ HINSTANCE hMod，　　　　　　　　　　　　钩子设置的Dll实例句柄,就是DLL的句柄
+  _In_ DWORD dwThreadId　　　　　　　　　　   设置钩子的线程ID. 如果为0 则设置为全局钩子.
+）;
+　　HHOOK 返回值. 是一个钩子过程句柄.
+原型  SetWindowsHookEx(WH_KEYBOARD, KeyBoardProc, HInstance, 0);</code></pre>
+<p><strong>KeyBoardProc()</strong></p>
+<pre><code>首先键盘钩子处理函数的函数名是可以自定义的 ，例如：MyKeyboardProc()
+函数原型：
+LRESULT CALLBACK KeyboardProc( 
+    int code,
+    WPARAM wParam,
+    LPARAM lParam
+);
+code：
+根据这个数值决定怎样处理消息
+如果 code 小于0，则 必须让KeyboardProc()函数返回CallNextHookEx()
+wParam：
+按键的虚拟键值消息，例如:VK_F1
+lParam:
+32位内存，内容描述包括：指定扩展键值，扫描码，上下文，重复次数。这里只用到了第31位就只给31位的解释吧。
+31位,指定转变状态：31位为0时候，按键正在被按下，为1时候，按键正在被释放
+返回值：
+如果参数1:code小于0，则必须 返回CallNextHookEx(),也就是返回CallNextHookEx()的返回值
+如果参数1:code大于等于0，并且钩子处理函数没有处理消息，强烈建议您 返回CallNextHookEx()的返回值，否则当您安装WH_KEYBOARD钩子时
+，钩子将不会得到通知，并返回错误结果。
+**如果钩子处理的消息，您可以返回一个非0值，防止系统把消息传递给钩子链中的下一个钩子，或者把消息发送到目标窗口。**</code></pre>
+<p>可以根据需要来决定截取那一个进程的键盘消息。</p>
+<pre><code>#include &quot;stdio.h&quot;
+#include &quot;windows.h&quot;
+#include &quot;pch.h&quot;
+
+
+#define DEF_PROCESS_NAME        &quot;notepad.exe&quot;
+
+HINSTANCE g_hInstance = NULL;
+HHOOK g_hHook = NULL;
+HWND g_hWnd = NULL;
+
+
+
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpvReserved)
+&#123;
+    switch (dwReason)
+    &#123;
+    case DLL_PROCESS_ATTACH:
+        g_hInstance = hinstDLL;//获取该DLL的句柄。
+        break;
+
+    case DLL_PROCESS_DETACH:
+        break;
+    &#125;
+
+    return TRUE;
+&#125;
+
+LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+&#123;
+    char szPath[MAX_PATH] = &#123; 0, &#125;;
+    char* p = NULL;
+
+    if (nCode &gt;= 0)
+    &#123;
+        // 根据lParam的31位判断是否有按键输入
+        if (!(lParam &amp; 0x80000000)) 
+        &#123;
+            GetModuleFileNameA(NULL, szPath, MAX_PATH);
+            p = strrchr(szPath, &#39;\\&#39;);
+
+            if (!_stricmp(p + 1, DEF_PROCESS_NAME))//看当前进程是否是notepad.exe
+            &#123;
+                OutputDebugString(L&quot;successful&quot;);//用Debugview输出successful来确定注入成功
+                return 1；//返回一个非0值，防止系统把消息传递给钩子链中的下一个钩子，这样notepad就不会有键盘消息了。
+            &#125;
+        &#125;
+    &#125;
+
+    return CallNextHookEx(g_hHook, nCode, wParam, lParam);
+&#125;
+
+#ifdef __cplusplus
+extern &quot;C&quot; &#123;
+#endif
+    __declspec(dllexport) void HookStart()
+    &#123;
+        g_hHook = SetWindowsHookEx(WH_KEYBOARD, KeyboardProc, g_hInstance, 0);   //调用SetWindowsHookEx()函数
+    &#125;
+
+    __declspec(dllexport) void HookStop()
+    &#123;
+        if (g_hHook)
+        &#123;
+            UnhookWindowsHookEx(g_hHook);  //结束钩取函数
+            g_hHook = NULL;
+        &#125;
+    &#125;
+#ifdef __cplusplus
+&#125;
+#endif</code></pre>
+<p>根据需要选择32位还是64位的，我这里是选择的64位的，查看结果如下<br><img src="https://i.loli.net/2021/03/09/vzjMuLNC98AYiG1.png"></p>
+<p>但是会出现一些问题，就是如果尝试在其他64位进程中输入消息，会出现未响应的情况，网上搜了一下，感觉这个消息比较合理。</p>
+<p>如果你认真看SetWindowsHookEx的文档的话，会看到在你的DLL因为CPU架构不匹配而不能注入目标程序的时候，被钩的程序是通过SendMessage来调用你的KeyboardProc的。然后你的KeyboardProc卡在了对话框那里没有返回，所以这些程序的界面就卡在SendMessage那里了。  在64位Windows上，大多数程序是32位。资源管理器是64位。</p>
+<h3 id="通过修改pe文件来加载DLL文件"><a href="#通过修改pe文件来加载DLL文件" class="headerlink" title="通过修改pe文件来加载DLL文件"></a>通过修改pe文件来加载DLL文件</h3><h4 id="myhack3-dll"><a href="#myhack3-dll" class="headerlink" title="myhack3.dll"></a>myhack3.dll</h4><p>改了书上的，书上代码太复杂了，而且不知道什么原因(可能是访问的Google吧)，注入成功了也看不到效果，就改了一个输出一个窗口(简单嘛)。</p>
+<pre><code>#include &quot;stdio.h&quot;
+#include &quot;windows.h&quot;
+#include &quot;pch.h&quot;
+#include &quot;tchar.h&quot;
+
+#pragma comment(lib, &quot;Wininet.lib&quot;)
+
+HWND g_hWnd = NULL;
+
+#ifdef __cplusplus
+extern &quot;C&quot; &#123;
+#endif
+    __declspec(dllexport) void fun()  //根据形式要求，必须设置一个导出函数，我这里是将函数名设置为fun。
+    &#123;
+        return;
+    &#125;
+#ifdef __cplusplus
+&#125;
+#endif
+
+
+DWORD WINAPI ThreadProc(LPVOID lParam)
+&#123;
+    MessageBoxA(NULL, &quot;The_Itach1&quot;, &quot;Reverse Corse&quot;, MB_OK);
+
+    return 0;
+&#125;
+
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+&#123;
+    switch (fdwReason)
+    &#123;
+    case DLL_PROCESS_ATTACH:
+        CloseHandle(CreateThread(NULL, 0, ThreadProc, NULL, 0, NULL));
+        break;
+    &#125;
+
+    return TRUE;
+&#125;</code></pre>
+<h4 id="修改TextView-exe"><a href="#修改TextView-exe" class="headerlink" title="修改TextView.exe"></a>修改TextView.exe</h4><p>Import Directory Table由IMAGE_IMPORT_DESCRIPTOR结构体组成。</p>
+<pre><code>typedef struct _IMAGE_IMPORT_DESCRIPTOR &#123;
+    union &#123;
+        DWORD Characteristics;
+        DWORD OriginalFirstThunk;            //INT(Import Name Table) address (RVA)
+    &#125;;
+    DWORD TimeDateStamp;
+    DWORD ForwarderChain;
+    DWORD Name;                                //library name string address (RVA)
+    DWORD FirstThunk;                        //IAT(Import Address Table) address (RVA)
+&#125; IMAGE_IMPORT_DESCRIPTOR;
+
+typedef struct _IMAGE_IMPORT_BY_NAME &#123;
+    WORD Hint;                                //ordinal
+    BYTE Name[1];                            //function name string</code></pre>
+<p>用pe view打开可以发现Import Directory Table的后面已经有了其他代码，所以不能添写更多的IMAGE_IMPORT_DESCRIPTOR结构体了，所以要选择另一片区域来设置Import Directory Table，然后设置到了.rdate节区。</p>
+<p>先将原来Import Directory Table(RAV=84CC)的64个字节的数据复制到选择的null-padding位置。然后再加上myhack3.dll的IMAGE_IMPORT_DESCRIPTOR。<br><img src="https://i.loli.net/2021/03/09/IPKsRdwOMujrE7o.png"></p>
+<p>然后修改新Import Directory Table在文件中的位置和大小，还要修改IAT节区的可写属性。</p>
+<p><img src="https://i.loli.net/2021/03/09/cdlWkBhipqV6Umu.png"><br>然后保存，将修改后的TextView.exe和myhack.dll放在一起，运行TextView.exe，得到<br><img src="https://i.loli.net/2021/03/09/x3FadZLlXVGJ7qr.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">The_Itach1</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/03/09/DLL%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF/">http://example.com/2021/03/09/DLL%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Windows/">Windows</a><a class="post-meta__tags" href="/tags/%E3%80%8A%E9%80%86%E5%8E%9F%E3%80%8B/">《逆原》</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/03/09/ureiVDLYMQqvnIf.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/03/27/nepctf&amp;dasctf/"><img class="prev-cover" src="https://i.loli.net/2021/03/27/KyLuMPlxOjEU159.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">nepctf&amp;dasctf的wp</div></div></a></div><div class="next-post pull-right"><a href="/2021/02/27/hgame/"><img class="next-cover" src="https://i.loli.net/2021/02/27/N5BnYSMFzfZj4Ei.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">hgame2021的wp</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/10/19/Hook API/" title="Hook API"><img class="cover" src="https://i.loli.net/2021/10/19/zVLWyCboJvDKMQZ.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-19</div><div class="title">Hook API</div></div></a></div><div><a href="/2022/01/31/Windows-Hack-Programming/" title="Windows-Hack-Programming"><img class="cover" src="https://s2.loli.net/2022/01/31/ktMQEOe8CgB9LJD.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-31</div><div class="title">Windows-Hack-Programming</div></div></a></div><div><a href="/2021/02/04/一些常用的壳/" title="一些常用的壳"><img class="cover" src="https://i.loli.net/2021/02/04/8vlJQ6SNkU4DWpt.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-02-04</div><div class="title">一些常用的壳</div></div></a></div><div><a href="/2021/02/26/内嵌补丁练习/" title="《逆向工程核心原理》20章内嵌补丁练习"><img class="cover" src="https://i.loli.net/2021/02/26/FV8EmzyUav4BPeg.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-02-26</div><div class="title">《逆向工程核心原理》20章内嵌补丁练习</div></div></a></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/5.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">The_Itach1</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">52</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">21</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86DLL%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">逆向工程核心原理DLL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%BF%9C%E7%AB%AF%E7%BA%BF%E7%A8%8B%EF%BC%88CreateRemoteThread-API%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">创建远端线程（CreateRemoteThread()API）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#InjectDll-exe"><span class="toc-number">1.1.1.</span> <span class="toc-text">InjectDll.exe</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#myhack-dll"><span class="toc-number">1.1.2.</span> <span class="toc-text">myhack.dll</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%B3%A8%E5%86%8C%E8%A1%A8%EF%BC%88AppInit-DLLs%E5%80%BC%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">使用注册表（AppInit_DLLs值）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#myhack2-dll"><span class="toc-number">1.2.1.</span> <span class="toc-text">myhack2.dll</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E9%92%A9%E5%8F%96%EF%BC%88SetWindowsHookEx-API%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">消息钩取（SetWindowsHookEx()API）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hookmain-exe"><span class="toc-number">1.3.1.</span> <span class="toc-text">hookmain.exe</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#KeyHook-dll"><span class="toc-number">1.3.2.</span> <span class="toc-text">KeyHook.dll</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E4%BF%AE%E6%94%B9pe%E6%96%87%E4%BB%B6%E6%9D%A5%E5%8A%A0%E8%BD%BDDLL%E6%96%87%E4%BB%B6"><span class="toc-number">1.4.</span> <span class="toc-text">通过修改pe文件来加载DLL文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#myhack3-dll"><span class="toc-number">1.4.1.</span> <span class="toc-text">myhack3.dll</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9TextView-exe"><span class="toc-number">1.4.2.</span> <span class="toc-text">修改TextView.exe</span></a></li></ol></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/Recent%20CTF%20summary/" title="Recent CTF summary"><img src="https://s2.loli.net/2022/06/10/HR1Wcv8IJAznUOd.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Recent CTF summary"/></a><div class="content"><a class="title" href="/2022/06/11/Recent%20CTF%20summary/" title="Recent CTF summary">Recent CTF summary</a><time datetime="2022-06-11T09:38:45.000Z" title="Created 2022-06-11 17:38:45">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/win32%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="win32编程学习笔记"><img src="https://i.loli.net/2021/03/30/n7siDC4uFlg8SLv.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="win32编程学习笔记"/></a><div class="content"><a class="title" href="/2022/06/11/win32%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="win32编程学习笔记">win32编程学习笔记</a><time datetime="2022-06-10T17:10:13.923Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/30/Simple%20Exe%20Packing/" title="Simple Exe Packing"><img src="https://s2.loli.net/2022/03/30/cVsNfuSDZGqMO4r.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Simple Exe Packing"/></a><div class="content"><a class="title" href="/2022/03/30/Simple%20Exe%20Packing/" title="Simple Exe Packing">Simple Exe Packing</a><time datetime="2022-03-30T10:38:45.000Z" title="Created 2022-03-30 18:38:45">2022-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/15/OWASP%20Top%2010%20learning/" title="OWASP Top 10 learning"><img src="https://s2.loli.net/2022/03/15/Afs4qw2QXxeUHlO.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OWASP Top 10 learning"/></a><div class="content"><a class="title" href="/2022/03/15/OWASP%20Top%2010%20learning/" title="OWASP Top 10 learning">OWASP Top 10 learning</a><time datetime="2022-03-15T10:38:45.000Z" title="Created 2022-03-15 18:38:45">2022-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/25/%E5%90%91%E6%97%A5%E8%91%B5%20CNVD-2022-10270%E5%88%86%E6%9E%90/" title="向日葵 CNVD-2022-10270分析"><img src="https://s2.loli.net/2022/02/25/v2oYBbMdSCqf3gc.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="向日葵 CNVD-2022-10270分析"/></a><div class="content"><a class="title" href="/2022/02/25/%E5%90%91%E6%97%A5%E8%91%B5%20CNVD-2022-10270%E5%88%86%E6%9E%90/" title="向日葵 CNVD-2022-10270分析">向日葵 CNVD-2022-10270分析</a><time datetime="2022-02-25T10:38:45.000Z" title="Created 2022-02-25 18:38:45">2022-02-25</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://i.loli.net/2021/03/09/ureiVDLYMQqvnIf.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By The_Itach1</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">木叶飞舞之处，火亦生生不息</div><div class="icp"><a><span></span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

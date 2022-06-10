@@ -1,0 +1,763 @@
+<!DOCTYPE html><html lang="zh-CH" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>学习汇编的一些记录 | The_Itach1</title><meta name="keywords" content="汇编"><meta name="author" content="The_Itach1"><meta name="copyright" content="The_Itach1"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="学习汇编的一些记录一、一些常用汇编指令汇编指令（书上比较重要的）jmp word ptr 内存单元地址（段内转移） 功能：从内存单元地址处开始存放一个字，是转会目的地的偏移地址。（实际上要去IP） jmp dword ptr 功能：内存单元地址处开始存放着两个字，高地址处的字是转移地址的目的段地址，低地址处是转移的目的偏移地址 ret pop IP retf pop IP pop CS call">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习汇编的一些记录">
+<meta property="og:url" content="http://example.com/2020/11/30/%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="The_Itach1">
+<meta property="og:description" content="学习汇编的一些记录一、一些常用汇编指令汇编指令（书上比较重要的）jmp word ptr 内存单元地址（段内转移） 功能：从内存单元地址处开始存放一个字，是转会目的地的偏移地址。（实际上要去IP） jmp dword ptr 功能：内存单元地址处开始存放着两个字，高地址处的字是转移地址的目的段地址，低地址处是转移的目的偏移地址 ret pop IP retf pop IP pop CS call">
+<meta property="og:locale" content="zh_CH">
+<meta property="og:image" content="https://i.loli.net/2020/11/30/dSi6rUhR2nE1MlY.jpg">
+<meta property="article:published_time" content="2020-11-30T09:38:45.000Z">
+<meta property="article:modified_time" content="2022-06-10T18:51:51.980Z">
+<meta property="article:author" content="The_Itach1">
+<meta property="article:tag" content="汇编">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/11/30/dSi6rUhR2nE1MlY.jpg"><link rel="shortcut icon" href="/img/2.png"><link rel="canonical" href="http://example.com/2020/11/30/%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-06-11 02:51:51'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/5.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">52</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">21</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/11/30/dSi6rUhR2nE1MlY.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">The_Itach1</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> music</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> movies</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">学习汇编的一些记录</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-11-30T09:38:45.000Z" title="Created 2020-11-30 17:38:45">2020-11-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-06-10T18:51:51.980Z" title="Updated 2022-06-11 02:51:51">2022-06-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Reverse/">Reverse</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Reverse/%E7%BC%96%E7%A8%8Blearning/">编程learning</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="学习汇编的一些记录"><a href="#学习汇编的一些记录" class="headerlink" title="学习汇编的一些记录"></a>学习汇编的一些记录</h1><h2 id="一、一些常用汇编指令"><a href="#一、一些常用汇编指令" class="headerlink" title="一、一些常用汇编指令"></a>一、一些常用汇编指令</h2><h3 id="汇编指令（书上比较重要的）"><a href="#汇编指令（书上比较重要的）" class="headerlink" title="汇编指令（书上比较重要的）"></a>汇编指令（书上比较重要的）</h3><p>jmp word ptr 内存单元地址（段内转移）</p>
+<pre><code>功能：从内存单元地址处开始存放一个字，是转会目的地的偏移地址。（实际上要去IP）</code></pre>
+<p>jmp dword ptr</p>
+<pre><code>功能：内存单元地址处开始存放着两个字，高地址处的字是转移地址的目的段地址，低地址处是转移的目的偏移地址</code></pre>
+<p>ret</p>
+<pre><code>pop IP</code></pre>
+<p>retf</p>
+<pre><code>pop IP
+pop CS</code></pre>
+<p>call</p>
+<pre><code>push IP//将call指令下一句的IP入栈，在call内部会有个ret将IP又出栈，从而返回到call指令下一句。
+jmp near ptr 标号</code></pre>
+<p>更多细节，和例子还是在书上看。</p>
+<h3 id="汇编指令（书上没有的）"><a href="#汇编指令（书上没有的）" class="headerlink" title="汇编指令（书上没有的）"></a>汇编指令（书上没有的）</h3><p>var_4 = dword ptr -4</p>
+<pre><code>var_4 = dword ptr -4；   这是解释代码，可解释成var_4 是 esp - 4处的空间;
+var_0 = dword ptr 8;    var_0 是 esp +8处的空间；
+
+在IDA中VAR 是代表的函数中的局部变量.
+
+你要知道在汇编中访问局部变量，是通过ebp-x的来定位栈中位置.
+
+var a = dwod -10h
+var b = dwod - 8h
+var c = dwod - 4h
+
+_main proc nea
+push ebp
+mov ebp,esp
+sub esp,10h
+mov [ebp-4],0   //同过这种方式访问局部变量，
+等价于mov [ebp+c],0
+
+那么我把var c 换个有意思的名字如 var Max = dword - 4h
+
+mov [ebp+Max],0   //这个时候，就更清楚了。</code></pre>
+<p>lea</p>
+<pre><code>LEA 取有效地址指令 （Load Effective Address )
+　　指令格式：LEA 目的，源
+　　指令功能：取源操作数地址的偏移量，并把它传送到目的操作数所在的单元。
+　　LEA 指令要求原操作数必须是 存储单元 ，而且目的操作数必须是一个除段寄存器之外的16位或32位寄存器。当目的操作数是16位通用寄存器时，那么只装入有效地址的低16位。使用时要注意它与MOV指令的区别，MOV指令传送的一般是源操作数中的内容而不是地址。
+　　例1 假设：SI=1000H , DS=5000H, (51000H)=1234H
+　　执行指令 LEA BX , [SI]后，BX=1000H
+　　执行指令 MOV BX , [SI]后，BX=1234H
+　　有时，LEA指令也可用取偏移地址的MOV指令替代。
+　　例2 下面两条指令就是等价的，他们都取TABLE的偏移地址，然后送到BX中，即
+　　LEA BX,TABLE
+　　MOV BX,OFFSET TABLE</code></pre>
+<p>MOVZX指令</p>
+<pre><code>汇编语言数据传送指令MOV的变体。无符号扩展，并传送。
+
+movzx是将源操作数的内容拷贝到目的操作数，并将该值0扩展至16位或者32位。但是它只适用于无符号整数。 他大致下面的三种格式。
+
+　　movzx 32位通用寄存器, 8位通用寄存器/内存单元
+
+　　movzx 32位通用寄存器, 16位通用寄存器/内存单元
+
+　　movzx 16位通用寄存器, 8位通用寄存器/内存单元
+
+　　举个例子。例如
+
+　　令eax=00304000h
+
+　　若执行 movzx eax, ax后 eax = 00004000h 。
+
+　　若执行 movzx eax, ah后 eax = 00000040h。
+
+　　又如：
+
+　　MOV BL,80H
+
+　　MOVZX AX,BL
+
+　　运行完以上汇编语句之后，AX的值为0080H。由于BL为80H，最高位也即符号位为1，但在进行无符号扩展时，其扩展的高8位均为0，故赋值AX为0080H。
+
+　　总结:
+
+　　movzx其实就是将我们的源操作数取出来,然后置于目的操作数,目的操作数其余位用0填充。</code></pre>
+<p>text指令</p>
+<pre><code>test 对两个参数(目标，源)执行AND逻辑操作,并根据结果设置标志寄存器,结果本身不会保存。
+
+test eax ，eax 不改变值的大小，只改变标志位ZF。运算结果为0，则zf=1 ，否则zf=0
+
+所有的对操作数进行算术和逻辑运算的指令，都会根据运算结果修改ZF标志。</code></pre>
+<p>jnz指令</p>
+<pre><code>JNZ : jump if not zero 结果不为零则转移</code></pre>
+<p>cmd</p>
+<pre><code> cmp(compare)指令进行比较两个操作数的大小
+
+ 例:cmp oprd1,oprd2
+
+ 为第一个操作减去第二个操作数,但不影响第两个操作数的值,它影响flag的CF，ZF，OF，AF，PF.</code></pre>
+<p>CDQ</p>
+<pre><code>把EAX的第31位(这个位数是从右往左数的)复制到EDX的每个位去，常和除法连用。
+
+如果EAX = 0x0000000A
+那么执行CDQ后 EDX = 0x00000000，这样EDX:EAX就是0x000000000x0000000A的64bit的了，用来作为被除数(如果是除数是32位，就需要64位来作为被除数)
+如果EAX = 0xFFFFFFFA
+那么执行CDQ后 EDX = 0xFFFFFFFF</code></pre>
+<p>sar</p>
+<pre><code>sar是算术右移指令，功能是将操作数右移，符号位保持不变。
+例如，sar eax,1//假设eax是0x0000000A，执行完之后eax就会变成0x00000005，相对于除以2。</code></pre>
+<p>imul和mul</p>
+<pre><code>imul 有符号乘法，将被乘数与乘数均作为有符号数。
+mul 无符号乘法，将被乘数及乘数均作为无符号数。
+可以有三个操作数：imul eax,eax,0Ch
+第3操作数是乘数，
+第2操作数是被乘数，
+运算结果放入第1操作数。
+也可以是两个操作数：imul eax,0Ch
+目标操作数（第一个操作数）乘以源操作数（第二个操作数）</code></pre>
+<p>idiv(带符号数除法)/div(无符号除法)</p>
+<pre><code>写法：idiv reg；/div reg
+作用：如果操作数是8位，结果商在AL、余数在AH中；
+
+如果操作数是16位，结果商在AX,余数在DX中；
+
+如果操作数是32位，结果商在EAX,余数在EDX中；
+
+注意：不能直接实现8位数除8位数、16位数除16位数、32除32，若需要这样，则必须先把除数符号扩展或零扩展到16、32、64位，然后用除法指令。</code></pre>
+<p>跳转</p>
+<pre><code>JE   ;等于则跳转
+JNE  ;不等于则跳转
+
+JZ   ;为 0 则跳转
+JNZ  ;不为 0 则跳转
+
+JS   ;为负则跳转
+JNS  ;不为负则跳转
+
+JC   ;进位则跳转
+JNC  ;不进位则跳转
+
+JO   ;溢出则跳转
+JNO  ;不溢出则跳转
+
+JA   ;无符号大于则跳转
+JNA  ;无符号不大于则跳转
+JAE  ;无符号大于等于则跳转
+JNAE ;无符号不大于等于则跳转
+
+JG   ;有符号大于则跳转
+JNG  ;有符号不大于则跳转
+JGE  ;有符号大于等于则跳转
+JNGE ;有符号不大于等于则跳转
+
+JB   ;无符号小于则跳转
+JNB  ;无符号不小于则跳转
+JBE  ;无符号小于等于则跳转
+JNBE ;无符号不小于等于则跳转
+
+JL   ;有符号小于则跳转
+JNL  ;有符号不小于则跳转
+JLE  ;有符号小于等于则跳转
+JNLE ;有符号不小于等于则跳转
+
+JP   ;奇偶位置位则跳转
+JNP  ;奇偶位清除则跳转
+JPE  ;奇偶位相等则跳转
+JPO  ;奇偶位不等则跳转</code></pre>
+<p>retn</p>
+<pre><code>pop ip
+pop n//sp+n</code></pre>
+<p>前言：主要还是给自己看的。</p>
+<h2 id="二、堆栈平衡"><a href="#二、堆栈平衡" class="headerlink" title="二、堆栈平衡"></a>二、堆栈平衡</h2><h3 id="堆栈平衡的原理"><a href="#堆栈平衡的原理" class="headerlink" title="堆栈平衡的原理"></a>堆栈平衡的原理</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cat47/p/12285209.html">https://www.cnblogs.com/cat47/p/12285209.html</a>这个上面讲的还可以。下面总结总结。</p>
+<p>堆栈平衡主要分为两中情况</p>
+<p>情况1：</p>
+<p>就是call调用函数的时候，函数内部不能改变栈顶sp，如果有改变（例如函数内部有push或者pop指令，但是一般函数调用时，函数内部都会把esp给ebp，最后又把ebp给esp，所以一般不会变），也必须要在ret执行之前改为原来的栈顶sp，否则ret，pop的IP，可能将不是call的下一句的IP。</p>
+<p>情况2：</p>
+<p>用堆栈来传递参数，先改变原来的堆栈，在函数内使用了这个堆栈来传递参数，回到主函数后，要恢复原来的堆栈。</p>
+<p>具体恢复方法有两种，一种是直接在主函数中用add或者sub修改sp的值。</p>
+<p>另一种是，在函数内部就直接将sp修改。<br><img src="https://i.loli.net/2020/11/22/L4Kjv8e9hBRlqzW.png"><br>其中的retn 8的意思就是</p>
+<pre><code>pop ip
+pop 8</code></pre>
+<p>retn在最下面也有简单介绍</p>
+<h3 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h3><p>自己动手了解堆栈平衡的原理，并观察调试过程中堆栈的变化情况。</p>
+<h3 id="实验样本1-调用一个空函数"><a href="#实验样本1-调用一个空函数" class="headerlink" title="实验样本1-调用一个空函数"></a>实验样本1-调用一个空函数</h3><p>由vc++6.0编译的 堆栈平衡.exe文件，代码如下</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+void kong()
+&#123;
+&#125;
+int main(void)
+&#123;
+    int a = 1, b = 2;
+    kong();
+    printf(&quot;%d\n&quot;, a+b);
+    getchar();//主要是为了找到main函数。
+&#125;</code></pre>
+<h3 id="调试过程"><a href="#调试过程" class="headerlink" title="调试过程"></a>调试过程</h3><p>找到main函数<br>先F9到达EIP处，然后F8一直调，会在main函数处停下来。进入main函数。<br><img src="https://i.loli.net/2020/11/26/bB6WzaSjUE7MygR.png"><br>注意这时候ESP，EBP的值，和在堆栈中的情况。</p>
+<pre><code>ESP:0019FF34
+EBP:0019FF70</code></pre>
+<p><img src="https://i.loli.net/2020/11/26/Cn9VdNebYFB8A6J.png"><br>执行</p>
+<pre><code>push ebp</code></pre>
+<p>将ebp的值入栈，ESP-4:0019FF30，EBP不变，堆栈变化如下，注意灰色那一行<br><img src="https://i.loli.net/2020/11/26/qju79k1c3WTrlKZ.png"><br>执行</p>
+<pre><code>mov ebp esp</code></pre>
+<p>将esp的值给ebp，ebp的作用可以理解为esp的替身（ebp的值只要在pop ebp之前都不会发生改变，不会受esp期间被改变的影响），用来访问栈内局部变量，参数，函数返回地址。这时候</p>
+<pre><code>ESP:0019FF30
+EBP:0019FF30</code></pre>
+<p>执行灰色部分代码<br><img src="https://i.loli.net/2020/11/27/Ieq4N2DtwhP5uiV.png"><br>不用了解具体过程，大概就是开辟一个4c空间的堆栈，执行后</p>
+<pre><code>ESP:0019FED8//灰色部分有3个push，esp-4c-12
+EBP:0019FF30</code></pre>
+<p>堆栈情况为<br><img src="https://i.loli.net/2020/11/27/CZJSOdaIQ1oF5st.png"><br>继续执行下面两句指令。<br><img src="https://i.loli.net/2020/11/27/3P1x9X7QGLKkrua.png"><br>将1存入ebp-4的地址，将2存入ebp-8的地址。堆栈情况如下<br><img src="https://i.loli.net/2020/11/27/VW6PlQTkOXNBoJZ.png"><br>由于接下来调用的一个函数是空函数所以，不需要用push指令来开辟一段栈空间，用来传递参数。如果函数用来传递了参数，最后需要将开辟的堆栈还原，意思就是是esp要回到原来的值。</p>
+<p>执行下一句语句</p>
+<pre><code>call 堆栈平衡1.401005
+//相对于 pop eip//eip是call指令的下一句的地址。esp的值会变成esp-4:0019FED4
+        jmz 00401005</code></pre>
+<p><img src="https://i.loli.net/2020/11/27/YPj4w7VfiAuX2EK.png"><br>进入call的函数，一个空函数。<br><img src="https://i.loli.net/2020/11/27/8FNWwxUTehS1gfB.png"><br>第一句和上面的一样，直接看堆栈变化</p>
+<pre><code>EBP:0019FF30
+ESP:0019FED0</code></pre>
+<p><img src="https://i.loli.net/2020/11/27/yfJ8EYjcgvABTs5.png"><br>0019FED0处存着ebp的值。</p>
+<p>这些指令配合使用</p>
+<pre><code>push ebp
+mov ebp,esp
+...//中间的指令大概就是将esp-40，又push了一些东西，又pop了一些东西
+mov esp,ebp
+pop ebp</code></pre>
+<p>直接看mov esp,ebp执行前的堆栈情况</p>
+<pre><code>ESP:0019FE90
+EBP:0019FED0</code></pre>
+<p><img src="https://i.loli.net/2020/11/27/oNRGZIMdn15Jh6u.png"><br>执行后</p>
+<pre><code>ESP:0019FED0
+EBP:0019FED0</code></pre>
+<p><img src="https://i.loli.net/2020/11/27/aBvcXhnpL1CMKTf.png"><br>这时候ESP重新回到了原来进入这个函数的值，再</p>
+<pre><code>pop ebp</code></pre>
+<p>EBP变为0019FF30，ESP变为0019FED4，存着返回主函数的地址。<br><img src="https://i.loli.net/2020/11/27/jS6eLDMunsm1ROh.png"><br>执行ret指令（相对于pop ip）回到主函数。ESP+4</p>
+<pre><code>ESP:0019FF30
+EBP:0019FED0</code></pre>
+<p><img src="https://i.loli.net/2020/11/27/ifbzA849dNv3jZp.png"><br>由于是个空函数，没有传递参数，前面也没有开辟新的堆栈，所以不需要将esp进行加减，但如果之前调用了参数，就必须要在函数内将用rent指令将esp改了，或者在函数外用，add或者sub来改esp的值，来维持堆栈平衡。<br>继续下两条指令<br>    mov eax,dword ptr ss:[ebp-4]<br>    add eax,dword ptr ss:[ebp-8]</p>
+<p>将<br><img src="https://i.loli.net/2020/11/27/ZtzbsudT2eMVnPA.png"><br>中ebp-4的1先给eax寄存器，再将ebp-8的2和eax的1用add指令加起来，将最后的结果传个eax寄存器，得到结果3。</p>
+<p>最后的输出函数<br><img src="https://i.loli.net/2020/11/27/AnuJ7gDtyh8WrwL.png"><br>知道EAX：累加(Accumulator)寄存器，常用于函数返回值，这几条语句是用来输出最后结果的，就可以了。</p>
+<h3 id="实验样本-裸函数1"><a href="#实验样本-裸函数1" class="headerlink" title="实验样本-裸函数1"></a>实验样本-裸函数1</h3><pre><code>void __declspec(naked)plus()
+&#123;
+    __asm
+    &#123;
+        ret
+    &#125;
+&#125;
+int main(int argc,char*argv[])
+&#123;
+    plus();
+    return 0;
+&#125;</code></pre>
+<p>整个主函数<br><img src="https://i.loli.net/2020/11/28/oNQIBtUwCbWhlPS.png"><br>调用的裸函数<br><img src="https://i.loli.net/2020/11/28/mX8WSRE3LOZ7fVu.png"></p>
+<h3 id="实验样本-裸函数2"><a href="#实验样本-裸函数2" class="headerlink" title="实验样本-裸函数2"></a>实验样本-裸函数2</h3><pre><code>#include&lt;stdio.h&gt;
+
+int __declspec(naked)plus(int a,int b)
+&#123;
+    __asm
+    &#123;
+        mov eax,dword ptr ds:[esp+8]
+        add eax,dword ptr ds:[esp+4]
+        ret
+    &#125;
+&#125;
+int main(int argc,char*argv[])
+&#123;
+    int a;
+    a=plus(1,2);
+    printf(&quot;%d&quot;,a);
+    return 0;
+&#125;</code></pre>
+<p><img src="https://i.loli.net/2020/11/28/JZiAXNDbr3R8HQu.png"><br><img src="https://i.loli.net/2020/11/28/BPMAVKhWdX14yDS.png"></p>
+<h2 id="三、不同C语言语句在汇编中的显示情况及简单分析"><a href="#三、不同C语言语句在汇编中的显示情况及简单分析" class="headerlink" title="三、不同C语言语句在汇编中的显示情况及简单分析"></a>三、不同C语言语句在汇编中的显示情况及简单分析</h2><h3 id="1-if-else"><a href="#1-if-else" class="headerlink" title="1.if-else"></a>1.if-else</h3><p>源代码如下</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int a=1,b=2,c;
+    if(a&lt;b)
+    &#123;
+        c=0;
+    &#125;
+    else
+    &#123;
+        c=1;
+    &#125;
+    return 0;
+&#125;</code></pre>
+<p>对应汇编代码如下</p>
+<pre><code>1:    #include&lt;stdio.h&gt;
+2:
+3:    int main(void)
+4:    &#123;
+00401010   push        ebp
+00401011   mov         ebp,esp
+00401013   sub         esp,4Ch
+00401016   push        ebx
+00401017   push        esi
+00401018   push        edi
+00401019   lea         edi,[ebp-4Ch]
+0040101C   mov         ecx,13h
+00401021   mov         eax,0CCCCCCCCh
+00401026   rep stos    dword ptr [edi]
+5:        int a=1,b=2,c;
+00401028   mov         dword ptr [ebp-4],1
+0040102F   mov         dword ptr [ebp-8],2
+6:        if(a&lt;b)
+00401036   mov         eax,dword ptr [ebp-4]
+00401039   cmp         eax,dword ptr [ebp-8]//cmp是比较指令，相对于sub指令，并改变一些标志寄存器的值。
+0040103C   jge         main+37h (00401047)//前面的数大于或等于后面的数就跳转。实际上与SF,OF两个寄存器有关。
+7:        &#123;
+8:            c=0;
+0040103E   mov         dword ptr [ebp-0Ch],0
+9:        &#125;
+10:       else
+00401045   jmp         main+3Eh (0040104e)
+11:       &#123;
+12:           c=1;
+00401047   mov         dword ptr [ebp-0Ch],1
+13:       &#125;
+14:       return 0;
+0040104E   xor         eax,eax
+15:   &#125;</code></pre>
+<h3 id="2-for循环"><a href="#2-for循环" class="headerlink" title="2.for循环"></a>2.for循环</h3><p>简单的累加代码</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int i,sum;
+    sum=0;
+
+    for(i=0;i&lt;5;i++)
+    &#123;
+        sum=i+sum;
+    &#125;
+
+    printf(&quot;%d&quot;,sum);
+&#125;</code></pre>
+<p>对应汇编代码</p>
+<pre><code>1:    #include&lt;stdio.h&gt;
+2:
+3:    int main(void)
+4:    &#123;
+00401010   push        ebp
+00401011   mov         ebp,esp
+00401013   sub         esp,48h
+00401016   push        ebx
+00401017   push        esi
+00401018   push        edi
+00401019   lea         edi,[ebp-48h]
+0040101C   mov         ecx,12h
+00401021   mov         eax,0CCCCCCCCh
+00401026   rep stos    dword ptr [edi]
+5:        int i,sum;
+6:        sum=0;
+00401028   mov         dword ptr [ebp-8],0
+7:
+
+
+8:        for(i=0;i&lt;5;i++)
+0040102F   mov         dword ptr [ebp-4],0
+00401036   jmp         main+31h (00401041)
+00401038   mov         eax,dword ptr [ebp-4]
+0040103B   add         eax,1
+0040103E   mov         dword ptr [ebp-4],eax
+00401041   cmp         dword ptr [ebp-4],5
+00401045   jge         main+42h (00401052)
+9:        &#123;
+10:           sum=i+sum;
+00401047   mov         ecx,dword ptr [ebp-4]
+0040104A   add         ecx,dword ptr [ebp-8]
+0040104D   mov         dword ptr [ebp-8],ecx
+11:       &#125;
+00401050   jmp         main+28h (00401038)
+//8到11就是for循环
+
+12:
+13:       printf(&quot;%d&quot;,sum);
+00401052   mov         edx,dword ptr [ebp-8]
+00401055   push        edx
+00401056   push        offset string &quot;%d&quot; (0042201c)
+0040105B   call        printf (00401090)
+00401060   add         esp,8
+14:   &#125;</code></pre>
+<h3 id="3-while循环"><a href="#3-while循环" class="headerlink" title="3.while循环"></a>3.while循环</h3><pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int i=0;
+    int sum=0;
+    while(i&lt;5)
+    &#123;
+        sum=sum+i;
+        i++;
+    &#125;
+    printf(&quot;%d&quot;,sum);
+&#125;</code></pre>
+<p>while循环对应的汇编代码</p>
+<pre><code>1:    #include&lt;stdio.h&gt;
+2:
+3:    int main(void)
+4:    &#123;
+00401010   push        ebp
+00401011   mov         ebp,esp
+00401013   sub         esp,48h
+00401016   push        ebx
+00401017   push        esi
+00401018   push        edi
+00401019   lea         edi,[ebp-48h]
+0040101C   mov         ecx,12h
+00401021   mov         eax,0CCCCCCCCh
+00401026   rep stos    dword ptr [edi]
+5:        int i=0;
+00401028   mov         dword ptr [ebp-4],0
+6:        int sum=0;
+0040102F   mov         dword ptr [ebp-8],0
+7:        while(i&lt;5)
+00401036   cmp         dword ptr [ebp-4],5
+0040103A   jge         main+40h (00401050)
+8:        &#123;
+9:            sum=sum+i;
+0040103C   mov         eax,dword ptr [ebp-8]
+0040103F   add         eax,dword ptr [ebp-4]
+00401042   mov         dword ptr [ebp-8],eax
+10:           i++;
+00401045   mov         ecx,dword ptr [ebp-4]
+00401048   add         ecx,1
+0040104B   mov         dword ptr [ebp-4],ecx
+11:       &#125;
+0040104E   jmp         main+26h (00401036)
+12:       printf(&quot;%d&quot;,sum);
+00401050   mov         edx,dword ptr [ebp-8]
+00401053   push        edx
+00401054   push        offset string &quot;%d&quot; (0042201c)
+00401059   call        printf (00401080)
+0040105E   add         esp,8
+13:   &#125;</code></pre>
+<h3 id="4-do-while的汇编语句"><a href="#4-do-while的汇编语句" class="headerlink" title="4.do_while的汇编语句"></a>4.do_while的汇编语句</h3><pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int i=0;
+    int sum=0;
+
+    do
+    &#123;
+        sum=sum+i;
+        i++;
+    &#125;
+    while(i&lt;5);
+    printf(&quot;%d&quot;,sum);
+&#125;</code></pre>
+<p>do_while的汇编代码</p>
+<pre><code>1:    #include&lt;stdio.h&gt;
+2:
+3:    int main(void)
+4:    &#123;
+00401010   push        ebp
+00401011   mov         ebp,esp
+00401013   sub         esp,48h
+00401016   push        ebx
+00401017   push        esi
+00401018   push        edi
+00401019   lea         edi,[ebp-48h]
+0040101C   mov         ecx,12h
+00401021   mov         eax,0CCCCCCCCh
+00401026   rep stos    dword ptr [edi]
+5:        int i=0;
+00401028   mov         dword ptr [ebp-4],0
+6:        int sum=0;
+0040102F   mov         dword ptr [ebp-8],0
+7:
+8:        do
+9:        &#123;
+10:           sum=sum+i;
+00401036   mov         eax,dword ptr [ebp-8]
+00401039   add         eax,dword ptr [ebp-4]
+0040103C   mov         dword ptr [ebp-8],eax
+11:           i++;
+0040103F   mov         ecx,dword ptr [ebp-4]
+00401042   add         ecx,1
+00401045   mov         dword ptr [ebp-4],ecx
+12:       &#125;
+13:       while(i&lt;5);
+00401048   cmp         dword ptr [ebp-4],5
+0040104C   jl          main+26h (00401036)
+14:       printf(&quot;%d&quot;,sum);
+0040104E   mov         edx,dword ptr [ebp-8]
+00401051   push        edx
+00401052   push        offset string &quot;%d&quot; (0042201c)
+00401057   call        printf (00401080)
+0040105C   add         esp,8
+15:   &#125;</code></pre>
+<h3 id="5-数组的在堆栈中的情况"><a href="#5-数组的在堆栈中的情况" class="headerlink" title="5.数组的在堆栈中的情况"></a>5.数组的在堆栈中的情况</h3><pre><code>#include&lt;stdio.h&gt;
+
+int main(void)
+&#123;
+    int b;
+    int a[]=&#123;1,2,3,4,5&#125;;
+
+    scanf(&quot;%d&quot;,b);
+&#125;</code></pre>
+<p>堆栈中的样子</p>
+<p>刚开始将数组中的数放到堆栈里面<br><img src="https://i.loli.net/2020/11/30/ePw9pDTF7ChBIES.png"><br>放完之后<br><img src="https://i.loli.net/2020/11/30/V3O78iTgRUk4qun.png"><br>需要注意的点，数组中的数是在堆栈中是从上到下开始排的(我认为这可能和大端序和小端序，《逆向核心原理》中第3章有关)，而且ebp-4位置存的是cccccccc，这应该是那个参数b</p>
+<h3 id="6-一个用函数来实现两个乘除的简单代码"><a href="#6-一个用函数来实现两个乘除的简单代码" class="headerlink" title="6.一个用函数来实现两个乘除的简单代码"></a>6.一个用函数来实现两个乘除的简单代码</h3><h4 id="c源代码"><a href="#c源代码" class="headerlink" title="c源代码"></a>c源代码</h4><p>原c代码如下，其中的运算都为有符号运算，由于之前没有写关于乘除的汇编会是怎么样，所以这次顺便弄一个乘除的。：</p>
+<pre><code>#include&lt;stdio.h&gt;
+
+int function(int x,int y)
+&#123;
+    int z;
+
+    z=(x*y)/5;//注意这里面是故意取5的，为了看余数的值会储存在哪个寄存器中。
+    return z;    
+&#125;
+
+int main(void)
+&#123;
+    int a=3,b=4,c;
+
+    c=function(a,b);
+    printf(&quot;%d&quot;,c);
+    return 0;
+&#125;</code></pre>
+<p>实际上，如果你如果是z=(x*y)/2，其对应的汇编代码会有一些不同。就像这样。</p>
+<pre><code>00401038   mov         eax,dword ptr [ebp+8]
+0040103B   imul        eax,dword ptr [ebp+0Ch]//前两句实际上就是x*y
+0040103F   cdq
+00401040   sub         eax,edx
+00401042   sar         eax,1//这是通过向右位移1位来达到除以2的目的，好像只有除以2的时候汇编代码会成为这样。
+00401044   mov         dword ptr [ebp-4],eax</code></pre>
+<p>imul,cdq,sar这三个指令请在上面第一部分查看具体用法。</p>
+<h4 id="开始调试源程序"><a href="#开始调试源程序" class="headerlink" title="开始调试源程序"></a>开始调试源程序</h4><p>主函数<br><img src="https://i.loli.net/2020/12/11/eI1awuc8XVGNy3p.png"><br>初始堆栈空间</p>
+<p><img src="https://i.loli.net/2020/12/11/xVcTEluYkNU1zbs.png"></p>
+<p>执行这一句后的堆栈空间</p>
+<pre><code>401060    55    push ebp</code></pre>
+<p><img src="https://i.loli.net/2020/12/11/U6T4mXWlgLMK9xI.png"></p>
+<p>执行这几句后的堆栈空间</p>
+<pre><code>401066    53                 push ebx
+401067    56                 push esi
+401068    57                 push edi
+401069    8D7D B4    lea      edi,dword ptr ss:[ebp-4C]
+40106C    B9 13000000         mov ecx,13
+401071    B8 CCCCCCCC         mov eax,CCCCCCCC
+401076    F3:AB             rep stosd</code></pre>
+<p><img src="https://i.loli.net/2020/12/11/WVCKm6xe75L4cvz.png"></p>
+<p>执行这几句后的堆栈空间</p>
+<pre><code>401078    C745 FC 03000000    mov dword ptr ss:[ebp-4],3
+40107F    C745 F8 04000000    mov dword ptr ss:[ebp-8],4
+401086    8B45 F8                mov eax,dword ptr ss:[ebp-8]
+401089    50                    push eax
+40108A    8B4D FC                mov ecx,dword ptr ss:[ebp-4]
+40108D    51                    push ecx</code></pre>
+<p><img src="https://i.loli.net/2020/12/11/RqOITSAULZ4iNeM.png"></p>
+<p>function函数框架<br><img src="https://i.loli.net/2020/12/11/nxcHUT7X2YS15Z4.png"><br>进入function函数后的堆栈空间</p>
+<p><img src="https://i.loli.net/2020/12/11/uJdicMKDPp1Gowv.png"></p>
+<p>执行这一句后的堆栈空间</p>
+<pre><code>401020    55    push ebp</code></pre>
+<p><img src="https://i.loli.net/2020/12/11/7fH3EhLlFrV2sjp.png"><br><img src="https://i.loli.net/2020/12/11/7fH3EhLlFrV2sjp.png"><br>执行完这几句的堆栈空间</p>
+<pre><code>401021    8BEC            mov ebp,esp
+401023    83EC 44            sub esp,44
+401026    53                   push ebx
+401027    56                push esi
+401028    57                push edi
+401029    8D7D BC            lea edi,dword ptr ss:[ebp-44]
+0040102C    B9 11000000    mov ecx,11
+401031    B8 CCCCCCCC        mov eax,CCCCCCCC
+401036    F3:AB            rep stosd</code></pre>
+<p><img src="https://i.loli.net/2020/12/11/PGW641VhAROm7QI.png"></p>
+<p>接下来是计算的指令，就自己根据本文第一部分常用的汇编指令，来慢慢分析了</p>
+<pre><code>401038    8B45 08                mov eax,dword ptr ss:[ebp+8]
+0040103B    0FAF45 0C        imul eax,dword ptr ss:[ebp+C]
+0040103F    99    cdq
+401040    B9 05000000            mov ecx,5
+401045    F7F9                idiv ecx
+401047    8945 FC                mov dword ptr ss:[ebp-4],eax
+0040104A    8B45 FC            mov eax,dword ptr ss:[ebp-4]</code></pre>
+<p>然后直到ret指令前的堆栈空间</p>
+<p><img src="https://i.loli.net/2020/12/11/EuBrz3nXjHmbPNW.png"></p>
+<p>执行ret后，回到主函数</p>
+<p><img src="https://i.loli.net/2020/12/11/9zTgUyvMi56Anpa.png"><br>执行这一句，保持堆栈平衡<br>    add esp，8<br><img src="https://i.loli.net/2020/12/11/ADxKgi9opXYhHP1.png"></p>
+<p>后面的内容就不在调试了。</p>
+<h3 id="7-结构体指针"><a href="#7-结构体指针" class="headerlink" title="7.结构体指针"></a>7.结构体指针</h3><p>调试一个返回结构体指针的文件</p>
+<h3 id="c代码"><a href="#c代码" class="headerlink" title="c代码"></a>c代码</h3><pre><code>#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;string.h&gt;
+
+typedef struct _Student
+&#123;
+    char stuName[20];
+    int stuNo;
+    int stuAge;
+&#125;Student,*STUDENT;
+
+int function(Student **p)
+&#123;
+    STUDENT q;//在子函数内部定义了一个结构体指针变量
+
+    q=(Student*)malloc(sizeof(Student));//向堆申请一段内存空间，返回的地址值给结构体指针变量。
+    strcpy(q-&gt;stuName,&quot;wuhao&quot;); //给结构体赋值
+    q-&gt;stuNo=2020122188;
+    q-&gt;stuAge=18;
+
+    *p=q;//将这个结构体地址返回给主函数的结构体指针变量。
+
+    return 0;
+&#125;
+
+int main()
+&#123;
+    Student *p;//定义了一个结构体指针变量
+    function(&amp;p);//传入结构体指针变量的地址
+
+    if(p-&gt;stuNo==2020122188 &amp;&amp; p-&gt;stuAge==18 &amp;&amp; !strcmp(p-&gt;stuName,&quot;wuhao&quot;))//检验
+    &#123;
+        printf(&quot;sucess!\n&quot;);
+        printf(&quot;姓名：%s\n&quot;,p-&gt;stuName);
+        printf(&quot;学号：%d\n&quot;,p-&gt;stuNo);
+        printf(&quot;年龄：%d\n&quot;,p-&gt;stuAge);
+    &#125;
+    else
+    &#123;
+        printf(&quot;wrong!&quot;);
+    &#125;
+    getchar();
+&#125;</code></pre>
+<h4 id="调试过程-1"><a href="#调试过程-1" class="headerlink" title="调试过程"></a>调试过程</h4><p>进入子函数前<br><img src="https://i.loli.net/2021/03/21/VOIAxroc3wlKPJQ.png"><br>进入子函数<br><img src="https://i.loli.net/2021/03/21/xqQSeVl1tPwv4mi.png"><br>回到主函数查看<br><img src="https://i.loli.net/2021/03/21/NKplzFY8hW2IbmM.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">The_Itach1</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2020/11/30/%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/">http://example.com/2020/11/30/%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B1%87%E7%BC%96/">汇编</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/11/30/dSi6rUhR2nE1MlY.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/12/02/buuctf%E7%9A%84wp/"><img class="prev-cover" src="https://i.loli.net/2020/12/02/GBH9cj7JztSasMh.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">buuCTF的wp</div></div></a></div><div class="next-post pull-right"><a href="/2020/11/29/%E6%9E%81%E5%AE%A2wp%E6%80%BB%E7%BB%93/"><img class="next-cover" src="https://i.loli.net/2020/11/29/uQHmV2qFLoC6nOJ.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">极客wp总结</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/5.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">The_Itach1</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">52</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">21</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E6%B1%87%E7%BC%96%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%B0%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">学习汇编的一些记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4"><span class="toc-number">1.1.</span> <span class="toc-text">一、一些常用汇编指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%EF%BC%88%E4%B9%A6%E4%B8%8A%E6%AF%94%E8%BE%83%E9%87%8D%E8%A6%81%E7%9A%84%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">汇编指令（书上比较重要的）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%EF%BC%88%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%EF%BC%89"><span class="toc-number">1.1.2.</span> <span class="toc-text">汇编指令（书上没有的）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1"><span class="toc-number">1.2.</span> <span class="toc-text">二、堆栈平衡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">堆栈平衡的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%9B%AE%E7%9A%84"><span class="toc-number">1.2.2.</span> <span class="toc-text">实验目的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E6%A0%B7%E6%9C%AC1-%E8%B0%83%E7%94%A8%E4%B8%80%E4%B8%AA%E7%A9%BA%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">实验样本1-调用一个空函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.4.</span> <span class="toc-text">调试过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E6%A0%B7%E6%9C%AC-%E8%A3%B8%E5%87%BD%E6%95%B01"><span class="toc-number">1.2.5.</span> <span class="toc-text">实验样本-裸函数1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E6%A0%B7%E6%9C%AC-%E8%A3%B8%E5%87%BD%E6%95%B02"><span class="toc-number">1.2.6.</span> <span class="toc-text">实验样本-裸函数2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%8D%E5%90%8CC%E8%AF%AD%E8%A8%80%E8%AF%AD%E5%8F%A5%E5%9C%A8%E6%B1%87%E7%BC%96%E4%B8%AD%E7%9A%84%E6%98%BE%E7%A4%BA%E6%83%85%E5%86%B5%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">三、不同C语言语句在汇编中的显示情况及简单分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-if-else"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.if-else</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-for%E5%BE%AA%E7%8E%AF"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.for循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-while%E5%BE%AA%E7%8E%AF"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.while循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-do-while%E7%9A%84%E6%B1%87%E7%BC%96%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.3.4.</span> <span class="toc-text">4.do_while的汇编语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%95%B0%E7%BB%84%E7%9A%84%E5%9C%A8%E5%A0%86%E6%A0%88%E4%B8%AD%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-number">1.3.5.</span> <span class="toc-text">5.数组的在堆栈中的情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%B8%80%E4%B8%AA%E7%94%A8%E5%87%BD%E6%95%B0%E6%9D%A5%E5%AE%9E%E7%8E%B0%E4%B8%A4%E4%B8%AA%E4%B9%98%E9%99%A4%E7%9A%84%E7%AE%80%E5%8D%95%E4%BB%A3%E7%A0%81"><span class="toc-number">1.3.6.</span> <span class="toc-text">6.一个用函数来实现两个乘除的简单代码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#c%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-number">1.3.6.1.</span> <span class="toc-text">c源代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E8%B0%83%E8%AF%95%E6%BA%90%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.3.6.2.</span> <span class="toc-text">开始调试源程序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E7%BB%93%E6%9E%84%E4%BD%93%E6%8C%87%E9%92%88"><span class="toc-number">1.3.7.</span> <span class="toc-text">7.结构体指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#c%E4%BB%A3%E7%A0%81"><span class="toc-number">1.3.8.</span> <span class="toc-text">c代码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B-1"><span class="toc-number">1.3.8.1.</span> <span class="toc-text">调试过程</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/Recent%20CTF%20summary/" title="Recent CTF summary"><img src="https://s2.loli.net/2022/06/10/HR1Wcv8IJAznUOd.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Recent CTF summary"/></a><div class="content"><a class="title" href="/2022/06/11/Recent%20CTF%20summary/" title="Recent CTF summary">Recent CTF summary</a><time datetime="2022-06-11T09:38:45.000Z" title="Created 2022-06-11 17:38:45">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/11/win32%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="win32编程学习笔记"><img src="https://i.loli.net/2021/03/30/n7siDC4uFlg8SLv.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="win32编程学习笔记"/></a><div class="content"><a class="title" href="/2022/06/11/win32%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="win32编程学习笔记">win32编程学习笔记</a><time datetime="2022-06-10T17:10:13.923Z" title="Created 2022-06-11 01:10:13">2022-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/30/Simple%20Exe%20Packing/" title="Simple Exe Packing"><img src="https://s2.loli.net/2022/03/30/cVsNfuSDZGqMO4r.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Simple Exe Packing"/></a><div class="content"><a class="title" href="/2022/03/30/Simple%20Exe%20Packing/" title="Simple Exe Packing">Simple Exe Packing</a><time datetime="2022-03-30T10:38:45.000Z" title="Created 2022-03-30 18:38:45">2022-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/15/OWASP%20Top%2010%20learning/" title="OWASP Top 10 learning"><img src="https://s2.loli.net/2022/03/15/Afs4qw2QXxeUHlO.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OWASP Top 10 learning"/></a><div class="content"><a class="title" href="/2022/03/15/OWASP%20Top%2010%20learning/" title="OWASP Top 10 learning">OWASP Top 10 learning</a><time datetime="2022-03-15T10:38:45.000Z" title="Created 2022-03-15 18:38:45">2022-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/25/%E5%90%91%E6%97%A5%E8%91%B5%20CNVD-2022-10270%E5%88%86%E6%9E%90/" title="向日葵 CNVD-2022-10270分析"><img src="https://s2.loli.net/2022/02/25/v2oYBbMdSCqf3gc.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="向日葵 CNVD-2022-10270分析"/></a><div class="content"><a class="title" href="/2022/02/25/%E5%90%91%E6%97%A5%E8%91%B5%20CNVD-2022-10270%E5%88%86%E6%9E%90/" title="向日葵 CNVD-2022-10270分析">向日葵 CNVD-2022-10270分析</a><time datetime="2022-02-25T10:38:45.000Z" title="Created 2022-02-25 18:38:45">2022-02-25</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://i.loli.net/2020/11/30/dSi6rUhR2nE1MlY.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By The_Itach1</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">木叶飞舞之处，火亦生生不息</div><div class="icp"><a><span></span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
